@@ -1,6 +1,6 @@
-import 'package:facial_emotional_detection_graduation_project/onboarding/ui/widgets/onboarding_buttons.dart';
-import 'package:facial_emotional_detection_graduation_project/onboarding/ui/widgets/onboarding_page.dart';
-import 'package:facial_emotional_detection_graduation_project/onboarding/ui/widgets/smooth_page_indicator_widget.dart';
+import 'package:facial_emotional_detection_graduation_project/features/onboarding/ui/widgets/onboarding_buttons.dart';
+import 'package:facial_emotional_detection_graduation_project/features/onboarding/ui/widgets/onboarding_page.dart';
+import 'package:facial_emotional_detection_graduation_project/features/onboarding/ui/widgets/smooth_page_indicator_widget.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingScreen extends StatefulWidget {

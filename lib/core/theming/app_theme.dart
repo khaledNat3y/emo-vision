@@ -7,6 +7,7 @@ class AppTheme {
   static ThemeData lightMode = ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
+    fontFamily: "LeagueSpartan",
     colorScheme: const ColorScheme.light(
       // surface: AppColors.surfaceLight,
       primary: AppColors.primary,
@@ -177,6 +178,7 @@ class AppTheme {
   );
 
   static ThemeData darkMode = ThemeData(
+    fontFamily: "LeagueSpartan",
     useMaterial3: true,
     brightness: Brightness.dark,
     colorScheme: const ColorScheme.dark(

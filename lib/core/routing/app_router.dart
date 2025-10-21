@@ -1,7 +1,6 @@
 import 'package:facial_emotional_detection_graduation_project/core/routing/routes.dart';
 import 'package:flutter/material.dart';
-
-import '../../onboarding/ui/onboarding_screen.dart';
+import '../../features/onboarding/ui/onboarding_screen.dart';
 
 class AppRouter {
   static Route? generateRoute(RouteSettings settings) {

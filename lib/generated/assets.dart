@@ -2,6 +2,11 @@
 class Assets {
   Assets._();
 
+  static const String fontsLeagueSpartanBold = 'assets/fonts/LeagueSpartan-Bold.ttf';
+  static const String fontsLeagueSpartanLight = 'assets/fonts/LeagueSpartan-Light.ttf';
+  static const String fontsLeagueSpartanMedium = 'assets/fonts/LeagueSpartan-Medium.ttf';
+  static const String fontsLeagueSpartanRegular = 'assets/fonts/LeagueSpartan-Regular.ttf';
+  static const String fontsLeagueSpartanSemiBold = 'assets/fonts/LeagueSpartan-SemiBold.ttf';
   static const String iconsAppIcon = 'assets/icons/app_icon.png';
   static const String imagesBrandingDark = 'assets/images/branding_dark.png';
   static const String imagesBrandingLight = 'assets/images/branding_light.png';
