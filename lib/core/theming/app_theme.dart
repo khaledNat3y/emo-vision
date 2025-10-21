@@ -114,9 +114,9 @@ class AppTheme {
         color: AppColors.textPrimaryLight,
       ),
       headlineLarge: TextStyle(
-        fontSize: 24.sp,
+        fontSize: 32.sp,
         fontWeight: FontWeightHelper.bold,
-        color: AppColors.textPrimaryLight,
+        color: AppColors.white,
       ),
       headlineMedium: TextStyle(
         fontSize: 20.sp,
@@ -126,7 +126,7 @@ class AppTheme {
       headlineSmall: TextStyle(
         fontSize: 18.sp,
         fontWeight: FontWeightHelper.bold,
-        color: AppColors.textPrimaryLight,
+        color: AppColors.white,
       ),
       titleLarge: TextStyle(
         fontSize: 16.sp,
@@ -141,7 +141,7 @@ class AppTheme {
       titleSmall: TextStyle(
         fontSize: 12.sp,
         fontWeight: FontWeightHelper.medium,
-        color: AppColors.textTertiaryLight,
+        color: AppColors.white,
       ),
       bodyLarge: TextStyle(
         fontSize: 16.sp,
