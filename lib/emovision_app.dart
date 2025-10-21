@@ -22,7 +22,7 @@ class EmovisionApp extends StatelessWidget {
           darkTheme: AppTheme.darkMode,
           //themeMode: ThemeMode.system,
           onGenerateRoute: AppRouter.generateRoute,
-          initialRoute: Routes.onBoardingScreen,
+          initialRoute: Routes.loginScreen,
         );
       },
     );

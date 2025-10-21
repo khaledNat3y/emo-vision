@@ -22,9 +22,8 @@ abstract class AppColors {
   // Common Colors
   static const Color white = Color(0xffffffff);
   static const Color black = Color(0xff000000);
-  static const Color primary = Color(0xff2563EB);
-  static const Color primaryLight = Color(0xff3B82F6);
-  static const Color primaryDark = Color(0xff1d4ed8);
+  static const Color primary = Color(0xff1d4ed8);
+  static const Color primaryDark = Color(0xff2563EB);
   static const Color secondary = Color(0xff06B6D4);
   static const Color tertiary = Color(0xff8B5CF6);
   static const Color success = Color(0xff10b981);
