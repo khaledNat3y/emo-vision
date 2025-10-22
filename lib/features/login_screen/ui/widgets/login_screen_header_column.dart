@@ -11,33 +11,21 @@ class LoginScreenHeaderColumn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Colors.transparent,
-            Colors.black.withValues(alpha: 0.2),
-          ],
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            30.verticalSpace,
-            const LoginLogoAndAppName(),
-            32.verticalSpace,
-            Text(
-              'Sign in to your Account',
-              style: Theme.of(context).textTheme.headlineLarge,
-            ),
-            8.verticalSpace,
-            const DontHaveAccountWidget(),
-          ],
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          30.verticalSpace,
+          const LoginLogoAndAppName(),
+          32.verticalSpace,
+          Text(
+            'Sign in to your Account',
+            style: Theme.of(context).textTheme.headlineLarge,
+          ),
+          8.verticalSpace,
+          const DontHaveAccountWidget(),
+        ],
       ),
     );
   }
