@@ -63,7 +63,7 @@ abstract class AppTextTheme {
   static TextStyle font18MediumSecondary = TextStyle(
     fontSize: 18.sp,
     fontWeight: FontWeightHelper.medium,
-    color: AppColors.textSecondaryLight,
+    color: AppColors.grey,
   );
 
   static TextStyle font14RegularTertiary = TextStyle(

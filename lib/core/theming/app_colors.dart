@@ -5,9 +5,9 @@ abstract class AppColors {
   static const Color backgroundLight = Color(0xffffffff);
   static const Color surfaceLight = Color(0xffffffff);
   static const Color textPrimaryLight = Color(0xff0F172A);
-  static const Color textSecondaryLight = Color(0xff64748B);
+  static const Color grey = Color(0xff6C7278);
   static const Color textTertiaryLight = Color(0xff94A3B8);
-  static const Color borderLight = Color(0xffe5e5e5);
+  static const Color borderLight = Color(0xffEDF1F3);
   static const Color dividerLight = Color(0xfff0f0f0);
 
   // Dark Theme Colors
@@ -22,8 +22,8 @@ abstract class AppColors {
   // Common Colors
   static const Color white = Color(0xffffffff);
   static const Color black = Color(0xff000000);
-  static const Color primary = Color(0xff1d4ed8);
-  static const Color primaryDark = Color(0xff2563EB);
+  static const Color primary = Color(0xff1D61E7);
+  static const Color primaryDark = Color(0xff1d4ed8); /// don't use this color
   static const Color secondary = Color(0xff06B6D4);
   static const Color tertiary = Color(0xff8B5CF6);
   static const Color success = Color(0xff10b981);

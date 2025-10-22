@@ -15,53 +15,12 @@ class AppTheme {
       tertiary: AppColors.tertiary,
       error: AppColors.error,
       onSurface: AppColors.textPrimaryLight,
-      onPrimary: AppColors.white,
+      // onPrimary: AppColors.white,
     ),
     scaffoldBackgroundColor: AppColors.backgroundLight,
     
-    // App Bar Theme
-    appBarTheme: AppBarTheme(
-      backgroundColor: AppColors.surfaceLight,
-      foregroundColor: AppColors.textPrimaryLight,
-      elevation: 0,
-      centerTitle: true,
-      titleTextStyle: TextStyle(
-        fontSize: 20.sp,
-        fontWeight: FontWeightHelper.bold,
-        color: AppColors.textPrimaryLight,
-      ),
-    ),
 
     // Input Decoration Theme
-    inputDecorationTheme: InputDecorationTheme(
-      filled: true,
-      fillColor: AppColors.backgroundLight,
-      contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8.r),
-        borderSide: BorderSide(color: AppColors.borderLight),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8.r),
-        borderSide: BorderSide(color: AppColors.borderLight),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8.r),
-        borderSide: BorderSide(color: AppColors.primary, width: 2),
-      ),
-      labelStyle: TextStyle(
-        fontSize: 14.sp,
-        fontWeight: FontWeightHelper.medium,
-        color: AppColors.textSecondaryLight,
-      ),
-      hintStyle: TextStyle(
-        fontSize: 14.sp,
-        fontWeight: FontWeightHelper.regular,
-        color: AppColors.textTertiaryLight,
-      ),
-      prefixIconColor: AppColors.textSecondaryLight,
-      suffixIconColor: AppColors.textSecondaryLight,
-    ),
 
     // Button Themes
     elevatedButtonTheme: ElevatedButtonThemeData(
@@ -136,22 +95,23 @@ class AppTheme {
       titleMedium: TextStyle(
         fontSize: 14.sp,
         fontWeight: FontWeightHelper.medium,
-        color: AppColors.textSecondaryLight,
+        color: AppColors.grey,
       ),
       titleSmall: TextStyle(
         fontSize: 12.sp,
         fontWeight: FontWeightHelper.medium,
-        color: AppColors.white,
+        color: AppColors.grey,
       ),
       bodyLarge: TextStyle(
         fontSize: 16.sp,
         fontWeight: FontWeightHelper.regular,
         color: AppColors.textPrimaryLight,
       ),
+      /// used in login screen form
       bodyMedium: TextStyle(
         fontSize: 14.sp,
-        fontWeight: FontWeightHelper.regular,
-        color: AppColors.textSecondaryLight,
+        fontWeight: FontWeightHelper.medium,
+        color: AppColors.black,
       ),
       bodySmall: TextStyle(
         fontSize: 12.sp,
@@ -160,21 +120,8 @@ class AppTheme {
       ),
     ),
 
-    // Card Theme
-    cardTheme: CardThemeData(
-      color: AppColors.surfaceLight,
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.r),
-      ),
-    ),
 
-    // Divider Theme
-    dividerTheme: DividerThemeData(
-      color: AppColors.dividerLight,
-      space: 16.h,
-      thickness: 1,
-    ),
+
   );
 
   static ThemeData darkMode = ThemeData(
@@ -182,7 +129,7 @@ class AppTheme {
     useMaterial3: true,
     brightness: Brightness.dark,
     colorScheme: const ColorScheme.dark(
-      // surface: AppColors.surfaceDark,
+      surface: AppColors.surfaceDark,
       primary: AppColors.primary,
       secondary: AppColors.secondary,
       tertiary: AppColors.tertiary,
@@ -192,49 +139,7 @@ class AppTheme {
     ),
     scaffoldBackgroundColor: AppColors.backgroundDark,
 
-    // App Bar Theme
-    appBarTheme: AppBarTheme(
-      backgroundColor: AppColors.surfaceDark,
-      foregroundColor: AppColors.textPrimaryDark,
-      elevation: 0,
-      centerTitle: true,
-      titleTextStyle: TextStyle(
-        fontSize: 20.sp,
-        fontWeight: FontWeightHelper.bold,
-        color: AppColors.textPrimaryDark,
-      ),
-    ),
-
     // Input Decoration Theme
-    inputDecorationTheme: InputDecorationTheme(
-      filled: true,
-      fillColor: AppColors.surfaceDark,
-      contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8.r),
-        borderSide: BorderSide(color: AppColors.borderDark),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8.r),
-        borderSide: BorderSide(color: AppColors.borderDark),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8.r),
-        borderSide: BorderSide(color: AppColors.primary, width: 2),
-      ),
-      labelStyle: TextStyle(
-        fontSize: 14.sp,
-        fontWeight: FontWeightHelper.medium,
-        color: AppColors.textSecondaryDark,
-      ),
-      hintStyle: TextStyle(
-        fontSize: 14.sp,
-        fontWeight: FontWeightHelper.regular,
-        color: AppColors.textTertiaryDark,
-      ),
-      prefixIconColor: AppColors.textSecondaryDark,
-      suffixIconColor: AppColors.textSecondaryDark,
-    ),
 
     // Button Themes
     elevatedButtonTheme: ElevatedButtonThemeData(
@@ -333,20 +238,5 @@ class AppTheme {
       ),
     ),
 
-    // Card Theme
-    cardTheme: CardThemeData(
-      color: AppColors.surfaceDark,
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.r),
-      ),
-    ),
-
-    // Divider Theme
-    dividerTheme: DividerThemeData(
-      color: AppColors.dividerDark,
-      space: 16.h,
-      thickness: 1,
-    ),
   );
 }

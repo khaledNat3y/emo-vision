@@ -1,6 +1,8 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/routing/routes.dart';
 import '../../../../core/theming/font_weight_helper.dart';
 
 class DontHaveAccountWidget extends StatelessWidget {
@@ -25,6 +27,10 @@ class DontHaveAccountWidget extends StatelessWidget {
                 decorationColor: Theme.of(context).colorScheme.primary,
                 decorationThickness: 2,
               ),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  Navigator.of(context).pushNamed(Routes.signupScreen);
+                },
             ),
           ],
         )
