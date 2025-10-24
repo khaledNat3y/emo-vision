@@ -63,7 +63,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
           // Indicator
           Positioned(
-            bottom: 200,
+            bottom: MediaQuery.of(context).size.height * 0.2463054,
+
             left: MediaQuery.of(context).size.width / 2 - 30,
             right: 0,
             child: SmoothPageIndicatorWidget(pageController: _pageController, currentPage: _currentPage),

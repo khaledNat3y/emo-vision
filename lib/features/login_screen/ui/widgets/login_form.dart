@@ -1,9 +1,8 @@
 import 'package:facial_emotional_detection_graduation_project/core/theming/app_colors.dart';
+import 'package:facial_emotional_detection_graduation_project/core/theming/app_text_theme.dart';
 import 'package:facial_emotional_detection_graduation_project/core/widgets/app_text_form_field.dart';
-import 'package:facial_emotional_detection_graduation_project/core/widgets/password_validation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../../../../core/helpers/app_regex.dart';
 import '../../../../core/widgets/custom_button.dart';
 
@@ -17,36 +16,39 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final formKey = GlobalKey<FormState>();
   bool isObscure = true;
+  bool isChecked = false;
 
-  bool hasLowercase = false;
-  bool hasUppercase = false;
-  bool hasSpecialCharacters = false;
-  bool hasNumber = false;
-  bool hasMinLength = false;
+  // bool hasLowercase = false;
+  // bool hasUppercase = false;
+  // bool hasSpecialCharacters = false;
+  // bool hasNumber = false;
+  // bool hasMinLength = false;
 
   late TextEditingController passwordController;
+  late TextEditingController emailController;
 
   @override
   void initState() {
     super.initState();
     // passwordController = context.read<LoginCubit>().passwordController;
     passwordController = TextEditingController();
-    setupPasswordControllerListener();
+    emailController = TextEditingController();
+    // setupPasswordControllerListener();
   }
 
-  void setupPasswordControllerListener() {
-    passwordController.addListener(() {
-      setState(() {
-        hasLowercase = AppRegex.hasLowerCase(passwordController.text);
-        hasUppercase = AppRegex.hasUpperCase(passwordController.text);
-        hasSpecialCharacters = AppRegex.hasSpecialCharacter(
-          passwordController.text,
-        );
-        hasNumber = AppRegex.hasNumber(passwordController.text);
-        hasMinLength = AppRegex.hasMinLength(passwordController.text);
-      });
-    });
-  }
+  // void setupPasswordControllerListener() {
+  //   passwordController.addListener(() {
+  //     setState(() {
+  //       hasLowercase = AppRegex.hasLowerCase(passwordController.text);
+  //       hasUppercase = AppRegex.hasUpperCase(passwordController.text);
+  //       hasSpecialCharacters = AppRegex.hasSpecialCharacter(
+  //         passwordController.text,
+  //       );
+  //       hasNumber = AppRegex.hasNumber(passwordController.text);
+  //       hasMinLength = AppRegex.hasMinLength(passwordController.text);
+  //     });
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +59,10 @@ class _LoginFormState extends State<LoginForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(" Email", style: Theme.of(context).textTheme.titleSmall),
+            Text(" Email", style: Theme
+                .of(context)
+                .textTheme
+                .titleSmall),
             5.verticalSpace,
             AppTextFormField(
               hintText: "Loisbecket@gmail.com",
@@ -70,7 +75,10 @@ class _LoginFormState extends State<LoginForm> {
               },
             ),
             16.verticalSpace,
-            Text(" Password", style: Theme.of(context).textTheme.titleSmall),
+            Text(" Password", style: Theme
+                .of(context)
+                .textTheme
+                .titleSmall),
             5.verticalSpace,
             AppTextFormField(
               controller: passwordController,
@@ -92,20 +100,50 @@ class _LoginFormState extends State<LoginForm> {
               ),
             ),
             16.verticalSpace,
-            Align(
-              alignment: Alignment.centerRight,
-              child: GestureDetector(
-                child: Text("Forgot Password?", style: Theme.of(context).textTheme.titleSmall?.copyWith(color: AppColors.primary)),
-                onTap: () {},
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Transform.translate(
+                      offset: const Offset(-5, 0), // Move checkbox slightly left to align better
+                      child: Checkbox(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        value: isChecked,
+                        onChanged: (newValue) {
+                          setState(() {
+                            isChecked = newValue!;
+                          });
+                        },
+                        activeColor: AppColors.primary,
+                        checkColor: AppColors.white,
+                        side: const BorderSide(color: AppColors.grey, width: 1.5),
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap, // Reduces padding
+                        visualDensity: VisualDensity.compact, // Makes it more compact
+                      ),
+                    ),
+                    Text("Remember me", style: AppTextTheme.font12GreyMedium,),
+                  ],
+                ),
+                GestureDetector(
+                  child: Text("Forgot Password?", style: Theme
+                      .of(context)
+                      .textTheme
+                      .titleSmall
+                      ?.copyWith(color: AppColors.primary)),
+                  onTap: () {},
+                ),
+              ],
             ),
-            PasswordValidation(
-              hasLowerCase: hasLowercase,
-              hasUpperCase: hasUppercase,
-              hasSpecialCharacters: hasSpecialCharacters,
-              hasNumber: hasNumber,
-              hasMinLength: hasMinLength,
-            ),
+            // PasswordValidation(
+            //   hasLowerCase: hasLowercase,
+            //   hasUpperCase: hasUppercase,
+            //   hasSpecialCharacters: hasSpecialCharacters,
+            //   hasNumber: hasNumber,
+            //   hasMinLength: hasMinLength,
+            // ),
             16.verticalSpace,
             CustomButton(formKey: formKey, text: 'Log in',)
           ],
@@ -117,7 +155,9 @@ class _LoginFormState extends State<LoginForm> {
   @override
   void dispose() {
     passwordController.dispose();
+    emailController.dispose();
     super.dispose();
   }
 }
+
 

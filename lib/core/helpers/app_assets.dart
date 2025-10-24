@@ -4,4 +4,7 @@ class AppAssets {
   static const String appLogo = 'assets/images/login_screen/app_logo.png';
   static const String loginScreenHead = 'assets/images/login_screen/head.png';
   static const String lottieLoadingAnimation = 'assets/lottie/loading_animation.json';
+  static const String googleIcon = "assets/svgs/google_icon.svg";
+  static const String facebookIcon = "assets/svgs/facebook_icon.svg";
+  static const String biometric = "assets/svgs/biometric.svg";
 }
