@@ -1,3 +1,5 @@
+import 'package:facial_emotional_detection_graduation_project/core/helpers/extensions.dart';
+import 'package:facial_emotional_detection_graduation_project/core/routing/routes.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingButtons extends StatelessWidget {
@@ -30,9 +32,7 @@ class OnboardingButtons extends StatelessWidget {
             ),
             onPressed: () {
               if (_currentPage == 2) {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) => const Scaffold()),
-                );
+                context.pushReplacementNamed(Routes.loginScreen);
               } else {
                 _pageController.nextPage(
                   duration: const Duration(milliseconds: 300),
@@ -56,9 +56,7 @@ class OnboardingButtons extends StatelessWidget {
             width: double.infinity,
             child: TextButton(
               onPressed: () {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) => const Scaffold()),
-                );
+                context.pushReplacementNamed(Routes.loginScreen);
               },
               child: const Text(
                 'Skip',

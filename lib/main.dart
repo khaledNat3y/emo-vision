@@ -11,7 +11,5 @@ void main() async{
     statusBarColor: AppColors.white.withValues(alpha: 0.04),
   ));
   runApp(const EmovisionApp());
-
-
 }
 
