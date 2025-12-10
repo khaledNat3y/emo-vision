@@ -1,6 +1,5 @@
 import 'package:facial_emotional_detection_graduation_project/core/helpers/logger.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:local_auth_android/local_auth_android.dart';
 
 class BiometricService {
   final LocalAuthentication auth = LocalAuthentication();

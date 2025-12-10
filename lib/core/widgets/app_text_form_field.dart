@@ -15,6 +15,7 @@ class AppTextFormField extends StatelessWidget {
   final Color? backgroundColor;
   final TextEditingController? controller;
   final Function(String?) validator;
+  final FocusNode? focusNode;
 
   const AppTextFormField(
       {super.key,
@@ -28,12 +29,14 @@ class AppTextFormField extends StatelessWidget {
         this.suffixIcon,
         this.backgroundColor,
         this.controller,
-        required this.validator});
+        required this.validator, this.focusNode});
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
+      focusNode: focusNode,
+      obscureText: isObscureText ?? false,
       cursorColor: AppColors.primary,
       decoration: InputDecoration(
         fillColor: backgroundColor ?? Theme.of(context).colorScheme.surface,
@@ -62,7 +65,6 @@ class AppTextFormField extends StatelessWidget {
         hintStyle: hintStyle ?? Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.black),
         suffixIcon: suffixIcon,
       ),
-      obscureText: isObscureText ?? false,
       // style: AppTheme.font14DarkBlueMedium,
       validator: (value) {
         return validator(value);

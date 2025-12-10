@@ -1,24 +1,26 @@
+import 'package:facial_emotional_detection_graduation_project/core/helpers/extensions.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../../../../core/routing/routes.dart';
 import '../../../../core/theming/font_weight_helper.dart';
 
-class DontHaveAccountWidget extends StatelessWidget {
-  const DontHaveAccountWidget({
-    super.key,
+class DontHaveAlreadyHaveAccountWidget extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  const DontHaveAlreadyHaveAccountWidget({
+    super.key, required this.title, required this.subtitle,
   });
 
   @override
   Widget build(BuildContext context) {
     return Text.rich(
         TextSpan(
-          text: "Don't have an account? ",
+          text: title,
           style: Theme.of(context).textTheme.titleSmall,
           children: [
             TextSpan(
-              text: "Sign up",
+              text: subtitle,
               style: Theme.of(context).textTheme.titleSmall!.copyWith(
                 color: Theme.of(context).colorScheme.primary,
                 fontSize: 14.sp,
@@ -29,7 +31,7 @@ class DontHaveAccountWidget extends StatelessWidget {
               ),
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
-                  Navigator.of(context).pushNamed(Routes.signupScreen);
+                  context.pushNamed(Routes.registerScreen);
                 },
             ),
           ],
