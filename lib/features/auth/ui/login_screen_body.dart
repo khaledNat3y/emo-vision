@@ -1,4 +1,6 @@
+import 'package:facial_emotional_detection_graduation_project/core/constant/cache_constants.dart';
 import 'package:facial_emotional_detection_graduation_project/core/helpers/logger.dart';
+import 'package:facial_emotional_detection_graduation_project/core/helpers/shared_pref_helper.dart';
 import 'package:facial_emotional_detection_graduation_project/core/services/biometric_service.dart';
 import 'package:facial_emotional_detection_graduation_project/core/theming/app_text_theme.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/ui/widgets/custom_login_method.dart';
@@ -43,8 +45,7 @@ class LoginScreenBody extends StatelessWidget {
               CustomLoginMethod(
                 iconPath: AppAssets.googleIcon,
                 title: 'Google',
-                onTap: () {
-                },
+                onTap: () {},
               ),
               15.horizontalSpace,
               CustomLoginMethod(
@@ -55,6 +56,12 @@ class LoginScreenBody extends StatelessWidget {
                     if (value) {
                       Logger.debug(value.toString());
                       if (context.mounted) {
+                        SharedPrefHelper.setData(
+                          CacheConstants.isBiometricLogin,
+                          value,
+                        );
+
+                        /// navigate to home
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => Scaffold()),

@@ -100,7 +100,7 @@ class _RegisterFormState extends State<RegisterForm> {
                     ],
                   ),
                 ),
-                16.horizontalSpace,
+                24.horizontalSpace,
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,7 +122,7 @@ class _RegisterFormState extends State<RegisterForm> {
                 ),
               ],
             ),
-            16.verticalSpace,
+            24.verticalSpace,
             Text("Email", style: AppTextTheme.font12GreyMedium),
             AppTextFormField(
               hintText: "Loisbecket@gmail.com",
@@ -135,7 +135,7 @@ class _RegisterFormState extends State<RegisterForm> {
               },
               controller: email,
             ),
-            16.verticalSpace,
+            24.verticalSpace,
             Text("Password", style: AppTextTheme.font12GreyMedium),
             AppTextFormField(
               hintText: "Password",
@@ -169,23 +169,23 @@ class _RegisterFormState extends State<RegisterForm> {
               curve: Curves.easeInOut,
               child: _isPasswordFocused
                   ? Padding(
-                      padding: EdgeInsets.only(top: 12.h),
-                      child: AnimatedOpacity(
-                        opacity: _isPasswordFocused ? 1.0 : 0.0,
-                        duration: const Duration(milliseconds: 300),
-                        child: PasswordValidation(
-                          hasLowerCase: hasLowerCase,
-                          hasUpperCase: hasUpperCase,
-                          hasSpecialCharacters: hasSpecialCharacters,
-                          hasNumber: hasNumber,
-                          hasMinLength: hasMinLength,
-                        ),
-                      ),
-                    )
+                padding: EdgeInsets.only(top: 12.h),
+                child: AnimatedOpacity(
+                  opacity: _isPasswordFocused ? 1.0 : 0.0,
+                  duration: const Duration(milliseconds: 300),
+                  child: PasswordValidation(
+                    hasLowerCase: hasLowerCase,
+                    hasUpperCase: hasUpperCase,
+                    hasSpecialCharacters: hasSpecialCharacters,
+                    hasNumber: hasNumber,
+                    hasMinLength: hasMinLength,
+                  ),
+                ),
+              )
                   : const SizedBox.shrink(),
             ),
 
-            16.verticalSpace,
+            24.verticalSpace,
             Text("Confirm Password", style: AppTextTheme.font12GreyMedium),
             AppTextFormField(
               hintText: "Confirm Password",
@@ -197,15 +197,7 @@ class _RegisterFormState extends State<RegisterForm> {
               controller: confirmPassword,
               isObscureText: isObscureText,
             ),
-            16.verticalSpace,
-            Text("Phone Number", style: AppTextTheme.font12GreyMedium),
-            PhoneTextField(
-              onChanged: (phone) {
-                phoneNumber = phone.completeNumber;
-                Logger.debug(phoneNumber);
-              },
-            ),
-            16.verticalSpace,
+            55.verticalSpace,
             BlocBuilder<RegisterCubit, RegisterState>(
               builder: (context, state) {
                 return CustomButton(
@@ -221,13 +213,12 @@ class _RegisterFormState extends State<RegisterForm> {
                           lastName: lastName,
                         ),
                       );
-                      await SharedPrefHelper.setData(CacheConstants.phoneNumber, phoneNumber);
                     }
                   },
                 );
               },
             ),
-            const RegisterBlocListener(),
+            RegisterBlocListener(email: email.text,),
           ],
         ),
       ),

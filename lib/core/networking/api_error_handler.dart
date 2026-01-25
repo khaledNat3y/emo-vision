@@ -13,14 +13,14 @@ class ApiErrorHandler {
         return e.when(
           connectionError: () => ApiErrorModel(
             message:
-                "No internet connection. Please check your Wi-Fi or mobile data.",
+            "No internet connection. Please check your Wi-Fi or mobile data.",
             icon: Icons.wifi_off,
             errors: [],
             statusCode: LocalStatusCodes.connectionError,
           ),
           connectionTimeout: () => ApiErrorModel(
             message:
-                "The connection took too long. Try checking your internet or try again later.",
+            "The connection took too long. Try checking your internet or try again later.",
             icon: Icons.timer_off,
             statusCode: LocalStatusCodes.connectionTimeout,
             errors: [],
@@ -39,28 +39,59 @@ class ApiErrorHandler {
           ),
           badCertificate: () => ApiErrorModel(
             message:
-                "Security issue detected with the server. Connection not secure.",
+            "Security issue detected with the server. Connection not secure.",
             icon: Icons.security,
             statusCode: LocalStatusCodes.badCertificate,
             errors: [],
           ),
           badResponse: () {
-            final allErrors = e.response?.data['errors'] as Map<String, dynamic>?;
-            final errorsList = <String>[];
-            if (allErrors != null) {
-              allErrors.forEach((key, value) {
-                for (var e in (value as List)) {
-                  final String singleErrorMessage = "$key: $e";
-                  errorsList.add(singleErrorMessage);
+            try {
+              final responseData = e.response?.data;
+              final errorsList = <String>[];
+
+              // Check if response data exists and is a Map
+              if (responseData != null && responseData is Map<String, dynamic>) {
+                final allErrors = responseData['errors'];
+
+                // Check if errors exists and is a Map
+                if (allErrors != null && allErrors is Map<String, dynamic>) {
+                  allErrors.forEach((key, value) {
+                    // ✅ FIXED: Check if value is a List before iterating
+                    if (value is List) {
+                      for (var error in value) {
+                        final String singleErrorMessage = "$key: ${error.toString()}";
+                        errorsList.add(singleErrorMessage);
+                      }
+                    }
+                    // Handle if value is a String directly
+                    else if (value is String) {
+                      errorsList.add("$key: $value");
+                    }
+                  });
                 }
-              });
+              }
+
+              // Get the main message
+              String? mainMessage;
+              if (responseData is Map<String, dynamic>) {
+                mainMessage = responseData['message']?.toString();
+              }
+
+              return ApiErrorModel(
+                statusCode: e.response?.statusCode,
+                message: mainMessage ?? "An error occurred",
+                errors: errorsList,
+                icon: Icons.error_outline,
+              );
+            } catch (error) {
+              // Fallback if parsing fails
+              return ApiErrorModel(
+                statusCode: e.response?.statusCode ?? 500,
+                message: "An error occurred while processing the response",
+                errors: [],
+                icon: Icons.error_outline,
+              );
             }
-            return ApiErrorModel(
-              statusCode: e.response?.statusCode,
-              message: e.response?.data['message'],
-              errors: errorsList,
-              icon: Icons.error_outline,
-            );
           },
           cancel: () => ApiErrorModel(
             message: "The request was cancelled. Please try again.",
@@ -70,7 +101,7 @@ class ApiErrorHandler {
           ),
           unknown: () => ApiErrorModel(
             message:
-                "Something went wrong. Please check your connection and try again.",
+            "Something went wrong. Please check your connection and try again.",
             icon: Icons.error_outline,
             statusCode: LocalStatusCodes.unknown,
             errors: [],

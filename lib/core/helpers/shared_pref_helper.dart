@@ -49,6 +49,13 @@ class SharedPrefHelper {
     final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getBool(key) ?? false;
   }
+  /// Gets a bool value from SharedPreferences with given [key].
+  /// Returns null if the key doesn't exist.
+  static Future<bool?> getBoolOrNull(String key) async {
+    Logger.debug('SharedPrefHelper : getBoolOrNull with key : $key');
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getBool(key); // Returns null if key doesn't exist
+  }
 
   /// Gets a double value from SharedPreferences with given [key].
   static Future<double> getDouble(String key) async {

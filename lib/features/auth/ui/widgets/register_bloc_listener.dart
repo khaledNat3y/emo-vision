@@ -1,3 +1,5 @@
+import 'package:facial_emotional_detection_graduation_project/core/helpers/extensions.dart';
+import 'package:facial_emotional_detection_graduation_project/features/auth/ui/otp_verification_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -6,7 +8,9 @@ import '../../../../core/routing/routes.dart';
 import '../../logic/register_cubit/register_cubit.dart';
 
 class RegisterBlocListener extends StatelessWidget {
-  const RegisterBlocListener({super.key});
+  final String? email;
+
+  const RegisterBlocListener({super.key, this.email});
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +23,10 @@ class RegisterBlocListener extends StatelessWidget {
             data: state.error,
           );
         } else if (state is RegisterSuccess) {
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            Routes.loginScreen,
-            (route) => false,
+          context.pushNamedAndRemoveUntil(
+            Routes.otpScreen,
+            predicate: (route) => false,
+            arguments: email,
           );
         }
       },

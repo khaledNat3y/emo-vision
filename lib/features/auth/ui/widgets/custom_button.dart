@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theming/app_colors.dart';
+import '../../../../core/theming/app_text_theme.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;
@@ -16,20 +17,23 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IgnorePointer(
       ignoring: isLoading == true,  // Prevents clicking while loading
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          animationDuration: const Duration(milliseconds: 500),
-          elevation: 2.7,
-          backgroundColor: AppColors.primary,
-          minimumSize: const Size.fromHeight(55),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+      child: InkWell(
+        onTap: isLoading ?? false ? null : onPressed,
+        child: Container(
+          width: double.infinity,
+          height: MediaQuery.sizeOf(context).height * 0.0786,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(50),
+            gradient: LinearGradient(
+              colors: [
+                isLoading ?? false ? AppColors.grey : AppColors.primary,
+                isLoading ?? false ? AppColors.grey : AppColors.primaryDark
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
           ),
-        ),
-        onPressed: onPressed,
-        child: Text(
-          isLoading! ? "Loading..." : text,
-          style: const TextStyle(color: Colors.white),
+          child: Center(child: Text(isLoading ?? false ? 'Loading...' : text, style: AppTextTheme.font16WhiteMedium,)),
         ),
       ),
     );

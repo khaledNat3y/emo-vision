@@ -2,6 +2,9 @@ import 'package:facial_emotional_detection_graduation_project/core/constant/cach
 import 'package:facial_emotional_detection_graduation_project/core/di/dependency_injection.dart';
 import 'package:facial_emotional_detection_graduation_project/core/helpers/logger.dart';
 import 'package:facial_emotional_detection_graduation_project/emovision_app.dart';
+import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/otp_error_model.dart';
+import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/verify_email_request_body.dart';
+import 'package:facial_emotional_detection_graduation_project/features/auth/data/repo/auth_repo.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,10 +18,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setupDependencies();
   final String accessToken = await SharedPrefHelper.getSecuredString(CacheConstants.accessToken);
-  final String phoneNumber = await SharedPrefHelper.getString(CacheConstants.phoneNumber);
   Logger.debug(accessToken);
-  Logger.debug(phoneNumber);
-
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -26,9 +26,22 @@ void main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: AppColors.white.withValues(alpha: 0.05),
   ));
-
-
+  await checkIfUserFirstLaunch();
   runApp(const EmovisionApp());
+}
+
+
+Future<void> checkIfUserFirstLaunch() async {
+  final hasSeenOnboarding = await SharedPrefHelper.getBool(CacheConstants.hasSeenOnboarding);
+  final isBiometricLoggedIn = await SharedPrefHelper.getBool(CacheConstants.isBiometricLogin);
+  Logger.debug("hasSeenOnboarding: $hasSeenOnboarding");
+  // If false (default), user hasn't seen onboarding
+  // If true, user has completed onboarding
+  isFirstLaunch = !hasSeenOnboarding;
+  if(isBiometricLoggedIn) {
+    isBiometric = true;
+  }
+  Logger.debug("isFirstLaunch: $isFirstLaunch");
 }
 
 

@@ -1,4 +1,6 @@
+import 'package:facial_emotional_detection_graduation_project/core/constant/cache_constants.dart';
 import 'package:facial_emotional_detection_graduation_project/core/helpers/extensions.dart';
+import 'package:facial_emotional_detection_graduation_project/core/helpers/shared_pref_helper.dart';
 import 'package:facial_emotional_detection_graduation_project/core/routing/routes.dart';
 import 'package:flutter/material.dart';
 
@@ -30,9 +32,13 @@ class OnboardingButtons extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
-            onPressed: () {
+            onPressed: () async {
               if (_currentPage == 2) {
-                context.pushReplacementNamed(Routes.loginScreen);
+                // Mark onboarding as seen
+                await SharedPrefHelper.setData(CacheConstants.hasSeenOnboarding, true);
+                if (context.mounted) {
+                  context.pushReplacementNamed(Routes.loginScreen);
+                }
               } else {
                 _pageController.nextPage(
                   duration: const Duration(milliseconds: 300),
@@ -55,8 +61,11 @@ class OnboardingButtons extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: TextButton(
-              onPressed: () {
-                context.pushReplacementNamed(Routes.loginScreen);
+              onPressed: () async {
+                await SharedPrefHelper.setData(CacheConstants.hasSeenOnboarding, true);
+                if (context.mounted) {
+                  context.pushReplacementNamed(Routes.loginScreen);
+                }
               },
               child: const Text(
                 'Skip',
