@@ -16,12 +16,12 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  setupDependencies();
   final String accessToken = await SharedPrefHelper.getSecuredString(CacheConstants.accessToken);
   Logger.debug(accessToken);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  setupDependencies();
   await ScreenUtil.ensureScreenSize();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: AppColors.white.withValues(alpha: 0.05),
@@ -34,6 +34,7 @@ void main() async {
 Future<void> checkIfUserFirstLaunch() async {
   final hasSeenOnboarding = await SharedPrefHelper.getBool(CacheConstants.hasSeenOnboarding);
   final isBiometricLoggedIn = await SharedPrefHelper.getBool(CacheConstants.isBiometricLogin);
+  final loggedInWithGoogle = await SharedPrefHelper.getBool(CacheConstants.signInWithGoogle);
   Logger.debug("hasSeenOnboarding: $hasSeenOnboarding");
   // If false (default), user hasn't seen onboarding
   // If true, user has completed onboarding
@@ -41,7 +42,12 @@ Future<void> checkIfUserFirstLaunch() async {
   if(isBiometricLoggedIn) {
     isBiometric = true;
   }
+  if(loggedInWithGoogle) {
+    isUserLoggedInWithGoogle = true;
+  }
   Logger.debug("isFirstLaunch: $isFirstLaunch");
+  Logger.debug("isBiometric: $isBiometric");
+  Logger.debug("isUserLoggedInWithGoogle: $isUserLoggedInWithGoogle");
 }
 
 

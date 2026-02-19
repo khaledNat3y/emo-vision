@@ -2,6 +2,7 @@ import 'package:facial_emotional_detection_graduation_project/core/helpers/exten
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
  import '../../../core/helpers/spacing.dart';
+import '../../../core/routing/routes.dart';
 import '../../../core/widgets/custom_btn.dart';
 
 class OTPSuccessScreen extends StatelessWidget {
@@ -64,7 +65,7 @@ class OTPSuccessScreen extends StatelessWidget {
                 // Continue Button
                 80.verticalSpace,
                 CustomBtn(title: "Continue", onTap: (){
-                  context.pop();
+                  context.pushReplacementNamed(Routes.loginScreen);
                 },),
               ],
             ),

@@ -7,10 +7,13 @@ import 'package:facial_emotional_detection_graduation_project/features/auth/ui/w
 import 'package:facial_emotional_detection_graduation_project/features/auth/ui/widgets/login_form.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/ui/widgets/login_register_screen_header_column.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/ui/widgets/or_login_with_widget.dart';
+import 'package:facial_emotional_detection_graduation_project/features/home/ui/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../core/helpers/app_assets.dart';
 import '../../../core/theming/app_colors.dart';
+import '../logic/login_cubit/login_cubit.dart';
 
 class LoginScreenBody extends StatelessWidget {
   const LoginScreenBody({super.key});
@@ -45,7 +48,10 @@ class LoginScreenBody extends StatelessWidget {
               CustomLoginMethod(
                 iconPath: AppAssets.googleIcon,
                 title: 'Google',
-                onTap: () {},
+                onTap: () async {
+                  await context.read<LoginCubit>().signInWithGoogle();
+                  // await SharedPrefHelper.setData(CacheConstants.signInWithGoogle, true);
+                },
               ),
               15.horizontalSpace,
               CustomLoginMethod(
@@ -60,11 +66,10 @@ class LoginScreenBody extends StatelessWidget {
                           CacheConstants.isBiometricLogin,
                           value,
                         );
-
                         /// navigate to home
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => Scaffold()),
+                          MaterialPageRoute(builder: (context) => const HomeScreen()),
                         );
                       }
                     }

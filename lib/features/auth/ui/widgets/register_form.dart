@@ -1,6 +1,3 @@
-import 'package:facial_emotional_detection_graduation_project/core/constant/cache_constants.dart';
-import 'package:facial_emotional_detection_graduation_project/core/helpers/logger.dart';
-import 'package:facial_emotional_detection_graduation_project/core/helpers/shared_pref_helper.dart';
 import 'package:facial_emotional_detection_graduation_project/core/theming/app_colors.dart';
 import 'package:facial_emotional_detection_graduation_project/core/theming/app_text_theme.dart';
 import 'package:facial_emotional_detection_graduation_project/core/widgets/app_text_form_field.dart';
@@ -9,14 +6,13 @@ import 'package:facial_emotional_detection_graduation_project/core/helpers/app_r
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/register_request_body.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/logic/register_cubit/register_cubit.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/ui/widgets/custom_button.dart';
-import 'package:facial_emotional_detection_graduation_project/features/auth/ui/widgets/phone_text_field.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/ui/widgets/register_bloc_listener.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class RegisterForm extends StatefulWidget {
-  const RegisterForm({super.key});
+  const RegisterForm({super.key,});
 
   @override
   State<RegisterForm> createState() => _RegisterFormState();

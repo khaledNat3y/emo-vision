@@ -42,8 +42,9 @@ class AppRouter {
         );
 
       case Routes.homeScreen:
+        final email = arguments as String?;
         return RouterTransitions.buildFade(
-          const HomeScreen(),
+          HomeScreen(email: email,),
         );
 
       case Routes.otpScreen:

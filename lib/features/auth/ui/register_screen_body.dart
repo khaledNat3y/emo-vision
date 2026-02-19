@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../core/helpers/app_assets.dart';
 
 class RegisterScreenBody extends StatelessWidget {
-  const RegisterScreenBody({super.key});
+  const RegisterScreenBody({super.key,});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class RegisterScreenBody extends StatelessWidget {
             ],
           ),
           24.verticalSpace,
-          const RegisterForm(),
+           const RegisterForm(),
         ],
       ),
     );

@@ -1,4 +1,4 @@
-class VerifyEmailRequestBody {
+class  VerifyEmailRequestBody {
   final String email;
   final String otp;
 

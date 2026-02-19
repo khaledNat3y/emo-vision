@@ -16,6 +16,8 @@ class AppTextFormField extends StatelessWidget {
   final TextEditingController? controller;
   final Function(String?) validator;
   final FocusNode? focusNode;
+  final bool? isReadOnly;
+  final String? initialValue;
 
   const AppTextFormField(
       {super.key,
@@ -29,7 +31,7 @@ class AppTextFormField extends StatelessWidget {
         this.suffixIcon,
         this.backgroundColor,
         this.controller,
-        required this.validator, this.focusNode});
+        required this.validator, this.focusNode, this.isReadOnly, this.initialValue});
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +40,8 @@ class AppTextFormField extends StatelessWidget {
       focusNode: focusNode,
       obscureText: isObscureText ?? false,
       cursorColor: AppColors.primary,
+      readOnly: isReadOnly ?? false,
+      initialValue: initialValue,
       decoration: InputDecoration(
         fillColor: backgroundColor ?? Theme.of(context).colorScheme.surface,
         filled: true,

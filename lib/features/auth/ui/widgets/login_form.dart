@@ -141,7 +141,7 @@ class _LoginFormState extends State<LoginForm> {
                 );
               },
             ),
-            const LoginBlocListener(),
+            LoginBlocListener(email: emailController.text,),
           ],
         ),
       ),

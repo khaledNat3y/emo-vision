@@ -2,9 +2,11 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:facial_emotional_detection_graduation_project/core/networking/api_result.dart';
 import 'package:facial_emotional_detection_graduation_project/core/services/auth_service.dart';
+import 'package:facial_emotional_detection_graduation_project/core/services/firebase_services.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/login_request_body.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/login_response.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/verify_email_request_body.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../../../core/constant/cache_constants.dart';
 import '../../../../core/helpers/logger.dart';
@@ -15,8 +17,9 @@ import '../models/register_response.dart';
 
 class AuthRepo {
   final AuthService authService;
+  final FirebaseServices firebaseServices;
 
-  AuthRepo(this.authService);
+  AuthRepo(this.authService, this.firebaseServices);
 
   Future<ApiResult<LoginResponse>> login({
     required LoginRequestBody body,
@@ -126,4 +129,15 @@ class AuthRepo {
       );
     }
   }
+
+  Future<UserCredential> signInWithGoogle() {
+    return firebaseServices.signInWithGoogle();
+  }
+
+  Future<void> signOut() {
+    return firebaseServices.signOut();
+  }
+
+
+
 }

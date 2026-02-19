@@ -8,8 +8,9 @@ import '../../../../core/theming/font_weight_helper.dart';
 class DontHaveAlreadyHaveAccountWidget extends StatelessWidget {
   final String title;
   final String subtitle;
+  final Function()? onTap;
   const DontHaveAlreadyHaveAccountWidget({
-    super.key, required this.title, required this.subtitle,
+    super.key, required this.title, required this.subtitle, this.onTap,
   });
 
   @override
@@ -30,9 +31,7 @@ class DontHaveAlreadyHaveAccountWidget extends StatelessWidget {
                 decorationThickness: 2,
               ),
               recognizer: TapGestureRecognizer()
-                ..onTap = () {
-                  context.pushNamed(Routes.registerScreen);
-                },
+                ..onTap = onTap,
             ),
           ],
         )

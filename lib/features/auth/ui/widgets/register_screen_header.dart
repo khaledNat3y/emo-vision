@@ -3,8 +3,9 @@ import 'package:facial_emotional_detection_graduation_project/core/theming/app_c
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/routing/routes.dart';
 import 'dont_have_already_have_account_widget.dart';
-
+@immutable
 class RegisterScreenHeader extends StatelessWidget {
   const RegisterScreenHeader({super.key});
 
@@ -23,7 +24,9 @@ class RegisterScreenHeader extends StatelessWidget {
           30.verticalSpace,
           Text('Register', style: Theme.of(context).textTheme.headlineLarge),
           8.verticalSpace,
-          const DontHaveAlreadyHaveAccountWidget(title: "Already have an account?", subtitle: "Log in",),
+          DontHaveAlreadyHaveAccountWidget(title: "Already have an account?", subtitle: "Log in",onTap: () {
+            context.pushReplacementNamed(Routes.loginScreen);
+          },),
         ],
       ),
     );

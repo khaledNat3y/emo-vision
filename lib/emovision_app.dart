@@ -26,7 +26,7 @@ class EmovisionApp extends StatelessWidget {
               ? Routes.onBoardingScreen
               : isBiometric
               ? Routes.homeScreen
-              : Routes.loginScreen,
+              : isUserLoggedInWithGoogle ? Routes.homeScreen : Routes.loginScreen,
           onGenerateRoute: AppRouter.generateRoute,
         );
       },

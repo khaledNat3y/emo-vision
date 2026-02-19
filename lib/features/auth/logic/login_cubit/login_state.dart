@@ -1,16 +1,26 @@
 part of 'login_cubit.dart';
 
-@immutable
-sealed class LoginState {}
+abstract class LoginState {}
 
-final class LoginInitial extends LoginState {}
+class LoginInitial extends LoginState {}
 
-final class LoginSuccess extends LoginState {}
+class LoginLoading extends LoginState {}
 
-final class LoginLoading extends LoginState {}
+class LoginWithGoogleLoading extends LoginState {}
 
-final class LoginError extends LoginState {
-  final ApiErrorModel error;
-  LoginError({required this.error});
+class LoginWithGoogleSuccess extends LoginState {
+  final String? email;
+  LoginWithGoogleSuccess({this.email});
 }
 
+class LoginSuccess extends LoginState {
+  final LoginResponse? loginResponse;
+  final String? email;
+  LoginSuccess({this.loginResponse, this.email});
+}
+
+class LoginError extends LoginState {
+  final ApiErrorModel error;
+
+  LoginError({required this.error});
+}

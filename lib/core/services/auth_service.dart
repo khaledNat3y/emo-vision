@@ -22,4 +22,5 @@ abstract class AuthService {
   Future<RegisterResponse> register({@Body() required RegisterRequestBody body});
   @POST(ApiConstants.verifyEmail)
   Future<dynamic> verifyEmail({@Body() required VerifyEmailRequestBody body});
+
 }
