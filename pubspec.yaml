@@ -40,13 +40,32 @@ dependencies:
   local_auth: ^2.3.0
   flutter_svg: ^2.2.1
   local_auth_android: ^1.0.52
+  firebase_core: ^4.2.0
+  firebase_auth: ^6.1.4
+  cloud_firestore: ^6.0.3
+  dartz: ^0.10.1
+  go_transitions: ^0.8.2
+  flutter_bloc: ^9.1.1
+  get_it: ^9.0.5
+  lottie: ^3.3.1
+  google_sign_in: ^7.2.0
+  intl_phone_field: ^3.2.0
+  retrofit: ^4.9.0
+  pretty_dio_logger: ^1.4.0
+  dio: ^5.9.0
+  build_runner: ^2.10.3
+  retrofit_generator: ^10.1.4
+  flutter_secure_storage: ^9.2.4
+  shared_preferences: ^2.5.3
+  pin_code_fields: ^8.0.1
+  image_picker: ^1.2.1
+  ffmpeg_kit_flutter_new: ^4.1.0
+  tflite_flutter: ^0.12.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_secure_storage: ^9.2.4
-  shared_preferences: ^2.5.3
   smooth_page_indicator: ^1.2.1
 
   # The "flutter_lints" package below contains a set of recommended lints to
