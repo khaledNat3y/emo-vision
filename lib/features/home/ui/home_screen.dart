@@ -1,14 +1,23 @@
+import 'dart:io';
+
 import 'package:facial_emotional_detection_graduation_project/core/constant/cache_constants.dart';
+import 'package:facial_emotional_detection_graduation_project/core/helpers/logger.dart';
 import 'package:facial_emotional_detection_graduation_project/core/helpers/shared_pref_helper.dart';
+import 'package:facial_emotional_detection_graduation_project/core/helpers/spacing.dart';
+import 'package:facial_emotional_detection_graduation_project/core/theming/app_colors.dart';
 import 'package:flutter/material.dart';
-import '../../../core/theming/app_colors.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'widgets/home_header.dart';
-import 'widgets/feature_card.dart';
-import 'widgets/signout_button.dart';
+import 'widgets/welcome_message.dart';
+import 'widgets/video_upload_section.dart';
+import 'widgets/analyze_button.dart';
 
 class HomeScreen extends StatefulWidget {
   final String? email;
-  const HomeScreen({super.key, this.email});
+  final String? userName;
+  final String? photoUrl;
+  const HomeScreen({super.key, this.email, this.userName, this.photoUrl});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -16,130 +25,203 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String? _userEmail;
-  bool _isLoading = true;
+  String? _userName;
+  String? _photoUrl;
+  bool _isLoadingEmail = true;
+  File? _selectedVideo;
+  bool _isBiometricLogin = false;
+  bool _isGoogleLogin = false;
 
   @override
   void initState() {
     super.initState();
-    _loadUserEmail();
+    _loadUserInfo();
   }
 
-  Future<void> _loadUserEmail() async {
+  Future<void> _loadUserInfo() async {
     try {
-      // First priority: email passed from previous screen
+      // Check login method flags
+      final isBiometric = await SharedPrefHelper.getBool(CacheConstants.isBiometricLogin);
+      final isGoogle = await SharedPrefHelper.getBool(CacheConstants.signInWithGoogle);
+      
+      setState(() {
+        _isBiometricLogin = isBiometric;
+        _isGoogleLogin = isGoogle;
+      });
+
+      // First check if email was passed as argument (might contain Map with email, userName, photoUrl)
       if (widget.email != null && widget.email!.isNotEmpty) {
         setState(() {
           _userEmail = widget.email;
-          _isLoading = false;
+          _userName = widget.userName;
+          _photoUrl = widget.photoUrl;
+          _isLoadingEmail = false;
         });
         return;
       }
 
-      final String normalEmail = await SharedPrefHelper.getString(CacheConstants.userEmail);
-      final String googleEmail = await SharedPrefHelper.getString(CacheConstants.userEmailFromGoogle);
+      // Get email based on login method
+      String? email;
+      String? name;
+      String? photoUrl;
+
+      if (_isBiometricLogin) {
+        // For biometric login, get stored email and name
+        email = await SharedPrefHelper.getString(CacheConstants.userEmailFromBiometric);
+        name = await SharedPrefHelper.getString(CacheConstants.userNameFromBiometric);
+      } else if (_isGoogleLogin) {
+        // For Google login, get stored email, name and photo URL
+        email = await SharedPrefHelper.getString(CacheConstants.userEmailFromGoogle);
+        name = await SharedPrefHelper.getString(CacheConstants.userNameFromGoogle);
+        photoUrl = await SharedPrefHelper.getString(CacheConstants.userPhotoUrlFromGoogle);
+      } else {
+        // For email/password login
+        email = await SharedPrefHelper.getString(CacheConstants.userEmail);
+        name = await SharedPrefHelper.getString(CacheConstants.userName);
+        photoUrl = await SharedPrefHelper.getString(CacheConstants.userPhotoUrl);
+      }
 
       setState(() {
-        if (normalEmail.isNotEmpty) {
-          _userEmail = normalEmail;
-        } else if (googleEmail.isNotEmpty) {
-          _userEmail = googleEmail;
-        } else {
-          _userEmail = null; // No email found
-        }
-        _isLoading = false;
+        _userEmail = email?.isNotEmpty == true ? email : null;
+        _userName = name?.isNotEmpty == true ? name : null;
+        _photoUrl = photoUrl?.isNotEmpty == true ? photoUrl : null;
+        _isLoadingEmail = false;
       });
+      
+      Logger.debug('User info loaded - Email: $_userEmail, Name: $_userName, PhotoURL: $_photoUrl, Biometric: $_isBiometricLogin, Google: $_isGoogleLogin');
     } catch (e) {
       setState(() {
         _userEmail = null;
-        _isLoading = false;
+        _userName = null;
+        _photoUrl = null;
+        _isLoadingEmail = false;
       });
-      debugPrint('Error loading email: $e');
+      Logger.debug('Error loading user info: $e');
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    // Show loading indicator while fetching email
-    if (_isLoading) {
-      return const Scaffold(
-        backgroundColor: AppColors.backgroundLight,
-        body: Center(
-          child: CircularProgressIndicator(
-            color: AppColors.primary,
-          ),
-        ),
-      );
+  void _onVideoSelected(File? video) {
+    setState(() {
+      _selectedVideo = video;
+    });
+    if (video != null) {
+      Logger.debug('Video selected: ${video.path}');
     }
+  }
 
-    // Determine email to display
-    final String userEmail = _userEmail ?? "No email provided";
-    final String userName = _userEmail != null
-        ? _userEmail!.split('@')[0]
-        : "User";
-
-    return Scaffold(
-      backgroundColor: AppColors.backgroundLight,
-      body: SafeArea(
-        child: Column(
+  void _showAnalysisDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.r),
+        ),
+        title: Row(
           children: [
-            // Header Section
-            HomeHeader(
-              userName: userName,
-              email: userEmail,
+            Container(
+              padding: EdgeInsets.all(8.w),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withAlpha(25),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.analytics_rounded,
+                color: AppColors.primary,
+              ),
             ),
-
-            // Main Content
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 40),
-
-                    // Main Feature Cards
-                    FeatureCard(
-                      icon: Icons.camera_alt_outlined,
-                      title: 'Start Detection',
-                      subtitle: 'Detect emotions in real-time',
-                      color: AppColors.primary,
-                      onTap: () {
-                        // Navigate to camera/detection screen
-                      },
-                    ),
-                    const SizedBox(height: 16),
-
-                    FeatureCard(
-                      icon: Icons.image_outlined,
-                      title: 'Upload Image',
-                      subtitle: 'Analyze emotions from photos',
-                      color: AppColors.secondary,
-                      onTap: () {
-                        // Navigate to image upload screen
-                      },
-                    ),
-                    const SizedBox(height: 16),
-
-                    FeatureCard(
-                      icon: Icons.history_outlined,
-                      title: 'History',
-                      subtitle: 'View past detections',
-                      color: AppColors.tertiary,
-                      onTap: () {
-                        // Navigate to history screen
-                      },
-                    ),
-
-                    const Spacer(),
-
-                    // Sign Out Button
-                    const SignOutButton(),
-                    const SizedBox(height: 24),
-                  ],
-                ),
+            SizedBox(width: 12.w),
+            Text(
+              'Analysis Ready',
+              style: TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ],
         ),
+        content: Text(
+          'Your video "${_selectedVideo?.path.split('/').last}" is ready for analysis. This will detect emotions in the video.',
+          style: TextStyle(
+            fontSize: 14.sp,
+            color: AppColors.grey,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                color: AppColors.grey,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              // TODO: Implement video analysis
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Starting video analysis...'),
+                  backgroundColor: AppColors.success,
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+            ),
+            child: Text(
+              'Analyze',
+              style: TextStyle(
+                color: AppColors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // BlocProvider is already provided by app_router.dart
+    return Scaffold(
+      body: SafeArea(
+        child: _isLoadingEmail
+            ? const Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Header Section
+                    HomeHeader(photoUrl: _photoUrl),
+                    32.verticalSpace,
+                    
+                    // Welcome Message
+                    WelcomeMessage(
+                      userEmail: _userEmail,
+                      userName: _userName,
+                      isBiometricLogin: _isBiometricLogin,
+                      isGoogleLogin: _isGoogleLogin,
+                    ),
+                    32.verticalSpace,
+                    
+                    // Video Upload Section
+                    VideoUploadSection(onVideoSelected: _onVideoSelected),
+                    24.verticalSpace,
+                    
+                    // Action Button (when video is selected)
+                    if (_selectedVideo != null) 
+                      AnalyzeButton(onTap: _showAnalysisDialog),
+                  ],
+                ),
+              ),
       ),
     );
   }

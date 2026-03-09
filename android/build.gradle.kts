@@ -2,6 +2,9 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        // ✅ Fix for ffmpeg_kit_flutter Maven not found error
+        maven { url = uri("https://jitpack.io") }
+        maven { url = uri("https://packagecloud.io/arthenica/maven/maven2") }
     }
 }
 

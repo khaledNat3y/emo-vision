@@ -5,6 +5,7 @@ import 'package:facial_emotional_detection_graduation_project/core/services/auth
 import 'package:facial_emotional_detection_graduation_project/core/services/firebase_services.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/login_request_body.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/login_response.dart';
+import 'package:facial_emotional_detection_graduation_project/features/home/data/model/user_model.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/verify_email_request_body.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -137,7 +138,6 @@ class AuthRepo {
   Future<void> signOut() {
     return firebaseServices.signOut();
   }
-
 
 
 }
