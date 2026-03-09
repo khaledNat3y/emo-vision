@@ -1,13 +1,13 @@
 import 'package:facial_emotional_detection_graduation_project/core/constant/cache_constants.dart';
 import 'package:facial_emotional_detection_graduation_project/core/helpers/logger.dart';
 import 'package:facial_emotional_detection_graduation_project/core/helpers/shared_pref_helper.dart';
+import 'package:facial_emotional_detection_graduation_project/core/routing/routes.dart';
 import 'package:facial_emotional_detection_graduation_project/core/services/biometric_service.dart';
 import 'package:facial_emotional_detection_graduation_project/core/theming/app_text_theme.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/ui/widgets/custom_login_method.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/ui/widgets/login_form.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/ui/widgets/login_register_screen_header_column.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/ui/widgets/or_login_with_widget.dart';
-import 'package:facial_emotional_detection_graduation_project/features/home/ui/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -66,10 +66,15 @@ class LoginScreenBody extends StatelessWidget {
                           CacheConstants.isBiometricLogin,
                           value,
                         );
-                        /// navigate to home
-                        Navigator.push(
+                        // Store a default name for biometric login
+                        SharedPrefHelper.setData(
+                          CacheConstants.userNameFromBiometric,
+                          'Biometric User',
+                        );
+                        // Navigate to home with proper route and BlocProvider
+                        Navigator.pushReplacementNamed(
                           context,
-                          MaterialPageRoute(builder: (context) => const HomeScreen()),
+                          Routes.homeScreen,
                         );
                       }
                     }

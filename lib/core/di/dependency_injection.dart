@@ -6,6 +6,8 @@ import 'package:facial_emotional_detection_graduation_project/features/auth/data
 import 'package:facial_emotional_detection_graduation_project/features/auth/logic/login_cubit/login_cubit.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/logic/otp_cubit/otp_cubit.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/logic/register_cubit/register_cubit.dart';
+import 'package:facial_emotional_detection_graduation_project/features/home/data/repo/home_repo.dart';
+import 'package:facial_emotional_detection_graduation_project/features/home/logic/cubit/home_cubit.dart';
 import 'package:get_it/get_it.dart';
 
 
@@ -20,8 +22,10 @@ void _setupAuth() {
   getIt.registerSingleton<AuthService>(AuthService(getIt()));
   getIt.registerSingleton<FirebaseServices>(FirebaseServices());
   getIt.registerSingleton<AuthRepo>(AuthRepo(getIt<AuthService>(), getIt<FirebaseServices>()));
+  getIt.registerSingleton<HomeRepo>(HomeRepo(getIt<FirebaseServices>()));
   /// cubits
   getIt.registerFactory(() => LoginCubit(getIt<AuthRepo>()));
   getIt.registerFactory(() => RegisterCubit(getIt<AuthRepo>()));
   getIt.registerFactory(() => OtpCubit(getIt<AuthRepo>()));
+  getIt.registerFactory(() => HomeCubit(getIt<HomeRepo>()));
 }

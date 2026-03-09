@@ -10,7 +10,10 @@ class LoginWithGoogleLoading extends LoginState {}
 
 class LoginWithGoogleSuccess extends LoginState {
   final String? email;
-  LoginWithGoogleSuccess({this.email});
+  final String? userName;
+  final String? photoUrl;
+  
+  LoginWithGoogleSuccess({this.email, this.userName, this.photoUrl});
 }
 
 class LoginSuccess extends LoginState {

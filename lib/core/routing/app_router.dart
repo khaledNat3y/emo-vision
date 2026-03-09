@@ -8,6 +8,7 @@ import 'package:facial_emotional_detection_graduation_project/features/auth/logi
 import 'package:facial_emotional_detection_graduation_project/features/auth/ui/otp_scuccess_screen.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/ui/otp_verification_screen.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/ui/register_screen.dart';
+import 'package:facial_emotional_detection_graduation_project/features/home/logic/cubit/home_cubit.dart';
 import 'package:facial_emotional_detection_graduation_project/features/home/ui/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,13 +43,19 @@ class AppRouter {
         );
 
       case Routes.homeScreen:
-        final email = arguments as String?;
+        final userInfo = arguments as Map<String, dynamic>?; // Expecting a map with email, userName, photoUrl
+        final email = userInfo?['email'] as String?;
+        final userName = userInfo?['userName'] as String?;
+        final photoUrl = userInfo?['photoUrl'] as String?;
         return RouterTransitions.buildFade(
-          HomeScreen(email: email,),
+          BlocProvider(
+            create: (context) => getIt<HomeCubit>()..getCurrentUserInfo(),
+            child: HomeScreen(email: email, userName: userName, photoUrl: photoUrl),
+          ),
         );
 
       case Routes.otpScreen:
-      // Get email from arguments
+        // Get email from arguments
         final email = arguments as String?;
 
         // Validate that email was passed
@@ -74,9 +81,7 @@ class AppRouter {
         );
 
       case Routes.otpSuccessScreen:
-        return RouterTransitions.buildFade(
-          const OTPSuccessScreen(),
-        );
+        return RouterTransitions.buildFade(const OTPSuccessScreen());
 
       default:
         return null;

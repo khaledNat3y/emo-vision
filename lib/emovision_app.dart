@@ -11,6 +11,7 @@ class EmovisionApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       minTextAdapt: true,
@@ -24,9 +25,13 @@ class EmovisionApp extends StatelessWidget {
           themeMode: ThemeMode.light,
           initialRoute: isFirstLaunch
               ? Routes.onBoardingScreen
+              : isUserLoggedInWithEmailAndPasswordAndHasValidAccessToken
+              ? Routes.homeScreen
               : isBiometric
               ? Routes.homeScreen
-              : isUserLoggedInWithGoogle ? Routes.homeScreen : Routes.loginScreen,
+              : isUserLoggedInWithGoogle
+              ? Routes.homeScreen
+              : Routes.loginScreen,
           onGenerateRoute: AppRouter.generateRoute,
         );
       },

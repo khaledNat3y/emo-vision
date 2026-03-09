@@ -31,14 +31,16 @@ class LoginCubit extends Cubit<LoginState> {
     try {
       final result = await authRepo.signInWithGoogle();
       final email = result.additionalUserInfo?.profile?['email'] as String?;
-      Logger.info('Email: $email');
-      emit(LoginWithGoogleSuccess(email: email));
+      final userName = result.user?.displayName ?? result.additionalUserInfo?.profile?['name'] as String? ?? 'Google User';
+      final photoUrl = result.user?.photoURL ?? result.additionalUserInfo?.profile?['picture'] as String?;
+      Logger.info('Email: $email, Name: $userName, Photo URL: $photoUrl');
+      emit(LoginWithGoogleSuccess(email: email, userName: userName, photoUrl: photoUrl));
       return result;
     } catch (e) {
       emit(LoginError(error: ApiErrorModel(
           message: "Google sign-in cancelled",
           statusCode: null,
-          errors: []
+          errors: [e.toString()],
       )));
       return null;
     }

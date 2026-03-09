@@ -9,6 +9,7 @@ plugins {
 }
 
 android {
+
     namespace = "com.example.facial_emotional_detection_graduation_project"
     compileSdk = 36
     ndkVersion = "27.0.12077973"
@@ -43,4 +44,8 @@ android {
 }
 flutter {
     source = "../.."
+}
+
+dependencies {
+    implementation("org.tensorflow:tensorflow-lite-select-tf-ops:latest.release")
 }

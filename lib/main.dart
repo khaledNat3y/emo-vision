@@ -1,10 +1,8 @@
 import 'package:facial_emotional_detection_graduation_project/core/constant/cache_constants.dart';
 import 'package:facial_emotional_detection_graduation_project/core/di/dependency_injection.dart';
 import 'package:facial_emotional_detection_graduation_project/core/helpers/logger.dart';
+import 'package:facial_emotional_detection_graduation_project/core/services/firebase_services.dart';
 import 'package:facial_emotional_detection_graduation_project/emovision_app.dart';
-import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/otp_error_model.dart';
-import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/verify_email_request_body.dart';
-import 'package:facial_emotional_detection_graduation_project/features/auth/data/repo/auth_repo.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -26,8 +24,10 @@ void main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: AppColors.white.withValues(alpha: 0.05),
   ));
+  FirebaseServices firebaseServices = getIt<FirebaseServices>();
+  await firebaseServices.signOut();
   await checkIfUserFirstLaunch();
-  runApp(const EmovisionApp());
+  runApp(const EmovisionApp()); 
 }
 
 
@@ -35,6 +35,7 @@ Future<void> checkIfUserFirstLaunch() async {
   final hasSeenOnboarding = await SharedPrefHelper.getBool(CacheConstants.hasSeenOnboarding);
   final isBiometricLoggedIn = await SharedPrefHelper.getBool(CacheConstants.isBiometricLogin);
   final loggedInWithGoogle = await SharedPrefHelper.getBool(CacheConstants.signInWithGoogle);
+  final String? accessToken = await SharedPrefHelper.getSecuredString(CacheConstants.accessToken);
   Logger.debug("hasSeenOnboarding: $hasSeenOnboarding");
   // If false (default), user hasn't seen onboarding
   // If true, user has completed onboarding
@@ -44,6 +45,9 @@ Future<void> checkIfUserFirstLaunch() async {
   }
   if(loggedInWithGoogle) {
     isUserLoggedInWithGoogle = true;
+  }
+  if(accessToken != null && accessToken.isNotEmpty) {
+    isUserLoggedInWithEmailAndPasswordAndHasValidAccessToken = true;
   }
   Logger.debug("isFirstLaunch: $isFirstLaunch");
   Logger.debug("isBiometric: $isBiometric");
