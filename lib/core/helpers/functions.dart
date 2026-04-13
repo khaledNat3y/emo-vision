@@ -1,34 +1,31 @@
 import 'package:facial_emotional_detection_graduation_project/core/helpers/spacing.dart';
 import 'package:flutter/material.dart';
-
-import '../networking/api_error_model.dart';
 import '../theming/app_colors.dart';
 import 'logger.dart';
 
+/// Shows an enhanced dialog for errors or success messages.
+///
+/// For errors: pass [isError] = true, [message], optional [statusCode] and [errors].
+/// For success: pass [isError] = false, [message], optional [successTitle].
 void showEnhancedDialog({
   required BuildContext context,
   required bool isError,
-  required ApiErrorModel data,
+  required String message,
+  int? statusCode,
+  List<String> errors = const [],
+  IconData? icon,
   String? successTitle,
-  String? successMessage,
   String? errorTitle,
 }) {
-  // Extract dialog details
-  final String message;
-  final IconData icon;
-  final int? statusCode;
   final Color iconColor;
   final Color backgroundColor;
   final String title;
+  final IconData dialogIcon;
 
   if (isError) {
-    // Handle error state
-    message = data.message ?? 'An error occurred';
-    icon = data.icon ?? Icons.error_outline;
-    statusCode = data.statusCode;
+    dialogIcon = icon ?? Icons.error_outline;
     title = errorTitle ?? _getErrorTitle(statusCode);
 
-    // Customize colors based on status code
     if (statusCode != null && statusCode >= 500) {
       iconColor = Colors.orange.shade700;
       backgroundColor = Colors.orange.shade50;
@@ -40,10 +37,7 @@ void showEnhancedDialog({
       backgroundColor = Colors.amber.shade50;
     }
   } else {
-    // Handle success state
-    message = successMessage ?? 'Operation completed successfully!';
-    icon = Icons.check_circle_outline;
-    statusCode = null;
+    dialogIcon = Icons.check_circle_outline;
     iconColor = Colors.green.shade700;
     backgroundColor = Colors.green.shade50;
     title = successTitle ?? 'Success';
@@ -64,11 +58,7 @@ void showEnhancedDialog({
               color: backgroundColor,
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              icon,
-              color: iconColor,
-              size: 28,
-            ),
+            child: Icon(dialogIcon, color: iconColor, size: 28),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -102,12 +92,9 @@ void showEnhancedDialog({
         children: [
           Text(
             message,
-            style: const TextStyle(
-              fontSize: 16,
-              height: 1.5,
-            ),
+            style: const TextStyle(fontSize: 16, height: 1.5),
           ),
-          if (isError && data.errors.isNotEmpty) ...[
+          if (isError && errors.isNotEmpty) ...[
             const SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.all(12),
@@ -120,11 +107,8 @@ void showEnhancedDialog({
                 children: [
                   Row(
                     children: [
-                      Icon(
-                        Icons.info_outline,
-                        size: 18,
-                        color: Colors.grey.shade700,
-                      ),
+                      Icon(Icons.info_outline,
+                          size: 18, color: Colors.grey.shade700),
                       const SizedBox(width: 8),
                       Text(
                         'Details:',
@@ -137,25 +121,19 @@ void showEnhancedDialog({
                     ],
                   ),
                   verticalSpace(8),
-                  ...data.errors.map((e) {
+                  ...errors.map((e) {
                     Logger.error('Error: $e');
-                    Logger.error('Error: ${data.errors.first}');
-                    Logger.error('Error: ${data.errors[0]}');
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 4),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            '• ',
-                            style: TextStyle(
-                              color: Colors.grey.shade700,
-                              fontSize: 14,
-                            ),
-                          ),
+                          Text('• ',
+                              style: TextStyle(
+                                  color: Colors.grey.shade700, fontSize: 14)),
                           Expanded(
                             child: Text(
-                              data.errors[0],
+                              e,
                               style: TextStyle(
                                 color: Colors.grey.shade700,
                                 fontSize: 14,
@@ -181,19 +159,14 @@ void showEnhancedDialog({
               ),
               child: Row(
                 children: [
-                  Icon(
-                    Icons.lightbulb_outline,
-                    size: 18,
-                    color: Colors.blue.shade700,
-                  ),
+                  Icon(Icons.lightbulb_outline,
+                      size: 18, color: Colors.blue.shade700),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       _getHelpText(statusCode),
                       style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.blue.shade700,
-                      ),
+                          fontSize: 13, color: Colors.blue.shade700),
                     ),
                   ),
                 ],
@@ -209,34 +182,24 @@ void showEnhancedDialog({
           child: Text(
             'OK',
             style: TextStyle(
-              color: Colors.grey.shade600,
-              fontWeight: FontWeight.w600,
-            ),
+                color: Colors.grey.shade600,
+                fontWeight: FontWeight.w600),
           ),
         ),
       ]
           : [
         ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          onPressed: () => Navigator.of(context).pop(),
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.green.shade600,
             foregroundColor: Colors.white,
             padding: const EdgeInsets.symmetric(
-              horizontal: 32,
-              vertical: 12,
-            ),
+                horizontal: 32, vertical: 12),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
+                borderRadius: BorderRadius.circular(8)),
           ),
-          child: const Text(
-            'Continue',
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
+          child: const Text('Continue',
+              style: TextStyle(fontWeight: FontWeight.w600)),
         ),
       ],
       actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -245,30 +208,17 @@ void showEnhancedDialog({
 }
 
 String _getErrorTitle(int? statusCode) {
-  if (statusCode == null) {
-    return 'Error';
-  }
-
-  if (statusCode == 400) {
-    return 'Validation Error';
-  } else if (statusCode == 401) {
-    return 'Authentication Failed';
-  } else if (statusCode == 403) {
-    return 'Access Denied';
-  } else if (statusCode == 404) {
-    return 'Not Found';
-  } else if (statusCode >= 500) {
-    return 'Server Error';
-  } else {
-    return 'Error';
-  }
+  if (statusCode == null) return 'Error';
+  if (statusCode == 400) return 'Validation Error';
+  if (statusCode == 401) return 'Authentication Failed';
+  if (statusCode == 403) return 'Access Denied';
+  if (statusCode == 404) return 'Not Found';
+  if (statusCode >= 500) return 'Server Error';
+  return 'Error';
 }
 
 String _getHelpText(int? statusCode) {
-  if (statusCode == null) {
-    return 'Please check your input and try again.';
-  }
-
+  if (statusCode == null) return 'Please check your input and try again.';
   switch (statusCode) {
     case 400:
       return 'Please check the information you provided and try again.';

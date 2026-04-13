@@ -1,6 +1,20 @@
-part of 'logout_cubit.dart';
+abstract class LogoutState {
+  const LogoutState();
+}
 
-@immutable
-sealed class LogoutState {}
+class LogoutInitial extends LogoutState {
+  const LogoutInitial();
+}
 
-final class LogoutInitial extends LogoutState {}
+class LogoutLoading extends LogoutState {
+  const LogoutLoading();
+}
+
+class LogoutSuccess extends LogoutState {
+  const LogoutSuccess();
+}
+
+class LogoutError extends LogoutState {
+  final String error;
+  const LogoutError({required this.error});
+}

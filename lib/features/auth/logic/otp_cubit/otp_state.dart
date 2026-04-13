@@ -1,15 +1,23 @@
 part of 'otp_cubit.dart';
 
 @immutable
-sealed class OtpState {}
+sealed class OtpState {
+  const OtpState();
+}
 
-final class OtpInitial extends OtpState {}
+final class OtpInitial extends OtpState {
+  const OtpInitial();
+}
 
-final class OtpLoading extends OtpState {}
+final class OtpLoading extends OtpState {
+  const OtpLoading();
+}
 
-final class OtpSuccess extends OtpState {}
+final class OtpSuccess extends OtpState {
+  const OtpSuccess();
+}
 
 final class OtpError extends OtpState {
-  final OtpErrorModel error;
-  OtpError(this.error);
+  final String error;
+  const OtpError({required this.error});
 }

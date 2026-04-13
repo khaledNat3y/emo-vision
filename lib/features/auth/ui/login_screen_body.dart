@@ -4,6 +4,7 @@ import 'package:facial_emotional_detection_graduation_project/core/helpers/share
 import 'package:facial_emotional_detection_graduation_project/core/routing/routes.dart';
 import 'package:facial_emotional_detection_graduation_project/core/services/biometric_service.dart';
 import 'package:facial_emotional_detection_graduation_project/core/theming/app_text_theme.dart';
+import 'package:facial_emotional_detection_graduation_project/features/auth/logic/login_cubit/login_cubit.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/ui/widgets/custom_login_method.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/ui/widgets/login_form.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/ui/widgets/login_register_screen_header_column.dart';
@@ -13,7 +14,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../core/helpers/app_assets.dart';
 import '../../../core/theming/app_colors.dart';
-import '../logic/login_cubit/login_cubit.dart';
 
 class LoginScreenBody extends StatelessWidget {
   const LoginScreenBody({super.key});
@@ -24,6 +24,7 @@ class LoginScreenBody extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // ── Header image ───────────────────────────────────────────────────
           Stack(
             children: [
               Container(
@@ -39,52 +40,62 @@ class LoginScreenBody extends StatelessWidget {
               const LoginScreenHeader(),
             ],
           ),
+
+          // Email / Password form
+          // LoginCubit is already provided by LoginScreen above this widget.
+          // LoginBlocListener is also already wrapping this whole body.
+          // So LoginForm just reads the cubit — no extra setup needed here.
           const LoginForm(),
+
           const OrLoginWith(),
           16.verticalSpace,
+
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // Google
               CustomLoginMethod(
                 iconPath: AppAssets.googleIcon,
                 title: 'Google',
-                onTap: () async {
-                  await context.read<LoginCubit>().signInWithGoogle();
-                  // await SharedPrefHelper.setData(CacheConstants.signInWithGoogle, true);
+                onTap: () {
+                  context.read<LoginCubit>().signInWithGoogle();
+                  // LoginBlocListener above will handle the navigation
+                  // when LoginWithGoogleSuccess is emitted
                 },
               ),
+
               15.horizontalSpace,
+
+              // Biometric
               CustomLoginMethod(
                 iconPath: AppAssets.biometric,
                 title: 'Biometric',
                 onTap: () {
-                  BiometricService().requestBiometric().then((value) {
-                    if (value) {
-                      Logger.debug(value.toString());
-                      if (context.mounted) {
-                        SharedPrefHelper.setData(
-                          CacheConstants.isBiometricLogin,
-                          value,
-                        );
-                        // Store a default name for biometric login
-                        SharedPrefHelper.setData(
-                          CacheConstants.userNameFromBiometric,
-                          'Biometric User',
-                        );
-                        // Navigate to home with proper route and BlocProvider
-                        Navigator.pushReplacementNamed(
-                          context,
-                          Routes.homeScreen,
-                        );
-                      }
+                  BiometricService().authenticate().then((authenticated) {
+                    if (authenticated && context.mounted) {
+                      Logger.debug('Biometric authenticated: $authenticated');
+                      SharedPrefHelper.setData(
+                        CacheConstants.isBiometricLogin,
+                        true,
+                      );
+                      // Navigate to home — HomeCubit will detect
+                      // isBiometricLogin flag and show "Biometric User"
+                      Navigator.pushReplacementNamed(
+                        context,
+                        Routes.homeScreen,
+                      );
+                    } else {
+                      Logger.debug('Biometric failed or cancelled');
                     }
-                    Logger.debug(value.toString());
                   });
                 },
               ),
             ],
           ),
+
           32.verticalSpace,
+
+          // ── Terms text ────────────────────────────────────────────────────
           Center(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 24.0.w),
@@ -115,6 +126,7 @@ class LoginScreenBody extends StatelessWidget {
               ),
             ),
           ),
+          32.verticalSpace,
         ],
       ),
     );

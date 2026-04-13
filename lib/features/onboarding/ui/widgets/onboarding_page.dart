@@ -26,11 +26,7 @@ class OnboardingPage extends StatelessWidget {
             shape: BoxShape.circle,
             color: color.withValues(alpha: 0.2),
           ),
-          child: Icon(
-            icon,
-            size: 60,
-            color: color,
-          ),
+          child: Icon(icon, size: 60, color: color),
         ),
         const SizedBox(height: 40),
         Text(

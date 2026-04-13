@@ -1,21 +1,28 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/verify_email_request_body.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/repo/auth_repo.dart';
-import 'package:meta/meta.dart';
-
-import '../../../../core/networking/api_error_model.dart';
-import '../../data/models/otp_error_model.dart';
 
 part 'otp_state.dart';
 
 class OtpCubit extends Cubit<OtpState> {
-  final AuthRepo authRepo;
+  final AuthRepo _authRepo;
 
-  OtpCubit(this.authRepo) : super(OtpInitial());
+  OtpCubit(this._authRepo) : super(OtpInitial());
 
-  Future<void> verifyOTP({required VerifyEmailRequestBody body}) async {
+  Future<void> verifyOTP({
+    required String email,
+    required String otp,
+  }) async {
     emit(OtpLoading());
-    final result = await authRepo.verifyEmail(body: body);
-    result.fold((l) => emit(OtpError(l)), (r) => emit(OtpSuccess()));
+
+    final result = await _authRepo.verifyEmail(
+      VerifyEmailRequestBody(email: email, otp: otp),
+    );
+
+    result.fold(
+          (errorMessage) => emit(OtpError(error: errorMessage)),
+          (_) => emit(const OtpSuccess()),
+    );
   }
 }

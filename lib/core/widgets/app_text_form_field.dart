@@ -19,19 +19,23 @@ class AppTextFormField extends StatelessWidget {
   final bool? isReadOnly;
   final String? initialValue;
 
-  const AppTextFormField(
-      {super.key,
-        required this.hintText,
-        this.isObscureText,
-        this.contentPadding,
-        this.focusedBorder,
-        this.enabledBorder,
-        this.inputTextStyle,
-        this.hintStyle,
-        this.suffixIcon,
-        this.backgroundColor,
-        this.controller,
-        required this.validator, this.focusNode, this.isReadOnly, this.initialValue});
+  const AppTextFormField({
+    super.key,
+    required this.hintText,
+    this.isObscureText,
+    this.contentPadding,
+    this.focusedBorder,
+    this.enabledBorder,
+    this.inputTextStyle,
+    this.hintStyle,
+    this.suffixIcon,
+    this.backgroundColor,
+    this.controller,
+    required this.validator,
+    this.focusNode,
+    this.isReadOnly,
+    this.initialValue,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -46,27 +50,42 @@ class AppTextFormField extends StatelessWidget {
         fillColor: backgroundColor ?? Theme.of(context).colorScheme.surface,
         filled: true,
         isDense: true,
-        contentPadding: contentPadding ??
+        contentPadding:
+            contentPadding ??
             EdgeInsets.symmetric(horizontal: 14.0.w, vertical: 12.5.h),
-        focusedBorder: focusedBorder ?? OutlineInputBorder(
-          borderSide: const BorderSide(width: 1.3, color: AppColors.primary),
-          borderRadius: BorderRadius.circular(16.0),
-        ),
+        focusedBorder:
+            focusedBorder ??
+            OutlineInputBorder(
+              borderSide: const BorderSide(
+                width: 1.3,
+                color: AppColors.primary,
+              ),
+              borderRadius: BorderRadius.circular(16.0),
+            ),
         hintFadeDuration: const Duration(milliseconds: 500),
         focusedErrorBorder: OutlineInputBorder(
           borderSide: const BorderSide(width: 1.3, color: AppColors.error),
           borderRadius: BorderRadius.circular(16.0),
         ),
-        enabledBorder: enabledBorder ?? OutlineInputBorder(
-          borderSide: const BorderSide(width: 1.3, color: AppColors.borderLight),
-          borderRadius: BorderRadius.circular(10.0),
-        ),
+        enabledBorder:
+            enabledBorder ??
+            OutlineInputBorder(
+              borderSide: const BorderSide(
+                width: 1.3,
+                color: AppColors.borderLight,
+              ),
+              borderRadius: BorderRadius.circular(10.0),
+            ),
         errorBorder: OutlineInputBorder(
           borderSide: const BorderSide(width: 1.3, color: AppColors.error),
           borderRadius: BorderRadius.circular(16.0),
         ),
         hintText: hintText,
-        hintStyle: hintStyle ?? Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.black),
+        hintStyle:
+            hintStyle ??
+            Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: AppColors.grey.withValues(alpha: 0.8),
+            ),
         suffixIcon: suffixIcon,
       ),
       // style: AppTheme.font14DarkBlueMedium,

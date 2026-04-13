@@ -2,12 +2,12 @@ import 'package:facial_emotional_detection_graduation_project/core/theming/app_c
 import 'package:facial_emotional_detection_graduation_project/core/theming/app_text_theme.dart';
 import 'package:facial_emotional_detection_graduation_project/core/widgets/app_text_form_field.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/logic/login_cubit/login_cubit.dart';
-import 'package:facial_emotional_detection_graduation_project/features/auth/ui/widgets/login_bloc_listener.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/helpers/app_regex.dart';
 import '../../data/models/login_request_body.dart';
+import '../../logic/login_cubit/login_state.dart';
 import 'custom_button.dart';
 
 class LoginForm extends StatefulWidget {
@@ -27,7 +27,6 @@ class _LoginFormState extends State<LoginForm> {
   @override
   void initState() {
     super.initState();
-    // passwordController = context.read<LoginCubit>().passwordController;
     passwordController = TextEditingController();
     emailController = TextEditingController();
   }
@@ -36,7 +35,6 @@ class _LoginFormState extends State<LoginForm> {
   Widget build(BuildContext context) {
     return Form(
       key: formKey,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -53,6 +51,7 @@ class _LoginFormState extends State<LoginForm> {
                     !AppRegex.isEmailValid(value)) {
                   return 'Please enter a valid email';
                 }
+                return null;
               },
             ),
             16.verticalSpace,
@@ -65,6 +64,7 @@ class _LoginFormState extends State<LoginForm> {
                 if (value == null || value.isEmpty) {
                   return 'Please enter a valid password';
                 }
+                return null;
               },
               isObscureText: isObscure,
               suffixIcon: IconButton(
@@ -79,46 +79,18 @@ class _LoginFormState extends State<LoginForm> {
             ),
             16.verticalSpace,
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Row(
-                  children: [
-                    Transform.translate(
-                      offset: const Offset(-5, 0),
-                      // Move checkbox slightly left to align better
-                      child: Checkbox(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        value: isChecked,
-                        onChanged: (newValue) {
-                          setState(() {
-                            isChecked = newValue!;
-                          });
-                        },
-                        activeColor: AppColors.primary,
-                        checkColor: AppColors.white,
-                        side: const BorderSide(
-                          color: AppColors.grey,
-                          width: 1.5,
-                        ),
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        // Reduces padding
-                        visualDensity:
-                            VisualDensity.compact, // Makes it more compact
-                      ),
-                    ),
-                    Text("Remember me", style: AppTextTheme.font12GreyMedium),
-                  ],
-                ),
                 GestureDetector(
+                  onTap: () {
+                    // Navigate to Forgot Password Screen
+                  },
                   child: Text(
                     "Forgot Password?",
                     style: Theme.of(
                       context,
                     ).textTheme.titleSmall?.copyWith(color: AppColors.primary),
                   ),
-                  onTap: () {},
                 ),
               ],
             ),
@@ -141,7 +113,8 @@ class _LoginFormState extends State<LoginForm> {
                 );
               },
             ),
-            LoginBlocListener(email: emailController.text,),
+            // ✅ LoginBlocListener is NOT here anymore.
+            // It is placed in LoginScreen wrapping the entire screen body.
           ],
         ),
       ),
