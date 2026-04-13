@@ -1,19 +1,30 @@
-part of 'home_cubit.dart';
-
-@immutable
-sealed class HomeState {}
-
-final class HomeInitial extends HomeState {}
-
-final class HomeLoading extends HomeState {}
-
-final class HomeSuccess extends HomeState {
-  final UserModel? userModel;
-  HomeSuccess(this.userModel);
+abstract class HomeState {
+  const HomeState();
 }
 
-final class HomeFailure extends HomeState {
-  final String errorMessage;
-  HomeFailure(this.errorMessage);
+class HomeInitial extends HomeState {
+  const HomeInitial();
 }
 
+class HomeLoading extends HomeState {
+  const HomeLoading();
+}
+
+class HomeSuccess extends HomeState {
+  final String email;
+  final String userName;
+  final String photoUrl;
+  final bool isBiometric;
+
+  const HomeSuccess({
+    required this.email,
+    required this.userName,
+    required this.photoUrl,
+    required this.isBiometric,
+  });
+}
+
+class HomeFailure extends HomeState {
+  final String error;
+  const HomeFailure({required this.error});
+}
