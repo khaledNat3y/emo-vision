@@ -1,48 +1,105 @@
-import 'package:facial_emotional_detection_graduation_project/core/networking/api_error_model.dart';
-import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/login_response.dart';
-import 'package:facial_emotional_detection_graduation_project/features/auth/data/repo/auth_repo.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/helpers/logger.dart';
-import '../../data/models/login_request_body.dart';
-import '../../data/models/login_response.dart';
-
-part 'login_state.dart';
+import 'package:facial_emotional_detection_graduation_project/core/constant/cache_constants.dart';
+import 'package:facial_emotional_detection_graduation_project/core/helpers/shared_pref_helper.dart';
+import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/login_request_body.dart';
+import 'package:facial_emotional_detection_graduation_project/features/auth/data/repo/auth_repo.dart';
+import 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
-  final AuthRepo authRepo;
-  LoginCubit(this.authRepo) : super(LoginInitial());
-  
-  Future<void>login({required LoginRequestBody body}) async {
-    emit(LoginLoading());
-    final result = await authRepo.login(body: body);
-    result.when(onSuccess: (data) async{
-      Logger.info(data.toString());
-      emit(LoginSuccess(loginResponse: data));
-    }, onError: (error) {
-      Logger.error(error.toString());
-      emit(LoginError(error: error));
-    });
+  final AuthRepo _authRepo;
+
+  LoginCubit(this._authRepo) : super(const LoginInitial());
+
+  // ── Email / Password
+
+  Future<void> login({required LoginRequestBody body}) async {
+    emit(const LoginLoading());
+
+    final result = await _authRepo.login(body);
+
+    result.fold(
+      // Left = error
+      (errorMessage) => emit(LoginError(error: errorMessage)),
+
+      // Right = success
+      (loginResponse) async {
+        // Save tokens securely
+        await SharedPrefHelper.setSecuredString(
+          CacheConstants.accessToken,
+          loginResponse.accessToken,
+        );
+        await SharedPrefHelper.setSecuredString(
+          CacheConstants.refreshToken,
+          loginResponse.refreshToken,
+        );
+
+        // 2. Fetch user info from /api/auth/me
+        final meResult = await _authRepo.getMe();
+
+        meResult.fold(
+          // /me failed — fallback to email from request body
+          (_) async {
+            await SharedPrefHelper.setData(
+              CacheConstants.userEmail,
+              body.email,
+            );
+            await SharedPrefHelper.setData(CacheConstants.userName, '');
+            emit(LoginSuccess(email: body.email, userName: ''));
+          },
+          // /me success — cache fullName & email
+          (meResponse) async {
+            await SharedPrefHelper.setData(
+              CacheConstants.userEmail,
+              meResponse.email,
+            );
+            await SharedPrefHelper.setData(
+              CacheConstants.userName,
+              meResponse.fullName,
+            );
+            emit(
+              LoginSuccess(
+                email: meResponse.email,
+                userName: meResponse.fullName,
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
-  Future<UserCredential?> signInWithGoogle() async {
-    emit(LoginWithGoogleLoading());
-    try {
-      final result = await authRepo.signInWithGoogle();
-      final email = result.additionalUserInfo?.profile?['email'] as String?;
-      final userName = result.user?.displayName ?? result.additionalUserInfo?.profile?['name'] as String? ?? 'Google User';
-      final photoUrl = result.user?.photoURL ?? result.additionalUserInfo?.profile?['picture'] as String?;
-      Logger.info('Email: $email, Name: $userName, Photo URL: $photoUrl');
-      emit(LoginWithGoogleSuccess(email: email, userName: userName, photoUrl: photoUrl));
-      return result;
-    } catch (e) {
-      emit(LoginError(error: ApiErrorModel(
-          message: "Google sign-in cancelled",
-          statusCode: null,
-          errors: [e.toString()],
-      )));
-      return null;
-    }
+  // ── Google ─────────────────────────────────────────────────────────────────
+
+  Future<void> signInWithGoogle() async {
+    emit(const LoginWithGoogleLoading());
+
+    final result = await _authRepo.signInWithGoogle();
+
+    result.fold((errorMessage) => emit(LoginError(error: errorMessage)), (
+      userCredential,
+    ) async {
+      final user = userCredential.user;
+      if (user == null) {
+        emit(const LoginError(error: 'Google sign-in failed'));
+        return;
+      }
+
+      final email = user.email ?? '';
+      final userName = user.displayName ?? '';
+      final photoUrl = user.photoURL ?? '';
+
+      await SharedPrefHelper.setData(CacheConstants.userEmailFromGoogle, email);
+      await SharedPrefHelper.setData(CacheConstants.userName, userName);
+      await SharedPrefHelper.setData(CacheConstants.userPhotoUrl, photoUrl);
+      await SharedPrefHelper.setData(CacheConstants.signInWithGoogle, true);
+
+      emit(
+        LoginWithGoogleSuccess(
+          email: email,
+          userName: userName,
+          photoUrl: photoUrl,
+        ),
+      );
+    });
   }
 }

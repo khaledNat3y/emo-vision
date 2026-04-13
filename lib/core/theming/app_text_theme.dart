@@ -48,7 +48,7 @@ abstract class AppTextTheme {
     color: AppColors.textPrimaryDark,
   );
 
-  static TextStyle font12PrimaryRegular = TextStyle(
+  static TextStyle font12RegularPrimary = TextStyle(
     fontSize: 12.sp,
     fontWeight: FontWeightHelper.regular,
     color: AppColors.primary,
@@ -69,7 +69,7 @@ abstract class AppTextTheme {
   static TextStyle font20BoldPrimary = TextStyle(
     fontSize: 20.sp,
     fontWeight: FontWeightHelper.bold,
-    color: AppColors.textPrimaryLight,
+    color: AppColors.primary,
   );
 
   static TextStyle font18MediumSecondary = TextStyle(

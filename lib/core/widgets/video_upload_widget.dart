@@ -7,7 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import '../theming/app_colors.dart';
 
 class VideoUploadWidget extends StatefulWidget {
-  final Function(File)? onVideoSelected;
+  final Function(File?)? onVideoSelected;
   final String? initialVideoPath;
   final String title;
   final String subtitle;
@@ -75,7 +75,7 @@ class _VideoUploadWidgetState extends State<VideoUploadWidget> {
     setState(() {
       _selectedVideo = null;
     });
-    widget.onVideoSelected?.call(_selectedVideo!);
+    widget.onVideoSelected?.call(null);
   }
 
   @override

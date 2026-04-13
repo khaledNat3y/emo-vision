@@ -1,3 +1,6 @@
+import 'package:facial_emotional_detection_graduation_project/core/helpers/spacing.dart';
+import 'package:facial_emotional_detection_graduation_project/core/theming/app_text_theme.dart';
+import 'package:facial_emotional_detection_graduation_project/core/theming/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -5,32 +8,39 @@ import '../../../../core/theming/app_colors.dart';
 
 class HomeHeader extends StatelessWidget {
   final String? photoUrl;
-  const HomeHeader({super.key, this.photoUrl});
+  final String? userName;
+  final String? email;
+  const HomeHeader({super.key, this.photoUrl, this.userName, this.email});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Boredom App',
-              style: TextStyle(
-                fontSize: 28.sp,
-                fontWeight: FontWeight.bold,
-                color: AppColors.primary,
+        Text.rich(
+          TextSpan(
+            text: 'Emo',
+            style: AppTextTheme.font20BoldPrimary.copyWith(color: AppColors.textPrimaryLight),
+            children: [
+              TextSpan(
+                text: 'Vision',
+                style: AppTextTheme.font20BoldPrimary,
               ),
-            ),
-            SizedBox(height: 4.h),
-            Text(
-              'Let\'s have some fun! 🎬',
-              style: TextStyle(fontSize: 14.sp, color: AppColors.grey),
-            ),
-          ],
+            ]
+          ),
         ),
-        Container(
+        verticalSpace(20),
+
+        ListTile(
+          title: Text(
+            "Welcome, ${userName ?? 'User'}",
+            style: TextStyle(fontSize: 14.sp, color: AppColors.grey),
+          ),
+          subtitle: Text(
+            email ?? '',
+            style: AppTextTheme.font13WhiteRegular.copyWith(color: AppColors.grey),
+          ),
+          trailing: Container(
           width: 50.w,
           height: 50.h,
           decoration: BoxDecoration(
@@ -70,6 +80,9 @@ class HomeHeader extends StatelessWidget {
                   ),
           ),
         ),
+        ),
+        
+          
       ],
     );
   }

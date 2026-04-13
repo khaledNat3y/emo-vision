@@ -6,29 +6,28 @@ import 'package:facial_emotional_detection_graduation_project/core/helpers/app_r
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/register_request_body.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/logic/register_cubit/register_cubit.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/ui/widgets/custom_button.dart';
-import 'package:facial_emotional_detection_graduation_project/features/auth/ui/widgets/register_bloc_listener.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class RegisterForm extends StatefulWidget {
-  const RegisterForm({super.key,});
+  const RegisterForm({super.key});
 
   @override
   State<RegisterForm> createState() => _RegisterFormState();
 }
 
 class _RegisterFormState extends State<RegisterForm> {
-  String firstName = "";
-  String lastName = "";
+  // ── Controllers & Keys ────────────────────────────────────────────────────
   late TextEditingController email;
   late TextEditingController password;
   late TextEditingController confirmPassword;
-  String phoneNumber = "";
+  late TextEditingController firstNameController;
+  late TextEditingController lastNameController;
   late GlobalKey<FormState> formKey;
-  bool isObscureText = true;
 
-  // Password validation focus node
+  // ── State ─────────────────────────────────────────────────────────────────
+  bool isObscureText = true;
   late FocusNode _passwordFocusNode;
   bool _isPasswordFocused = false;
   bool hasLowerCase = false;
@@ -43,17 +42,19 @@ class _RegisterFormState extends State<RegisterForm> {
     email = TextEditingController();
     password = TextEditingController();
     confirmPassword = TextEditingController();
+    firstNameController = TextEditingController();
+    lastNameController = TextEditingController();
     formKey = GlobalKey<FormState>();
     _passwordFocusNode = FocusNode();
 
-    /// Listen to password focus changes
+    // Listen to password focus changes
     _passwordFocusNode.addListener(() {
       setState(() {
         _isPasswordFocused = _passwordFocusNode.hasFocus;
       });
     });
 
-    /// Listen to password text changes for validation
+    // Listen to password text changes for live validation indicators
     password.addListener(() {
       setState(() {
         hasLowerCase = AppRegex.hasLowerCase(password.text);
@@ -74,7 +75,7 @@ class _RegisterFormState extends State<RegisterForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            /// first and second name Row
+            // ── First & Last Name ────────────────────────────────────────────
             Row(
               children: [
                 Expanded(
@@ -84,13 +85,12 @@ class _RegisterFormState extends State<RegisterForm> {
                       Text("First Name", style: AppTextTheme.font12GreyMedium),
                       AppTextFormField(
                         hintText: "Lois",
+                        controller: firstNameController,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Required';
                           }
-                          setState(() {
-                            firstName = value;
-                          });
+                          return null;
                         },
                       ),
                     ],
@@ -104,13 +104,12 @@ class _RegisterFormState extends State<RegisterForm> {
                       Text("Last Name", style: AppTextTheme.font12GreyMedium),
                       AppTextFormField(
                         hintText: "Becket",
+                        controller: lastNameController,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Required';
                           }
-                          setState(() {
-                            lastName = value;
-                          });
+                          return null;
                         },
                       ),
                     ],
@@ -119,22 +118,30 @@ class _RegisterFormState extends State<RegisterForm> {
               ],
             ),
             24.verticalSpace,
+
+            // ── Email ────────────────────────────────────────────────────────
             Text("Email", style: AppTextTheme.font12GreyMedium),
             AppTextFormField(
               hintText: "Loisbecket@gmail.com",
+              controller: email,
               validator: (value) {
                 if (value == null ||
                     value.isEmpty ||
                     !AppRegex.isEmailValid(value)) {
                   return 'Please enter a valid email';
                 }
+                return null;
               },
-              controller: email,
             ),
             24.verticalSpace,
+
+            // ── Password ─────────────────────────────────────────────────────
             Text("Password", style: AppTextTheme.font12GreyMedium),
             AppTextFormField(
               hintText: "Password",
+              controller: password,
+              focusNode: _passwordFocusNode,
+              isObscureText: isObscureText,
               suffixIcon: IconButton(
                 onPressed: () {
                   setState(() {
@@ -147,19 +154,18 @@ class _RegisterFormState extends State<RegisterForm> {
                 color: AppColors.grey,
               ),
               validator: (value) {
-
-                if(hasLowerCase && hasUpperCase && hasSpecialCharacters && hasNumber && hasMinLength) {
-                  return null;
-                }else {
+                if (!hasLowerCase ||
+                    !hasUpperCase ||
+                    !hasSpecialCharacters ||
+                    !hasNumber ||
+                    !hasMinLength) {
                   return 'Please enter a valid password';
                 }
+                return null;
               },
-              controller: password,
-              focusNode: _passwordFocusNode,
-              isObscureText: isObscureText,
             ),
 
-            // Animated Password Validation
+            // ── Animated Password Validation Indicator ───────────────────────
             AnimatedSize(
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut,
@@ -182,31 +188,36 @@ class _RegisterFormState extends State<RegisterForm> {
             ),
 
             24.verticalSpace,
+
+            // ── Confirm Password ─────────────────────────────────────────────
             Text("Confirm Password", style: AppTextTheme.font12GreyMedium),
             AppTextFormField(
               hintText: "Confirm Password",
-              validator: (value) {
-                if (value != password.text) {
-                  return "Password does not match";
-                }
-              },
               controller: confirmPassword,
               isObscureText: isObscureText,
+              validator: (value) {
+                if (value != password.text) {
+                  return "Passwords do not match";
+                }
+                return null;
+              },
             ),
             55.verticalSpace,
+
+            // ── Register Button ───────────────────────────────────────────────
             BlocBuilder<RegisterCubit, RegisterState>(
               builder: (context, state) {
                 return CustomButton(
                   text: "Register",
                   isLoading: state is RegisterLoading,
-                  onPressed: () async {
-                    if (formKey.currentState!.validate()){
+                  onPressed: () {
+                    if (formKey.currentState!.validate()) {
                       context.read<RegisterCubit>().register(
                         body: RegisterRequestBody(
                           email: email.text,
                           password: password.text,
-                          firstName: firstName,
-                          lastName: lastName,
+                          firstName: firstNameController.text,
+                          lastName: lastNameController.text,
                         ),
                       );
                     }
@@ -214,7 +225,9 @@ class _RegisterFormState extends State<RegisterForm> {
                 );
               },
             ),
-            RegisterBlocListener(email: email.text,),
+
+            // ✅ RegisterBlocListener is NOT here.
+            // It wraps the entire RegisterScreenBody inside RegisterScreen.
           ],
         ),
       ),
@@ -226,8 +239,9 @@ class _RegisterFormState extends State<RegisterForm> {
     email.dispose();
     password.dispose();
     confirmPassword.dispose();
+    firstNameController.dispose();
+    lastNameController.dispose();
     _passwordFocusNode.dispose();
-    formKey.currentState?.dispose();
     super.dispose();
   }
 }

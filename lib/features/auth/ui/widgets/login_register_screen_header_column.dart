@@ -6,8 +6,7 @@ import 'dont_have_already_have_account_widget.dart';
 import 'login_logo_and_app_name.dart';
 
 class LoginScreenHeader extends StatelessWidget {
-  const LoginScreenHeader({
-    super.key,});
+  const LoginScreenHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,11 +19,26 @@ class LoginScreenHeader extends StatelessWidget {
           30.verticalSpace,
           const LoginLogoAndAppName(),
           30.verticalSpace,
-          Text('Sign in to your Account', style: Theme.of(context).textTheme.headlineLarge),
+          Text(
+            'Sign in to your Account',
+            style: Theme.of(context).textTheme.headlineLarge,
+          ),
           8.verticalSpace,
-          DontHaveAlreadyHaveAccountWidget(title: "Don't have an account?", subtitle: "Sign Up", onTap: (){
-            context.pushNamed(Routes.registerScreen);
-          },),
+          DontHaveAlreadyHaveAccountWidget(
+            title: "Don't have an account?",
+            subtitle: "Sign Up",
+            onTap: () {
+              // Step 1: unfocus all text fields (dismiss keyboard)
+              FocusScope.of(context).unfocus();
+              // Step 2: delay navigation until after current frame is done
+              // This prevents "dirty widget in wrong build scope" crash
+              Future.microtask(() {
+                if (context.mounted) {
+                  context.pushNamed(Routes.registerScreen);
+                }
+              });
+            },
+          ),
         ],
       ),
     );

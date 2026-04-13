@@ -1,143 +1,145 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:facial_emotional_detection_graduation_project/core/networking/api_result.dart';
-import 'package:facial_emotional_detection_graduation_project/core/services/auth_service.dart';
 import 'package:facial_emotional_detection_graduation_project/core/services/firebase_services.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/login_request_body.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/login_response.dart';
-import 'package:facial_emotional_detection_graduation_project/features/home/data/model/user_model.dart';
+import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/logout_request_body.dart';
+import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/me_response.dart';
+import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/register_request_body.dart';
+import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/register_response.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/verify_email_request_body.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../../../core/constant/cache_constants.dart';
-import '../../../../core/helpers/logger.dart';
 import '../../../../core/helpers/shared_pref_helper.dart';
-import '../models/otp_error_model.dart';
-import '../models/register_request_body.dart';
-import '../models/register_response.dart';
+import '../../../../core/services/auth_service.dart';
+
+// Either<String, T>
+// Left(String)  → error message to show the user
+// Right(T)      → success data
 
 class AuthRepo {
-  final AuthService authService;
-  final FirebaseServices firebaseServices;
+  final AuthService _authService;
+  final FirebaseServices _firebaseServices;
 
-  AuthRepo(this.authService, this.firebaseServices);
+  AuthRepo(this._authService, this._firebaseServices);
 
-  Future<ApiResult<LoginResponse>> login({
-    required LoginRequestBody body,
-  }) async {
+  // ── Email / Password ───────────────────────────────────────────────────────
+
+  Future<Either<String, LoginResponse>> login(LoginRequestBody body) async {
     try {
-      final response = await authService.loginUser(body: body);
-      await SharedPrefHelper.setSecuredString(
-        CacheConstants.accessToken,
-        response.accessToken,
-      );
-      await SharedPrefHelper.setSecuredString(
-        CacheConstants.refreshToken,
-        response.refreshToken,
-      );
-      return ApiResult.success(response);
-    } catch (e) {
-      return ApiResult.error(e);
-    }
-  }
-
-  Future<ApiResult<RegisterResponse>> register({
-    required RegisterRequestBody body,
-  }) async {
-    try {
-      final response = await authService.register(body: body);
-      return ApiResult.success(response);
-    } catch (e) {
-      return ApiResult.error(e);
-    }
-  }
-
-  Future<Either<OtpErrorModel, String>> verifyEmail({
-    required VerifyEmailRequestBody body,
-  }) async {
-    try {
-      final response = await authService.verifyEmail(body: body);
+      final response = await _authService.loginUser(body: body);
       return Right(response);
+    } on DioException catch (e) {
+      return Left(_handleDioError(e));
     } catch (e) {
-      Logger.error('OTP Error: ${e.toString()}');
-
-      if (e is DioException) {
-        if (e.response != null && e.response!.data != null) {
-          try {
-            final errorData = e.response!.data;
-
-            Logger.error('Error Data Type: ${errorData.runtimeType}');
-            Logger.error('Error Data: $errorData');
-
-            // Dio automatically parses JSON, so errorData is already a Map
-            if (errorData is Map<String, dynamic>) {
-              final errorModel = OtpErrorModel.fromJson(errorData);
-              Logger.error('Parsed OTP Error Model - Message: ${errorModel.message}');
-              Logger.error('Parsed OTP Error Model - Errors: ${errorModel.errors.otp}');
-              return Left(errorModel);
-            } else if (errorData is String) {
-              // Handle case where response is a plain string
-              Logger.error('Error data is String: $errorData');
-              return Left(
-                OtpErrorModel(
-                  statusCode: e.response?.statusCode ?? 400,
-                  message: errorData,
-                  errors: Errors(otp: [errorData]),
-                ),
-              );
-            } else {
-              // Unknown format
-              Logger.error('Unknown error format');
-              return Left(
-                OtpErrorModel(
-                  statusCode: e.response?.statusCode ?? 400,
-                  message: 'An error occurred during verification',
-                  errors: Errors(otp: ['Verification failed. Please try again.']),
-                ),
-              );
-            }
-          } catch (parseError) {
-            Logger.error('Error parsing OTP error: ${parseError.toString()}');
-            return Left(
-              OtpErrorModel(
-                statusCode: e.response?.statusCode ?? 400,
-                message: 'Failed to parse error response',
-                errors: Errors(otp: ['Invalid OTP or verification failed']),
-              ),
-            );
-          }
-        } else {
-          // No response data
-          Logger.error('No response data from server');
-          return Left(
-            OtpErrorModel(
-              statusCode: e.response?.statusCode ?? 500,
-              message: e.message ?? 'Network error occurred',
-              errors: Errors(otp: ['Unable to connect to server']),
-            ),
-          );
-        }
-      }
-
-      // Handle non-Dio errors
-      Logger.error('Non-Dio exception: ${e.runtimeType}');
-      return Left(
-        OtpErrorModel(
-          statusCode: 500,
-          message: 'Unexpected error occurred',
-          errors: Errors(otp: ['Please check your connection and try again']),
-        ),
-      );
+      return Left(e.toString());
     }
   }
 
-  Future<UserCredential> signInWithGoogle() {
-    return firebaseServices.signInWithGoogle();
+  Future<Either<String, RegisterResponse>> register(
+    RegisterRequestBody body,
+  ) async {
+    try {
+      final response = await _authService.register(body: body);
+      return Right(response);
+    } on DioException catch (e) {
+      return Left(_handleDioError(e));
+    } catch (e) {
+      return Left(e.toString());
+    }
   }
 
-  Future<void> signOut() {
-    return firebaseServices.signOut();
+  Future<Either<String, String>> verifyEmail(
+    VerifyEmailRequestBody body,
+  ) async {
+    try {
+      await _authService.verifyEmail(body: body);
+      return const Right('Email verified successfully');
+    } on DioException catch (e) {
+      return Left(_handleDioError(e));
+    } catch (e) {
+      return Left(e.toString());
+    }
   }
 
+  Future<Either<String, void>> logout() async {
+    try {
+      final storedRefreshToken = await SharedPrefHelper.getSecuredString(
+        CacheConstants.refreshToken,
+      );
+      await _authService.logout(
+        body: LogoutRequestBody(refreshToken: storedRefreshToken ?? ''),
+      );
+      return const Right(null);
+    } on DioException catch (e) {
+      return Left(_handleDioError(e));
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
 
+  Future<Either<String, MeResponse>> getMe() async {
+    try {
+      final response = await _authService.getMe();
+      return Right(response);
+    } on DioException catch (e) {
+      return Left(_handleDioError(e));
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  // ── Google ─────────────────────────────────────────────────────────────────
+
+  Future<Either<String, UserCredential>> signInWithGoogle() async {
+    try {
+      final result = await _firebaseServices.signInWithGoogle();
+      return Right(result);
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  Future<void> signOutGoogle() async {
+    await _firebaseServices.signOut();
+  }
+
+  // Error Helper
+
+  String _handleDioError(DioException e) {
+    switch (e.type) {
+      case DioExceptionType.connectionError:
+        return 'No internet connection. Please check your network.';
+      case DioExceptionType.connectionTimeout:
+        return 'Connection timed out. Please try again.';
+      case DioExceptionType.receiveTimeout:
+        return 'Server took too long to respond. Please try again.';
+      case DioExceptionType.sendTimeout:
+        return 'Request timed out while sending. Please try again.';
+      case DioExceptionType.badResponse:
+        // Try to extract message from response body
+        try {
+          final data = e.response?.data;
+          if (data is Map<String, dynamic>) {
+            final message = data['message']?.toString();
+            if (message != null && message.isNotEmpty) return message;
+
+            // Try errors map
+            final errors = data['errors'];
+            if (errors is Map<String, dynamic>) {
+              final firstError = errors.values.first;
+              if (firstError is List && firstError.isNotEmpty) {
+                return firstError.first.toString();
+              }
+            }
+          }
+        } catch (_) {}
+        return 'Server error (${e.response?.statusCode}). Please try again.';
+      case DioExceptionType.cancel:
+        return 'Request was cancelled. Please try again.';
+      default:
+        return 'Something went wrong. Please try again.';
+    }
+  }
 }

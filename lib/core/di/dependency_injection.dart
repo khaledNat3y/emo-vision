@@ -1,31 +1,30 @@
-import 'package:dio/dio.dart';
-import 'package:facial_emotional_detection_graduation_project/core/networking/dio_factory.dart';
+import 'package:get_it/get_it.dart';
+import 'package:facial_emotional_detection_graduation_project/core/networking/dio_helper.dart';
 import 'package:facial_emotional_detection_graduation_project/core/services/auth_service.dart';
+import 'package:facial_emotional_detection_graduation_project/core/services/biometric_service.dart';
 import 'package:facial_emotional_detection_graduation_project/core/services/firebase_services.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/repo/auth_repo.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/logic/login_cubit/login_cubit.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/logic/otp_cubit/otp_cubit.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/logic/register_cubit/register_cubit.dart';
-import 'package:facial_emotional_detection_graduation_project/features/home/data/repo/home_repo.dart';
 import 'package:facial_emotional_detection_graduation_project/features/home/logic/cubit/home_cubit.dart';
-import 'package:get_it/get_it.dart';
 
+import '../../features/auth/logic/logout_cubit/logout_cubit.dart';
 
 final getIt = GetIt.instance;
 
 void setupDependencies() {
-  _setupAuth();
-}
+  getIt.registerLazySingleton<AuthService>(() => AuthService(DioHelper.dio));
+  getIt.registerLazySingleton<FirebaseServices>(() => FirebaseServices());
+  getIt.registerLazySingleton<BiometricService>(() => BiometricService());
 
-void _setupAuth() {
-  getIt.registerSingleton<Dio>(DioFactory().dio);
-  getIt.registerSingleton<AuthService>(AuthService(getIt()));
-  getIt.registerSingleton<FirebaseServices>(FirebaseServices());
-  getIt.registerSingleton<AuthRepo>(AuthRepo(getIt<AuthService>(), getIt<FirebaseServices>()));
-  getIt.registerSingleton<HomeRepo>(HomeRepo(getIt<FirebaseServices>()));
-  /// cubits
-  getIt.registerFactory(() => LoginCubit(getIt<AuthRepo>()));
-  getIt.registerFactory(() => RegisterCubit(getIt<AuthRepo>()));
-  getIt.registerFactory(() => OtpCubit(getIt<AuthRepo>()));
-  getIt.registerFactory(() => HomeCubit(getIt<HomeRepo>()));
+  getIt.registerLazySingleton<AuthRepo>(
+    () => AuthRepo(getIt<AuthService>(), getIt<FirebaseServices>()),
+  );
+
+  getIt.registerFactory<LoginCubit>(() => LoginCubit(getIt<AuthRepo>()));
+  getIt.registerFactory<RegisterCubit>(() => RegisterCubit(getIt<AuthRepo>()));
+  getIt.registerFactory<OtpCubit>(() => OtpCubit(getIt<AuthRepo>()));
+  getIt.registerFactory<HomeCubit>(() => HomeCubit());
+  getIt.registerFactory<LogoutCubit>(() => LogoutCubit(getIt<AuthRepo>()));
 }
