@@ -33,47 +33,56 @@ class HomeCubit extends Cubit<HomeState> {
         isBiometric = loginMethod == 'biometric';
       } else {
         // App restarted — determine method from stored flags
-        final isGoogle =
-        await SharedPrefHelper.getBool(CacheConstants.signInWithGoogle);
-        final isBiometricStored =
-        await SharedPrefHelper.getBool(CacheConstants.isBiometricLogin);
+        final isGoogle = await SharedPrefHelper.getBool(
+          CacheConstants.signInWithGoogle,
+        );
+        final isBiometricStored = await SharedPrefHelper.getBool(
+          CacheConstants.isBiometricLogin,
+        );
 
         isBiometric = isBiometricStored;
 
         if (isGoogle) {
           displayEmail = await SharedPrefHelper.getString(
-              CacheConstants.userEmailFromGoogle) ??
-              '';
-          displayName =
-              await SharedPrefHelper.getString(CacheConstants.userName) ?? '';
-          photoUrl =
-              await SharedPrefHelper.getString(CacheConstants.userPhotoUrl) ??
-                  '';
+            CacheConstants.userEmailFromGoogle,
+          );
+          displayName = await SharedPrefHelper.getString(
+            CacheConstants.userName,
+          );
+          photoUrl = await SharedPrefHelper.getString(
+            CacheConstants.userPhotoUrl,
+          );
         } else if (isBiometricStored) {
           // Biometric reuses the last email/name that was stored
-          displayEmail =
-              await SharedPrefHelper.getString(CacheConstants.userEmail) ?? '';
-          displayName =
-              await SharedPrefHelper.getString(CacheConstants.userName) ?? '';
+          displayEmail = await SharedPrefHelper.getString(
+            CacheConstants.userEmail,
+          );
+          displayName = await SharedPrefHelper.getString(
+            CacheConstants.userName,
+          );
         } else {
           // Email/Password
-          displayEmail =
-              await SharedPrefHelper.getString(CacheConstants.userEmail) ?? '';
-          displayName =
-              await SharedPrefHelper.getString(CacheConstants.userName) ?? '';
+          displayEmail = await SharedPrefHelper.getString(
+            CacheConstants.userEmail,
+          );
+          displayName = await SharedPrefHelper.getString(
+            CacheConstants.userName,
+          );
         }
       }
 
-      emit(HomeSuccess(
-        email: displayEmail,
-        userName: isBiometric
-            ? 'Biometric User'
-            : displayName.isNotEmpty
-            ? displayName
-            : displayEmail,
-        photoUrl: photoUrl,
-        isBiometric: isBiometric,
-      ));
+      emit(
+        HomeSuccess(
+          email: displayEmail,
+          userName: isBiometric
+              ? 'Biometric User'
+              : displayName.isNotEmpty
+              ? displayName
+              : displayEmail,
+          photoUrl: photoUrl,
+          isBiometric: isBiometric,
+        ),
+      );
     } catch (e) {
       emit(HomeFailure(error: e.toString()));
     }

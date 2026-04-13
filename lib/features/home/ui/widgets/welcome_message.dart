@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/theming/app_colors.dart';
 
@@ -21,7 +20,7 @@ class WelcomeMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     // Determine the display name based on available data
     String displayName;
-    
+
     if (userName != null && userName!.isNotEmpty) {
       displayName = userName!;
     } else if (userEmail != null && userEmail!.isNotEmpty) {
@@ -38,9 +37,9 @@ class WelcomeMessage extends StatelessWidget {
     return Text(
       'Welcome, $displayName',
       style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: AppColors.primary,
-          ),
+        fontWeight: FontWeight.bold,
+        color: AppColors.primary,
+      ),
     );
   }
 }

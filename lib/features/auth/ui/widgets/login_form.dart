@@ -1,5 +1,4 @@
 import 'package:facial_emotional_detection_graduation_project/core/theming/app_colors.dart';
-import 'package:facial_emotional_detection_graduation_project/core/theming/app_text_theme.dart';
 import 'package:facial_emotional_detection_graduation_project/core/widgets/app_text_form_field.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/logic/login_cubit/login_cubit.dart';
 import 'package:flutter/material.dart';
