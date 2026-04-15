@@ -1,3 +1,4 @@
+import 'package:facial_emotional_detection_graduation_project/features/auth/ui/forgot_password_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:facial_emotional_detection_graduation_project/core/routing/routes.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/ui/biometric_login_screen.dart';
@@ -12,37 +13,28 @@ class AppRouter {
   static Route generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case Routes.onBoardingScreen:
-        return MaterialPageRoute(
-          builder: (_) => const OnboardingScreen(),
-        );
+        return MaterialPageRoute(builder: (_) => const OnboardingScreen());
 
       case Routes.loginScreen:
-        return MaterialPageRoute(
-          builder: (_) => const LoginScreen(),
-        );
+        return MaterialPageRoute(builder: (_) => const LoginScreen());
 
       case Routes.registerScreen:
-        return MaterialPageRoute(
-          builder: (_) => const RegisterScreen(),
-        );
+        return MaterialPageRoute(builder: (_) => const RegisterScreen());
+
+      case Routes.forgotPasswordScreen:
+        return MaterialPageRoute(builder: (_) => const ForgotPasswordScreen());
 
       case Routes.otpScreen:
         final args = settings.arguments as Map<String, dynamic>?;
         return MaterialPageRoute(
-          builder: (_) => OTPVerificationScreen(
-            email: args?['email'] ?? '',
-          ),
+          builder: (_) => OTPVerificationScreen(email: args?['email'] ?? ''),
         );
 
       case Routes.otpSuccessScreen:
-        return MaterialPageRoute(
-          builder: (_) => const OTPSuccessScreen(),
-        );
+        return MaterialPageRoute(builder: (_) => const OTPSuccessScreen());
 
       case Routes.biometricLoginScreen:
-        return MaterialPageRoute(
-          builder: (_) => const BiometricLoginScreen(),
-        );
+        return MaterialPageRoute(builder: (_) => const BiometricLoginScreen());
 
       case Routes.homeScreen:
         final args = settings.arguments as Map<String, dynamic>?;
@@ -57,9 +49,8 @@ class AppRouter {
 
       default:
         return MaterialPageRoute(
-          builder: (_) => const Scaffold(
-            body: Center(child: Text('No route defined')),
-          ),
+          builder: (_) =>
+              const Scaffold(body: Center(child: Text('No route defined'))),
         );
     }
   }

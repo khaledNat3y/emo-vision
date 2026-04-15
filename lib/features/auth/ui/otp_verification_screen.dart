@@ -10,10 +10,7 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 class OTPVerificationScreen extends StatefulWidget {
   final String email;
 
-  const OTPVerificationScreen({
-    super.key,
-    required this.email,
-  });
+  const OTPVerificationScreen({super.key, required this.email});
 
   @override
   State<OTPVerificationScreen> createState() => _OTPVerificationScreenState();
@@ -45,7 +42,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
       return;
     }
 
-    // ✅ Updated to match new OtpCubit.verifyOTP(email:, otp:) signature
+    // Updated to match new OtpCubit.verifyOTP(email:, otp:) signature
     context.read<OtpCubit>().verifyOTP(
       email: widget.email,
       otp: _otpController.text,
@@ -139,7 +136,9 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                     BlocBuilder<OtpCubit, OtpState>(
                       builder: (context, state) {
                         return CustomBtn(
-                          title: state is OtpLoading ? "Verifying..." : "Confirm",
+                          title: state is OtpLoading
+                              ? "Verifying..."
+                              : "Confirm",
                           onTap: state is OtpLoading ? null : _handleVerifyOTP,
                           isLoading: state is OtpLoading,
                         );

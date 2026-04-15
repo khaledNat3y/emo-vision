@@ -12,7 +12,7 @@ android {
 
     namespace = "com.example.facial_emotional_detection_graduation_project"
     compileSdk = 36
-    ndkVersion = "27.0.12077973"
+    ndkVersion = "28.2.13676358"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11

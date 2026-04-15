@@ -11,7 +11,7 @@ import 'core/theming/app_colors.dart';
 import 'firebase_options.dart';
 
 // These are read once at startup in checkIfUserFirstLaunch()
-// and used in EmovisionApp to decide the initial route.
+// and used to decide the initial route.
 bool isFirstLaunch = false;
 bool isBiometric = false;
 bool isUserLoggedInWithGoogle = false;

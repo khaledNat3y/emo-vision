@@ -24,7 +24,7 @@ class AuthRepo {
 
   AuthRepo(this._authService, this._firebaseServices);
 
-  // ── Email / Password ───────────────────────────────────────────────────────
+  // Email / Password
 
   Future<Either<String, LoginResponse>> login(LoginRequestBody body) async {
     try {
@@ -90,7 +90,7 @@ class AuthRepo {
     }
   }
 
-  // ── Google ─────────────────────────────────────────────────────────────────
+  // Google
 
   Future<Either<String, UserCredential>> signInWithGoogle() async {
     try {

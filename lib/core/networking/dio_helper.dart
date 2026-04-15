@@ -79,7 +79,7 @@ class DioHelper {
   }
 }
 
-// ── Auth Interceptor ────────────────────────────────────────────────────────
+// Auth Interceptor
 // Attaches Bearer token to every request.
 // On 401: tries to refresh the token, retries original request once.
 // On refresh failure: clears credentials.
@@ -99,7 +99,9 @@ class _AuthInterceptor extends Interceptor {
 
   @override
   void onRequest(
-      RequestOptions options, RequestInterceptorHandler handler) async {
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
     // Don't attach token for public endpoints
     final skipPaths = [
       ApiConstants.login,
@@ -109,8 +111,9 @@ class _AuthInterceptor extends Interceptor {
 
     if (!skipPaths.contains(options.path)) {
       final token = await SharedPrefHelper.getSecuredString(
-          CacheConstants.accessToken);
-      if (token != null && token.isNotEmpty) {
+        CacheConstants.accessToken,
+      );
+      if (token.isNotEmpty) {
         options.headers['Authorization'] = 'Bearer $token';
       }
     }
@@ -126,8 +129,10 @@ class _AuthInterceptor extends Interceptor {
     }
 
     final refreshToken = await SharedPrefHelper.getSecuredString(
-        CacheConstants.refreshToken);
-
+      CacheConstants.refreshToken,
+    );
+    // If no refresh token:
+    // user session is invalid
     if (refreshToken == null || refreshToken.isEmpty) {
       await _clearCredentials();
       handler.next(err);
@@ -140,10 +145,8 @@ class _AuthInterceptor extends Interceptor {
         data: {'refreshToken': refreshToken},
       );
 
-      final newAccessToken =
-      refreshResponse.data['accessToken'] as String?;
-      final newRefreshToken =
-      refreshResponse.data['refreshToken'] as String?;
+      final newAccessToken = refreshResponse.data['accessToken'] as String?;
+      final newRefreshToken = refreshResponse.data['refreshToken'] as String?;
 
       if (newAccessToken == null || newAccessToken.isEmpty) {
         await _clearCredentials();
@@ -152,10 +155,14 @@ class _AuthInterceptor extends Interceptor {
       }
 
       await SharedPrefHelper.setSecuredString(
-          CacheConstants.accessToken, newAccessToken);
+        CacheConstants.accessToken,
+        newAccessToken,
+      );
       if (newRefreshToken != null && newRefreshToken.isNotEmpty) {
         await SharedPrefHelper.setSecuredString(
-            CacheConstants.refreshToken, newRefreshToken);
+          CacheConstants.refreshToken,
+          newRefreshToken,
+        );
       }
 
       // Retry original request with new token

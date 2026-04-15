@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/forgot_password_request_body.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/login_request_body.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/login_response.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/logout_request_body.dart';
@@ -31,4 +32,9 @@ abstract class AuthService {
 
   @GET(ApiConstants.me)
   Future<MeResponse> getMe();
+
+  @POST(ApiConstants.forgotPassword)
+  Future<String> forgotPassword({
+    @Body() required ForgotPasswordRequestBody body,
+  });
 }
