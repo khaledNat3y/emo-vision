@@ -1,4 +1,5 @@
 import 'package:facial_emotional_detection_graduation_project/features/auth/ui/forgot_password_screen.dart';
+import 'package:facial_emotional_detection_graduation_project/features/auth/ui/reset_password_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:facial_emotional_detection_graduation_project/core/routing/routes.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/ui/biometric_login_screen.dart';
@@ -28,6 +29,12 @@ class AppRouter {
         final args = settings.arguments as Map<String, dynamic>?;
         return MaterialPageRoute(
           builder: (_) => OTPVerificationScreen(email: args?['email'] ?? ''),
+        );
+
+      case Routes.resetPasswordScreen:
+        final args = settings.arguments as String?;
+        return MaterialPageRoute(
+          builder: (_) => ResetPasswordScreen(email: args ?? ''),
         );
 
       case Routes.otpSuccessScreen:

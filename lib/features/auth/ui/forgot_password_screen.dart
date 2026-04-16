@@ -19,9 +19,11 @@ class ForgotPasswordScreen extends StatefulWidget {
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   late final TextEditingController emailController;
+  late final GlobalKey<FormState> formKey;
   @override
   void initState() {
     super.initState();
+    formKey = GlobalKey();
     emailController = TextEditingController();
   }
 
@@ -37,53 +39,55 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text("Forgot Password", style: AppTextTheme.font24BlackBold),
-              verticalSpace(6),
-              Text(
-                "Enter your email address to receive a password reset link.",
-                style: AppTextTheme.font12GreyMedium,
-                textAlign: TextAlign.center,
-              ),
-              verticalSpace(50),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Email Address",
-                  style: AppTextTheme.font12GreyMedium.copyWith(
-                    fontWeight: FontWeightHelper.regular,
-                    fontSize: 12,
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Forgot Password", style: AppTextTheme.font24BlackBold),
+                verticalSpace(6),
+                Text(
+                  "Enter your email address to receive a password reset link.",
+                  style: AppTextTheme.font12GreyMedium,
+                  textAlign: TextAlign.center,
+                ),
+                verticalSpace(50),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Email Address",
+                    style: AppTextTheme.font12GreyMedium.copyWith(
+                      fontWeight: FontWeightHelper.regular,
+                      fontSize: 12,
+                    ),
                   ),
                 ),
-              ),
-              verticalSpace(6),
-              AppTextFormField(
-                controller: emailController,
-                hintText: "example@gmail.com",
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter valid email";
-                  }
-                },
-              ),
-              verticalSpace(32),
-              CustomButton(text: "Get Reset OTP", onPressed: _login),
-              verticalSpace(32),
-              TextButton(
-                onPressed: () {
-                  context.pushReplacementNamed(Routes.loginScreen);
-                },
-                child: Text(
-                  "Back to Login",
-                  style: AppTextTheme.font13WhiteRegular.copyWith(
-                    color: AppColors.primary,
-                    fontSize: 15,
+                verticalSpace(6),
+                AppTextFormField(
+                  controller: emailController,
+                  hintText: "example@gmail.com",
+                  validator: _validateEmailField,
+                ),
+                verticalSpace(32),
+                CustomButton(text: "Get Reset OTP", onPressed: _login),
+                verticalSpace(32),
+                TextButton(
+                  onPressed: () {
+                    context.pushNamedAndRemoveUntil(
+                      Routes.loginScreen,
+                      predicate: (route) => false,
+                    );
+                  },
+                  child: Text(
+                    "Back to Login",
+                    style: AppTextTheme.font13WhiteRegular.copyWith(
+                      color: AppColors.primary,
+                      fontSize: 15,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -91,22 +95,33 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   void _login() {
-    if (emailController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Please enter valid email"),
-          backgroundColor: AppColors.error,
-        ),
-      );
-      return;
-    } else if (!AppRegex.isEmailValid(emailController.text)) {
-      // tell user the words he must write to be a suitable for regex
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Email should be like this name@gmail.com"),
-          backgroundColor: AppColors.error,
-        ),
-      );
-    } else {}
+    if (formKey.currentState!.validate()) {
+      if (!AppRegex.isEmailValid(emailController.text)) {
+        // tell user the words he must write to be a suitable for regex
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              "Email should be like this ${emailController.text}@gmail.com",
+            ),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      } else {
+        // Call cubit to send OTP to user email
+
+        // Navigate to OTP verification screen
+        context.pushNamed(
+          Routes.resetPasswordScreen,
+          arguments: emailController.text,
+        );
+      }
+    }
+  }
+
+  dynamic _validateEmailField(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Please enter valid email";
+    }
+    return null;
   }
 }

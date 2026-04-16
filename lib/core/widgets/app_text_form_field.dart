@@ -45,7 +45,6 @@ class AppTextFormField extends StatelessWidget {
       obscureText: isObscureText ?? false,
       cursorColor: AppColors.primary,
       readOnly: isReadOnly ?? false,
-      initialValue: initialValue,
       decoration: InputDecoration(
         fillColor: backgroundColor ?? Theme.of(context).colorScheme.surface,
         filled: true,

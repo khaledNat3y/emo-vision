@@ -1,12 +1,14 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:facial_emotional_detection_graduation_project/core/services/firebase_services.dart';
+import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/forgot_password_request_body.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/login_request_body.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/login_response.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/logout_request_body.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/me_response.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/register_request_body.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/register_response.dart';
+import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/reset_password_request_body.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/verify_email_request_body.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -103,6 +105,36 @@ class AuthRepo {
 
   Future<void> signOutGoogle() async {
     await _firebaseServices.signOut();
+  }
+
+  Future<String> forgotPassword(String email) async {
+    try {
+      final response = await _authService.forgotPassword(
+        body: ForgotPasswordRequestBody(email: email),
+      );
+      return response;
+    } on DioException catch (e) {
+      throw Exception(_handleDioError(e));
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<String> resetPassword({required ResetPasswordRequestBody body}) async {
+    try {
+      final response = await _authService.resetPassword(
+        body: ResetPasswordRequestBody(
+          email: body.email,
+          otp: body.otp,
+          newPassword: body.newPassword,
+        ),
+      );
+      return response;
+    } on DioException catch (e) {
+      throw Exception(_handleDioError(e));
+    } catch (e) {
+      throw Exception(e.toString());
+    }
   }
 
   // Error Helper
