@@ -9,9 +9,10 @@ class AppTextFormField extends StatelessWidget {
   final InputBorder? enabledBorder;
   final TextStyle? inputTextStyle;
   final TextStyle? hintStyle;
-  final String hintText;
+  final String? hintText;
   final bool? isObscureText;
   final Widget? suffixIcon;
+  final Widget? prefixIcon;
   final Color? backgroundColor;
   final TextEditingController? controller;
   final Function(String?) validator;
@@ -21,7 +22,7 @@ class AppTextFormField extends StatelessWidget {
 
   const AppTextFormField({
     super.key,
-    required this.hintText,
+    this.hintText,
     this.isObscureText,
     this.contentPadding,
     this.focusedBorder,
@@ -35,6 +36,7 @@ class AppTextFormField extends StatelessWidget {
     this.focusNode,
     this.isReadOnly,
     this.initialValue,
+    this.prefixIcon,
   });
 
   @override
@@ -86,6 +88,7 @@ class AppTextFormField extends StatelessWidget {
               color: AppColors.grey.withValues(alpha: 0.8),
             ),
         suffixIcon: suffixIcon,
+        prefixIcon: prefixIcon,
       ),
       // style: AppTheme.font14DarkBlueMedium,
       validator: (value) {

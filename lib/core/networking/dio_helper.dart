@@ -107,6 +107,7 @@ class _AuthInterceptor extends Interceptor {
       ApiConstants.login,
       ApiConstants.register,
       ApiConstants.verifyEmail,
+      ApiConstants.forgotPassword,
     ];
 
     if (!skipPaths.contains(options.path)) {

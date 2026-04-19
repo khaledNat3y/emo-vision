@@ -1,3 +1,8 @@
+import 'package:facial_emotional_detection_graduation_project/core/networking/dio_helper.dart';
+import 'package:facial_emotional_detection_graduation_project/core/services/auth_service.dart';
+import 'package:facial_emotional_detection_graduation_project/core/services/firebase_services.dart';
+import 'package:facial_emotional_detection_graduation_project/features/auth/data/repo/auth_repo.dart';
+import 'package:facial_emotional_detection_graduation_project/features/auth/logic/forgot_password_cubit/cubit/forgot_password_cubit.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/ui/forgot_password_screen.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/ui/reset_password_screen.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +14,7 @@ import 'package:facial_emotional_detection_graduation_project/features/auth/ui/o
 import 'package:facial_emotional_detection_graduation_project/features/auth/ui/register_screen.dart';
 import 'package:facial_emotional_detection_graduation_project/features/home/ui/home_screen.dart';
 import 'package:facial_emotional_detection_graduation_project/features/onboarding/ui/onboarding_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AppRouter {
   static Route generateRoute(RouteSettings settings) {
@@ -23,7 +29,14 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const RegisterScreen());
 
       case Routes.forgotPasswordScreen:
-        return MaterialPageRoute(builder: (_) => const ForgotPasswordScreen());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => ForgotPasswordCubit(
+              AuthRepo(AuthService(DioHelper.dio), FirebaseServices()),
+            ),
+            child: const ForgotPasswordScreen(),
+          ),
+        );
 
       case Routes.otpScreen:
         final args = settings.arguments as Map<String, dynamic>?;
@@ -34,7 +47,12 @@ class AppRouter {
       case Routes.resetPasswordScreen:
         final args = settings.arguments as String?;
         return MaterialPageRoute(
-          builder: (_) => ResetPasswordScreen(email: args ?? ''),
+          builder: (_) => BlocProvider(
+            create: (context) => ForgotPasswordCubit(
+              AuthRepo(AuthService(DioHelper.dio), FirebaseServices()),
+            ),
+            child: ResetPasswordScreen(email: args ?? ''),
+          ),
         );
 
       case Routes.otpSuccessScreen:

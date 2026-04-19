@@ -6,9 +6,10 @@ import 'package:facial_emotional_detection_graduation_project/core/theming/app_c
 import 'package:facial_emotional_detection_graduation_project/core/theming/app_text_theme.dart';
 import 'package:facial_emotional_detection_graduation_project/core/theming/font_weight_helper.dart';
 import 'package:facial_emotional_detection_graduation_project/core/widgets/app_text_form_field.dart';
-import 'package:facial_emotional_detection_graduation_project/features/auth/ui/otp_verification_screen.dart';
+import 'package:facial_emotional_detection_graduation_project/features/auth/logic/forgot_password_cubit/cubit/forgot_password_cubit.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/ui/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -69,7 +70,39 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   validator: _validateEmailField,
                 ),
                 verticalSpace(32),
-                CustomButton(text: "Get Reset OTP", onPressed: _login),
+                BlocConsumer<ForgotPasswordCubit, ForgotPasswordState>(
+                  listener: (context, state) {
+                    if (state is ForgotPasswordError) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(state.message),
+                          backgroundColor: AppColors.error,
+                        ),
+                      );
+                    } else if (state is ForgotPasswordSuccess) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(state.message),
+                          backgroundColor: AppColors.success,
+                        ),
+                      );
+                      // Navigate to OTP verification screen
+                      context.pushNamed(
+                        Routes.resetPasswordScreen,
+                        arguments: emailController.text,
+                      );
+                    }
+                  },
+                  builder: (context, state) {
+                    return CustomButton(
+                      text: state is ForgotPasswordLoading
+                          ? "Loading..."
+                          : "Get Reset OTP",
+                      isLoading: state is ForgotPasswordLoading,
+                      onPressed: _login,
+                    );
+                  },
+                ),
                 verticalSpace(32),
                 TextButton(
                   onPressed: () {
@@ -94,7 +127,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     );
   }
 
-  void _login() {
+  void _login() async {
     if (formKey.currentState!.validate()) {
       if (!AppRegex.isEmailValid(emailController.text)) {
         // tell user the words he must write to be a suitable for regex
@@ -108,11 +141,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         );
       } else {
         // Call cubit to send OTP to user email
-
-        // Navigate to OTP verification screen
-        context.pushNamed(
-          Routes.resetPasswordScreen,
-          arguments: emailController.text,
+        await context.read<ForgotPasswordCubit>().forgotPassword(
+          emailController.text,
         );
       }
     }

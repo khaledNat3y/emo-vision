@@ -2,8 +2,11 @@ import 'package:facial_emotional_detection_graduation_project/core/helpers/exten
 import 'package:facial_emotional_detection_graduation_project/core/theming/app_text_theme.dart';
 import 'package:facial_emotional_detection_graduation_project/core/widgets/app_text_form_field.dart';
 import 'package:facial_emotional_detection_graduation_project/core/widgets/custom_btn.dart';
+import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/reset_password_request_body.dart';
+import 'package:facial_emotional_detection_graduation_project/features/auth/logic/forgot_password_cubit/cubit/forgot_password_cubit.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/ui/widgets/otp_pin_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
@@ -100,29 +103,14 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               8.verticalSpace,
 
               // Email display card (read-only)
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12.r),
+              AppTextFormField(
+                controller: TextEditingController(text: widget.email),
+                isReadOnly: true,
+                prefixIcon: const Icon(
+                  Icons.email_outlined,
+                  color: Color(0xFF1565C0),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      widget.email,
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        color: const Color(0xFF333333),
-                      ),
-                    ),
-                    const Icon(
-                      Icons.lock_outline,
-                      size: 18,
-                      color: Color(0xFFBBBBBB),
-                    ),
-                  ],
-                ),
+                validator: (value) => null,
               ),
               20.verticalSpace,
 
@@ -167,7 +155,16 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               8.verticalSpace,
 
               // New password field
-              AppTextFormField(hintText: '••••••••', validator: (value) {}),
+              AppTextFormField(
+                controller: _newPasswordController,
+                hintText: '••••••••',
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a password';
+                  }
+                  return null;
+                },
+              ),
               16.verticalSpace,
 
               // CONFIRM NEW PASSWORD label
@@ -178,15 +175,49 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               8.verticalSpace,
 
               // Confirm password field
-              AppTextFormField(hintText: '••••••••', validator: (value) {}),
+              AppTextFormField(
+                controller: _confirmPasswordController,
+                hintText: '••••••••',
+                validator: (value) {
+                  if (value != _newPasswordController.text) {
+                    return 'Passwords do not match';
+                  }
+                  return null;
+                },
+              ),
 
               40.verticalSpace,
 
-              // Confirm Button — untouched
-              CustomBtn(
-                title: "Reset Password",
-                onTap: _handleVerifyOTP,
-                isLoading: false,
+              BlocConsumer<ForgotPasswordCubit, ForgotPasswordState>(
+                listener: (context, state) {
+                  if (state is ResetPasswordSuccess) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Password reset successful! Please log in with your new password.',
+                        ),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                    context.pop();
+                  } else if (state is ResetPasswordError) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(state.message),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  return CustomBtn(
+                    title: state is ResetPasswordLoading
+                        ? "Verifying..."
+                        : "Reset Password",
+                    onTap: _handleVerifyOTP,
+                    isLoading: false,
+                  );
+                },
               ),
               24.verticalSpace,
             ],
@@ -206,6 +237,14 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
         ),
       );
       return;
+    } else {
+      context.read<ForgotPasswordCubit>().resetPassword(
+        ResetPasswordRequestBody(
+          email: widget.email,
+          otp: _otpController.text,
+          newPassword: _newPasswordController.text,
+        ),
+      );
     }
   }
 }
