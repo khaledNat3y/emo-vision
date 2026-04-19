@@ -6,6 +6,7 @@ import 'package:facial_emotional_detection_graduation_project/features/auth/data
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/me_response.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/register_request_body.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/register_response.dart';
+import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/resend_otp_request_body.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/reset_password_request_body.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/verify_email_request_body.dart';
 import 'package:retrofit/retrofit.dart';
@@ -45,4 +46,7 @@ abstract class AuthService {
   Future<String> resetPassword({
     @Body() required ResetPasswordRequestBody body,
   });
+
+  @POST(ApiConstants.resendOtp)
+  Future<String> resendOtp({@Body() required ResendOtpRequestBody body});
 }

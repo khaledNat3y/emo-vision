@@ -8,6 +8,7 @@ import 'package:facial_emotional_detection_graduation_project/features/auth/data
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/me_response.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/register_request_body.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/register_response.dart';
+import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/resend_otp_request_body.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/reset_password_request_body.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/verify_email_request_body.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -128,6 +129,19 @@ class AuthRepo {
           otp: body.otp,
           newPassword: body.newPassword,
         ),
+      );
+      return response;
+    } on DioException catch (e) {
+      throw Exception(_handleDioError(e));
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<String> resendOtp({required ResendOtpRequestBody body}) async {
+    try {
+      final response = await _authService.resendOtp(
+        body: ResendOtpRequestBody(email: body.email),
       );
       return response;
     } on DioException catch (e) {

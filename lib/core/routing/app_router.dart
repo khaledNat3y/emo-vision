@@ -45,13 +45,11 @@ class AppRouter {
         );
 
       case Routes.resetPasswordScreen:
-        final args = settings.arguments as String?;
+        final args = settings.arguments as Map<String, dynamic>?;
         return MaterialPageRoute(
-          builder: (_) => BlocProvider(
-            create: (context) => ForgotPasswordCubit(
-              AuthRepo(AuthService(DioHelper.dio), FirebaseServices()),
-            ),
-            child: ResetPasswordScreen(email: args ?? ''),
+          builder: (_) => BlocProvider.value(
+            value: args?['cubit'] as ForgotPasswordCubit,
+            child: ResetPasswordScreen(email: args?['email'] ?? ''),
           ),
         );
 

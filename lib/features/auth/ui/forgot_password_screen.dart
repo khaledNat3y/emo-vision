@@ -29,6 +29,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // force a rebuild every time this screen comes back into view
+    setState(() {});
+  }
+
+  @override
   void dispose() {
     emailController.dispose();
     super.dispose();
@@ -70,7 +77,18 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   validator: _validateEmailField,
                 ),
                 verticalSpace(32),
+
                 BlocConsumer<ForgotPasswordCubit, ForgotPasswordState>(
+                  // rebuild on every state change that affects the button
+                  buildWhen: (previous, current) =>
+                      current is ForgotPasswordLoading ||
+                      current is ForgotPasswordSuccess ||
+                      current is ForgotPasswordError ||
+                      current is ResendOtpTimerTick ||
+                      current is ResendOtpTimerFinished,
+                  listenWhen: (previous, current) =>
+                      current is ForgotPasswordError ||
+                      current is ForgotPasswordSuccess,
                   listener: (context, state) {
                     if (state is ForgotPasswordError) {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -86,20 +104,31 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           backgroundColor: AppColors.success,
                         ),
                       );
-                      // Navigate to OTP verification screen
                       context.pushNamed(
                         Routes.resetPasswordScreen,
-                        arguments: emailController.text,
+                        arguments: {
+                          'email': emailController.text,
+                          'cubit': context
+                              .read<
+                                ForgotPasswordCubit
+                              >(), // pass the same instance
+                        },
                       );
                     }
                   },
                   builder: (context, state) {
+                    final cubit = context.read<ForgotPasswordCubit>();
                     return CustomButton(
                       text: state is ForgotPasswordLoading
                           ? "Loading..."
+                          : cubit.isTimerActive
+                          ? 'Wait ${cubit.timerText}'
                           : "Get Reset OTP",
                       isLoading: state is ForgotPasswordLoading,
-                      onPressed: _login,
+                      onPressed:
+                          cubit.isTimerActive || state is ForgotPasswordLoading
+                          ? null
+                          : _login,
                     );
                   },
                 ),

@@ -2,6 +2,7 @@ import 'package:facial_emotional_detection_graduation_project/core/helpers/exten
 import 'package:facial_emotional_detection_graduation_project/core/theming/app_text_theme.dart';
 import 'package:facial_emotional_detection_graduation_project/core/widgets/app_text_form_field.dart';
 import 'package:facial_emotional_detection_graduation_project/core/widgets/custom_btn.dart';
+import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/resend_otp_request_body.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/reset_password_request_body.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/logic/forgot_password_cubit/cubit/forgot_password_cubit.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/ui/widgets/otp_pin_field.dart';
@@ -21,9 +22,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   late final TextEditingController _otpController;
   late final TextEditingController _newPasswordController;
   late final TextEditingController _confirmPasswordController;
-
-  bool _obscureNew = true;
-  bool _obscureConfirm = true;
 
   @override
   void initState() {
@@ -52,7 +50,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Back button
               GestureDetector(
                 onTap: () => context.pop(),
                 child: Row(
@@ -75,8 +72,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 ),
               ),
               32.verticalSpace,
-
-              // Title
               Text(
                 'Reset Password',
                 style: TextStyle(
@@ -86,8 +81,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 ),
               ),
               8.verticalSpace,
-
-              // Subtitle
               Text(
                 'Enter the OTP sent to your email and your new\npassword to secure your account.',
                 style: TextStyle(
@@ -97,12 +90,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 ),
               ),
               28.verticalSpace,
-
-              // EMAIL ADDRESS label
               Text('EMAIL ADDRESS', style: AppTextTheme.font12GreyMedium),
               8.verticalSpace,
-
-              // Email display card (read-only)
               AppTextFormField(
                 controller: TextEditingController(text: widget.email),
                 isReadOnly: true,
@@ -113,8 +102,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 validator: (value) => null,
               ),
               20.verticalSpace,
-
-              // VERIFICATION CODE label + Resend row
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -122,39 +109,84 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     'VERIFICATION CODE',
                     style: AppTextTheme.font12GreyMedium,
                   ),
-                  TextButton(
-                    onPressed: () {},
-                    style: TextButton.styleFrom(
-                      padding: EdgeInsets.zero,
-                      minimumSize: Size.zero,
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    ),
-                    child: Text(
-                      'Resend OTP',
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w600,
-                        color: const Color(0xFF1565C0),
-                      ),
-                    ),
+                  BlocConsumer<ForgotPasswordCubit, ForgotPasswordState>(
+                    listener: (context, state) {
+                      if (state is ResendOtpError) {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('Error'),
+                            content: Text(state.message),
+                            actions: [
+                              TextButton(
+                                onPressed: () => context.pop(),
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          ),
+                        );
+                      } else if (state is ResendOtpSuccess) {
+                        // timer now lives in the cubit
+                        context.read<ForgotPasswordCubit>().startResendTimer();
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('Success'),
+                            content: Text(state.message),
+                            actions: [
+                              TextButton(
+                                onPressed: () => context.pop(),
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                    },
+                    builder: (context, state) {
+                      final cubit = context.read<ForgotPasswordCubit>();
+                      return TextButton(
+                        onPressed:
+                            cubit.isTimerActive || state is ResendOtpLoading
+                            ? null
+                            : () {
+                                context.read<ForgotPasswordCubit>().resendOtp(
+                                  ResendOtpRequestBody(email: widget.email),
+                                );
+                              },
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          minimumSize: Size.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        child: Text(
+                          state is ResendOtpLoading
+                              ? 'Resending...'
+                              : cubit.isTimerActive
+                              ? cubit.timerText
+                              : 'Resend OTP',
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w600,
+                            color: cubit.isTimerActive
+                                ? const Color(0xFF888888)
+                                : const Color(0xFF1565C0),
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
               8.verticalSpace,
-
-              // OTP Input — untouched
               OtpPinField(
                 length: 6,
                 controller: _otpController,
                 onCompleted: _handleVerifyOTP,
               ),
               20.verticalSpace,
-
-              // NEW PASSWORD label
               Text("NEW PASSWORD", style: AppTextTheme.font12GreyMedium),
               8.verticalSpace,
-
-              // New password field
               AppTextFormField(
                 controller: _newPasswordController,
                 hintText: '••••••••',
@@ -166,15 +198,11 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 },
               ),
               16.verticalSpace,
-
-              // CONFIRM NEW PASSWORD label
               Text(
                 "CONFIRM NEW PASSWORD",
                 style: AppTextTheme.font12GreyMedium,
               ),
               8.verticalSpace,
-
-              // Confirm password field
               AppTextFormField(
                 controller: _confirmPasswordController,
                 hintText: '••••••••',
@@ -185,9 +213,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   return null;
                 },
               ),
-
               40.verticalSpace,
-
               BlocConsumer<ForgotPasswordCubit, ForgotPasswordState>(
                 listener: (context, state) {
                   if (state is ResetPasswordSuccess) {
