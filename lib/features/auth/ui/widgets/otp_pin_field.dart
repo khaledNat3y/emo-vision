@@ -1,3 +1,4 @@
+import 'package:facial_emotional_detection_graduation_project/core/helpers/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
@@ -27,6 +28,10 @@ class OtpPinField extends StatelessWidget {
       cursorColor: const Color(0xFF2F5FED),
       animationDuration: const Duration(milliseconds: 200),
       enableActiveFill: true,
+      onSubmitted: (value) {
+        Logger.debug("OTP submitted: $value");
+        if (onCompleted != null) onCompleted!();
+      },
       textStyle: const TextStyle(
         fontSize: 24,
         fontWeight: FontWeight.w600,

@@ -29,13 +29,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // force a rebuild every time this screen comes back into view
-    setState(() {});
-  }
-
-  @override
   void dispose() {
     emailController.dispose();
     super.dispose();

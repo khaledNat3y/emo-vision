@@ -18,7 +18,6 @@ class RegisterForm extends StatefulWidget {
 }
 
 class _RegisterFormState extends State<RegisterForm> {
-  // ── Controllers & Keys ────────────────────────────────────────────────────
   late TextEditingController email;
   late TextEditingController password;
   late TextEditingController confirmPassword;
@@ -26,7 +25,7 @@ class _RegisterFormState extends State<RegisterForm> {
   late TextEditingController lastNameController;
   late GlobalKey<FormState> formKey;
 
-  // ── State ─────────────────────────────────────────────────────────────────
+  // State
   bool isObscureText = true;
   late FocusNode _passwordFocusNode;
   bool _isPasswordFocused = false;
@@ -75,7 +74,7 @@ class _RegisterFormState extends State<RegisterForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── First & Last Name ────────────────────────────────────────────
+            // First & Last Name
             Row(
               children: [
                 Expanded(
@@ -119,7 +118,7 @@ class _RegisterFormState extends State<RegisterForm> {
             ),
             24.verticalSpace,
 
-            // ── Email ────────────────────────────────────────────────────────
+            // Email
             Text("Email", style: AppTextTheme.font12GreyMedium),
             AppTextFormField(
               hintText: "Loisbecket@gmail.com",
@@ -135,7 +134,7 @@ class _RegisterFormState extends State<RegisterForm> {
             ),
             24.verticalSpace,
 
-            // ── Password ─────────────────────────────────────────────────────
+            // Password
             Text("Password", style: AppTextTheme.font12GreyMedium),
             AppTextFormField(
               hintText: "Password",
@@ -165,25 +164,25 @@ class _RegisterFormState extends State<RegisterForm> {
               },
             ),
 
-            // ── Animated Password Validation Indicator ───────────────────────
+            // Animated Password Validation Indicator
             AnimatedSize(
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut,
               child: _isPasswordFocused
                   ? Padding(
-                padding: EdgeInsets.only(top: 12.h),
-                child: AnimatedOpacity(
-                  opacity: _isPasswordFocused ? 1.0 : 0.0,
-                  duration: const Duration(milliseconds: 300),
-                  child: PasswordValidation(
-                    hasLowerCase: hasLowerCase,
-                    hasUpperCase: hasUpperCase,
-                    hasSpecialCharacters: hasSpecialCharacters,
-                    hasNumber: hasNumber,
-                    hasMinLength: hasMinLength,
-                  ),
-                ),
-              )
+                      padding: EdgeInsets.only(top: 12.h),
+                      child: AnimatedOpacity(
+                        opacity: _isPasswordFocused ? 1.0 : 0.0,
+                        duration: const Duration(milliseconds: 300),
+                        child: PasswordValidation(
+                          hasLowerCase: hasLowerCase,
+                          hasUpperCase: hasUpperCase,
+                          hasSpecialCharacters: hasSpecialCharacters,
+                          hasNumber: hasNumber,
+                          hasMinLength: hasMinLength,
+                        ),
+                      ),
+                    )
                   : const SizedBox.shrink(),
             ),
 

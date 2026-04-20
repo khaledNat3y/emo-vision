@@ -1,15 +1,25 @@
 import 'dart:async';
-import 'package:bloc/bloc.dart';
 import 'package:facial_emotional_detection_graduation_project/core/helpers/logger.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/resend_otp_request_body.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/reset_password_request_body.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/repo/auth_repo.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'forgot_password_state.dart';
 
 class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
   final AuthRepo _authRepo;
+
+  // State
+  bool isObscureText = true;
+  bool isPasswordFocused = false;
+  bool hasLowerCase = false;
+  bool hasUpperCase = false;
+  bool hasSpecialCharacters = false;
+  bool hasNumber = false;
+  bool hasMinLength = false;
+  String? otpError;
 
   Timer? _resendTimer;
   int remainingSeconds = 0;

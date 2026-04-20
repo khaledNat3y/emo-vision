@@ -68,7 +68,7 @@ class LoginCubit extends Cubit<LoginState> {
     );
   }
 
-  // ── Google ─────────────────────────────────────────────────────────────────
+  // Google
 
   Future<void> signInWithGoogle() async {
     emit(const LoginWithGoogleLoading());
