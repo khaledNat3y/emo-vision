@@ -33,6 +33,20 @@ android {
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
+    flavorDimensions += "default"
+    
+    productFlavors {
+    create("development") {
+        dimension = "default"
+        applicationIdSuffix = ".development"
+        resValue("string", "app_name", "EmoVision Development")
+    }
+    create("production") {
+        dimension = "default"
+        applicationIdSuffix = ".production"
+        resValue("string", "app_name", "EmoVision")
+    }
+}
 
     buildTypes {
         release {

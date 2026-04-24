@@ -1,23 +1,16 @@
 import 'package:facial_emotional_detection_graduation_project/core/constant/cache_constants.dart';
 import 'package:facial_emotional_detection_graduation_project/core/di/dependency_injection.dart';
 import 'package:facial_emotional_detection_graduation_project/core/helpers/logger.dart';
-import 'package:facial_emotional_detection_graduation_project/emovision_app.dart';
+import 'package:facial_emotional_detection_graduation_project/core/helpers/shared_pref_helper.dart';
+import 'package:facial_emotional_detection_graduation_project/core/theming/app_colors.dart';
+import 'package:facial_emotional_detection_graduation_project/flavor.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'core/helpers/shared_pref_helper.dart';
-import 'core/theming/app_colors.dart';
-import 'firebase_options.dart';
+import 'package:facial_emotional_detection_graduation_project/firebase_options.dart';
 
-// These are read once at startup in checkIfUserFirstLaunch()
-// and used to decide the initial route.
-bool isFirstLaunch = false;
-bool isBiometric = false;
-bool isUserLoggedInWithGoogle = false;
-bool isUserLoggedInWithEmailAndPasswordAndHasValidAccessToken = false;
-
-void main() async {
+Future<void> initializeApp() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final String accessToken = await SharedPrefHelper.getSecuredString(
@@ -36,10 +29,9 @@ void main() async {
       statusBarColor: AppColors.white.withValues(alpha: 0.05),
     ),
   );
+  print(AppConfig.modeName);
 
   await checkIfUserFirstLaunch();
-
-  runApp(const EmovisionApp());
 }
 
 Future<void> checkIfUserFirstLaunch() async {
@@ -56,18 +48,9 @@ Future<void> checkIfUserFirstLaunch() async {
     CacheConstants.accessToken,
   );
 
-  Logger.debug("hasSeenOnboarding: $hasSeenOnboarding");
-
   isFirstLaunch = !hasSeenOnboarding;
-
-  if (isBiometricLoggedIn) {
-    isBiometric = true;
-  }
-
-  if (loggedInWithGoogle) {
-    isUserLoggedInWithGoogle = true;
-  }
-
+  if (isBiometricLoggedIn) isBiometric = true;
+  if (loggedInWithGoogle) isUserLoggedInWithGoogle = true;
   if (accessToken != null && accessToken.isNotEmpty) {
     isUserLoggedInWithEmailAndPasswordAndHasValidAccessToken = true;
   }

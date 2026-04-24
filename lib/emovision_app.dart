@@ -1,9 +1,9 @@
+import 'package:facial_emotional_detection_graduation_project/core/constant/cache_constants.dart'; // ✅ add this
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:facial_emotional_detection_graduation_project/core/routing/app_router.dart';
 import 'package:facial_emotional_detection_graduation_project/core/routing/routes.dart';
 import 'package:facial_emotional_detection_graduation_project/core/theming/app_theme.dart';
-import 'package:facial_emotional_detection_graduation_project/main.dart'; // ← globals: isFirstLaunch, isBiometric, etc.
 
 class EmovisionApp extends StatelessWidget {
   const EmovisionApp({super.key});

@@ -1,6 +1,5 @@
 import 'package:facial_emotional_detection_graduation_project/core/helpers/spacing.dart';
 import 'package:flutter/material.dart';
-import '../theming/app_colors.dart';
 import 'logger.dart';
 
 /// Shows an enhanced dialog for errors or success messages.
@@ -47,9 +46,7 @@ void showEnhancedDialog({
     context: context,
     barrierDismissible: !isError,
     builder: (context) => AlertDialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Row(
         children: [
           Container(
@@ -90,10 +87,7 @@ void showEnhancedDialog({
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            message,
-            style: const TextStyle(fontSize: 16, height: 1.5),
-          ),
+          Text(message, style: const TextStyle(fontSize: 16, height: 1.5)),
           if (isError && errors.isNotEmpty) ...[
             const SizedBox(height: 12),
             Container(
@@ -107,8 +101,11 @@ void showEnhancedDialog({
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.info_outline,
-                          size: 18, color: Colors.grey.shade700),
+                      Icon(
+                        Icons.info_outline,
+                        size: 18,
+                        color: Colors.grey.shade700,
+                      ),
                       const SizedBox(width: 8),
                       Text(
                         'Details:',
@@ -128,9 +125,13 @@ void showEnhancedDialog({
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('• ',
-                              style: TextStyle(
-                                  color: Colors.grey.shade700, fontSize: 14)),
+                          Text(
+                            '• ',
+                            style: TextStyle(
+                              color: Colors.grey.shade700,
+                              fontSize: 14,
+                            ),
+                          ),
                           Expanded(
                             child: Text(
                               e,
@@ -159,14 +160,19 @@ void showEnhancedDialog({
               ),
               child: Row(
                 children: [
-                  Icon(Icons.lightbulb_outline,
-                      size: 18, color: Colors.blue.shade700),
+                  Icon(
+                    Icons.lightbulb_outline,
+                    size: 18,
+                    color: Colors.blue.shade700,
+                  ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       _getHelpText(statusCode),
                       style: TextStyle(
-                          fontSize: 13, color: Colors.blue.shade700),
+                        fontSize: 13,
+                        color: Colors.blue.shade700,
+                      ),
                     ),
                   ),
                 ],
@@ -177,31 +183,37 @@ void showEnhancedDialog({
       ),
       actions: isError
           ? [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: Text(
-            'OK',
-            style: TextStyle(
-                color: Colors.grey.shade600,
-                fontWeight: FontWeight.w600),
-          ),
-        ),
-      ]
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(
+                  'OK',
+                  style: TextStyle(
+                    color: Colors.grey.shade600,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ]
           : [
-        ElevatedButton(
-          onPressed: () => Navigator.of(context).pop(),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.green.shade600,
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(
-                horizontal: 32, vertical: 12),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8)),
-          ),
-          child: const Text('Continue',
-              style: TextStyle(fontWeight: FontWeight.w600)),
-        ),
-      ],
+              ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green.shade600,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 12,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: const Text(
+                  'Continue',
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+              ),
+            ],
       actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
     ),
   );

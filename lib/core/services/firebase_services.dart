@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:facial_emotional_detection_graduation_project/core/constant/cache_constants.dart';
 import 'package:facial_emotional_detection_graduation_project/core/constant/firebase_constants.dart';
 import 'package:facial_emotional_detection_graduation_project/core/helpers/logger.dart';
 import 'package:facial_emotional_detection_graduation_project/features/home/data/model/user_model.dart';
@@ -17,7 +16,7 @@ class FirebaseServices {
         serverClientId:
             '911321786473-863rtkr9s7llukra3fq7lo6g1j6ovvmg.apps.googleusercontent.com',
       );
-    isInitialize = true;
+      isInitialize = true;
     }
   }
 
@@ -53,14 +52,16 @@ class FirebaseServices {
             .doc(user.uid);
         final docSnapshot = await userDoc.get();
         if (!docSnapshot.exists) {
-          await userDoc.set(UserModel(
-            createdAt: FieldValue.serverTimestamp(),
-            uid: user.uid,
-            email: user.email ?? '',
-            name: user.displayName ?? '',
-            photoURL: user.photoURL ?? '',
-            provider: 'google',
-          ).toJson());
+          await userDoc.set(
+            UserModel(
+              createdAt: FieldValue.serverTimestamp(),
+              uid: user.uid,
+              email: user.email ?? '',
+              name: user.displayName ?? '',
+              photoURL: user.photoURL ?? '',
+              provider: 'google',
+            ).toJson(),
+          );
         }
       }
       return userCredential;
@@ -85,6 +86,7 @@ class FirebaseServices {
   User? getCurrentUser() {
     return _auth.currentUser;
   }
+
   UserModel? getCurrentUserInfo() {
     return _auth.currentUser != null
         ? UserModel(
