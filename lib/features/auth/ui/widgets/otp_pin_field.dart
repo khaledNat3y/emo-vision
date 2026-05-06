@@ -1,4 +1,5 @@
 import 'package:facial_emotional_detection_graduation_project/core/helpers/logger.dart';
+import 'package:facial_emotional_detection_graduation_project/core/theming/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
@@ -18,6 +19,8 @@ class OtpPinField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return PinCodeTextField(
       appContext: context,
       autoDisposeControllers: false,
@@ -25,29 +28,29 @@ class OtpPinField extends StatelessWidget {
       controller: controller,
       keyboardType: TextInputType.number,
       animationType: AnimationType.fade,
-      cursorColor: const Color(0xFF2F5FED),
+      cursorColor: AppColors.primary,
       animationDuration: const Duration(milliseconds: 200),
       enableActiveFill: true,
       onSubmitted: (value) {
         Logger.debug("OTP submitted: $value");
         if (onCompleted != null) onCompleted!();
       },
-      textStyle: const TextStyle(
+      textStyle: TextStyle(
         fontSize: 24,
         fontWeight: FontWeight.w600,
-        color: Colors.black,
+        color: theme.colorScheme.onSurface,
       ),
       pinTheme: PinTheme(
         shape: PinCodeFieldShape.box,
         borderRadius: BorderRadius.circular(12),
         fieldHeight: 45,
         fieldWidth: 45,
-        activeFillColor: Colors.white,
-        inactiveFillColor: Colors.white,
-        selectedFillColor: Colors.white,
-        activeColor: const Color(0xFF2F5FED),
-        inactiveColor: const Color(0xFFE8E8E8),
-        selectedColor: const Color(0xFF2F5FED),
+        activeFillColor: theme.colorScheme.surface,
+        inactiveFillColor: theme.colorScheme.surface,
+        selectedFillColor: theme.colorScheme.surface,
+        activeColor: AppColors.primary,
+        inactiveColor: theme.colorScheme.outline,
+        selectedColor: AppColors.primary,
         borderWidth: 2,
       ),
       onCompleted: (value) {

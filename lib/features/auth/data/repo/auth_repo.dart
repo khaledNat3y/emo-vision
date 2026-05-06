@@ -19,8 +19,8 @@ import '../../../../core/helpers/shared_pref_helper.dart';
 import '../../../../core/services/auth_service.dart';
 
 // Either<String, T>
-// Left(String)  → error message to show the user
-// Right(T)      → success data
+// Left(String)  => error message to show the user
+// Right(T)      => success data
 
 class AuthRepo {
   final AuthService _authService;

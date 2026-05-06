@@ -1,577 +1,869 @@
 # Core Reference Guide
 
-This document provides a quick reference for the presentation layer of the Flutter project, covering design system tokens, reusable widgets, UI components, constants, enums, and utilities available in the `lib/core/` directory.
+Quick reference for presentation-layer work using `lib/core/`: design tokens, reusable widgets, dialogs, routing helpers, constants, and utilities.
 
----
+## File Structure Overview
 
-## Table of Contents
-
-1. [Design System](#design-system)
-   - [Colors](#colors)
-   - [Typography](#typography)
-   - [Spacing](#spacing)
-   - [Font Weights](#font-weights)
-2. [Core Widgets](#core-widgets)
-3. [UI Components](#ui-components)
-4. [Constants & Enums](#constants--enums)
-5. [Utilities](#utilities)
-6. [Quick Reference](#quick-reference)
-7. [File Structure Overview](#file-structure-overview)
-
----
+```text
+lib/core/
+|-- constant/
+|   |-- cache_constants.dart
+|   `-- firebase_constants.dart
+|-- di/
+|   `-- dependency_injection.dart
+|-- helpers/
+|   |-- app_assets.dart
+|   |-- app_regex.dart
+|   |-- app_startup.dart
+|   |-- constants.dart
+|   |-- extensions.dart
+|   |-- functions.dart
+|   |-- logger.dart
+|   |-- shared_pref_helper.dart
+|   `-- spacing.dart
+|-- networking/
+|   |-- api_constant.dart
+|   |-- api_error_handler.dart
+|   `-- dio_helper.dart
+|-- routing/
+|   |-- app_router.dart
+|   |-- router_transitions.dart
+|   `-- routes.dart
+|-- services/
+|   |-- biometric_service.dart
+|   |-- firebase_services.dart
+|   `-- auth_service.dart
+|-- theming/
+|   |-- app_colors.dart
+|   |-- app_text_theme.dart
+|   |-- app_theme.dart
+|   `-- font_weight_helper.dart
+`-- widgets/
+    |-- app_text_form_field.dart
+    |-- custom_btn.dart
+    |-- password_validation.dart
+    `-- video_upload_widget.dart
+```
 
 ## Design System
 
-### Colors
+### AppColors
 
-**File:** [`lib/core/theming/app_colors.dart`](lib/core/theming/app_colors.dart)
+File: `lib/core/theming/app_colors.dart`
 
-#### Light Theme Colors
+`AppColors` is the main color token source.
 
-| Token | Value | Usage |
-|-------|-------|-------|
-| `AppColors.backgroundLight` | `0xffffffff` | Scaffold background |
-| `AppColors.surfaceLight` | `0xffffffff` | Surface/Card background |
-| `AppColors.textPrimaryLight` | `0xff0F172A` | Primary text |
-| `AppColors.grey` | `0xff6C7278` | Secondary text |
-| `AppColors.textTertiaryLight` | `0xff94A3B8` | Hint/placeholder text |
-| `AppColors.borderLight` | `0xffEDF1F3` | Border color |
-| `AppColors.dividerLight` | `0xfff0f0f0` | Divider lines |
-
-#### Dark Theme Colors
-
-| Token | Value | Usage |
-|-------|-------|-------|
-| `AppColors.backgroundDark` | `0xff0F172A` | Scaffold background |
-| `AppColors.surfaceDark` | `0xff1e293b` | Surface/Card background |
-| `AppColors.textPrimaryDark` | `0xffffffff` | Primary text |
-| `AppColors.textSecondaryDark` | `0xffCBD5E1` | Secondary text |
-| `AppColors.textTertiaryDark` | `0xff94A3B8` | Hint/placeholder text |
-| `AppColors.borderDark` | `0xff334155` | Border color |
-| `AppColors.dividerDark` | `0xff475569` | Divider lines |
-
-#### Common Colors
-
-| Token | Value | Usage |
-|-------|-------|-------|
-| `AppColors.white` | `0xffffffff` | White color |
-| `AppColors.black` | `0xff000000` | Black color |
-| `AppColors.primary` | `0xff1D61E7` | Primary brand color |
-| `AppColors.primaryDark` | `0xff1d4ed8` | Primary hover/dark variant |
-| `AppColors.secondary` | `0xff06B6D4` | Secondary brand color |
-| `AppColors.tertiary` | `0xff8B5CF6` | Tertiary accent color |
-| `AppColors.success` | `0xff10b981` | Success states |
-| `AppColors.error` | `0xffef4444` | Error states |
-| `AppColors.warning` | `0xfff59e0b` | Warning states |
-
-#### Usage Example
+| Token group | Tokens |
+| --- | --- |
+| Light surfaces | `backgroundLight`, `surfaceLight`, `borderLight`, `dividerLight` |
+| Light text | `textPrimaryLight`, `grey`, `textTertiaryLight` |
+| Dark surfaces | `backgroundDark`, `surfaceDark`, `borderDark`, `dividerDark` |
+| Dark text | `textPrimaryDark`, `textSecondaryDark`, `textTertiaryDark` |
+| Brand/status | `primary`, `primaryDark`, `secondary`, `tertiary`, `success`, `error`, `warning` |
+| Base | `white`, `black` |
 
 ```dart
-import 'package:facial_emotional_detection_graduation_project/core/theming/app_colors.dart';
-
-// Using colors in a Container
 Container(
-  color: AppColors.primary,
-  child: Text(
-    'Hello',
-    style: TextStyle(color: AppColors.white),
+  decoration: BoxDecoration(
+    color: AppColors.surfaceLight,
+    border: Border.all(color: AppColors.borderLight),
   ),
-)
+  child: Text(
+    'Profile',
+    style: Theme.of(context).textTheme.titleLarge,
+  ),
+);
+```
 
-// Using in theme-aware contexts
+### AppTextStyles / AppTextTheme
+
+File: `lib/core/theming/app_text_theme.dart`
+
+There is no `AppTextStyles` class. The current class is `AppTextTheme`.
+
+Available static styles:
+
+```dart
+AppTextTheme.font24BlackBold
+AppTextTheme.font14BlackSemiBold
+AppTextTheme.font12GreyMedium
+AppTextTheme.font12BlueRegular
+AppTextTheme.font13BlackRegular
+AppTextTheme.font16WhiteMedium
+AppTextTheme.font24WhiteBold
+AppTextTheme.font12RegularPrimary
+AppTextTheme.font13WhiteRegular
+AppTextTheme.font16PrimaryMedium
+AppTextTheme.font20BoldPrimary
+AppTextTheme.font18MediumSecondary
+AppTextTheme.font14RegularTertiary
+```
+
+```dart
+Text(
+  'Welcome back',
+  style: AppTextTheme.font24BlackBold,
+);
+
+Text(
+  'Forgot password?',
+  style: AppTextTheme.font12BlueRegular,
+);
+```
+
+Prefer theme styles when the text should adapt between light and dark mode:
+
+```dart
+Text(
+  'Email address',
+  style: Theme.of(context).textTheme.bodyMedium,
+);
+```
+
+Theme styles are defined in `lib/core/theming/app_theme.dart` for `displayLarge`, `displayMedium`, `headlineLarge`, `headlineMedium`, `headlineSmall`, `titleLarge`, `titleMedium`, `titleSmall`, `bodyLarge`, `bodyMedium`, and `bodySmall`.
+
+### AppSpacing
+
+File: `lib/core/helpers/spacing.dart`
+
+There is no `AppSpacing` class. Use the spacing helpers and `flutter_screenutil` extensions.
+
+```dart
+Column(
+  children: [
+    Text('Title'),
+    verticalSpace(16),
+    Text('Subtitle'),
+  ],
+);
+
+Row(
+  children: [
+    const Icon(Icons.email),
+    horizontalSpace(8),
+    Expanded(child: AppTextFormField(...)),
+  ],
+);
+```
+
+Some screens also use extension syntax such as `16.verticalSpace` and `8.horizontalSpace`; those come from `flutter_screenutil`.
+
+### AppRadius
+
+No `AppRadius` class exists yet. Current radius values are hardcoded where needed.
+
+Common values already used:
+
+| Radius | Current usage |
+| --- | --- |
+| `8.r` | Theme buttons, dialog action button |
+| `10.0` | `AppTextFormField` enabled border |
+| `16.0` | `AppTextFormField` focused/error borders, enhanced dialog |
+| `24.r` | `VideoUploadWidget` card container |
+| `50` / `50.r` | Pill buttons |
+
+```dart
 Container(
-  color: Theme.of(context).brightness == Brightness.dark 
-      ? AppColors.backgroundDark 
-      : AppColors.backgroundLight,
-)
+  decoration: BoxDecoration(
+    borderRadius: BorderRadius.circular(16.r),
+  ),
+);
 ```
 
----
+### Shadows
 
-### Typography
-
-**File:** [`lib/core/theming/app_text_theme.dart`](lib/core/theming/app_text_theme.dart)
-
-The project uses **League Spartan** font family with responsive sizing via `flutter_screenutil`.
-
-#### Predefined Text Styles
-
-| Style | Size | Weight | Color | Usage |
-|-------|------|--------|-------|-------|
-| `font24BlackBold` | 24.sp | Bold | textPrimaryLight | Headlines |
-| `font14BlackSemiBold` | 14.sp | SemiBold | black | Subheadings |
-| `font12GreyMedium` | 12.sp | Medium | grey | Captions |
-| `font12BlueRegular` | 12.sp | Regular | primary | Links |
-| `font13BlackRegular` | 13.sp | Regular | textPrimaryLight | Body text |
-| `font16WhiteMedium` | 16.sp | Medium | white | Button text |
-| `font24WhiteBold` | 24.sp | Bold | textPrimaryDark | Dark theme headlines |
-| `font16PrimaryMedium` | 16.sp | Medium | primary | Primary text |
-| `font20BoldPrimary` | 20.sp | Bold | textPrimaryLight | Titles |
-| `font18MediumSecondary` | 18.sp | Medium | grey | Secondary headings |
-| `font14RegularTertiary` | 14.sp | Regular | textTertiaryLight | Tertiary text |
-
-#### Theme-based Text Styles
-
-Access via `Theme.of(context).textTheme`:
+There is no global shadow token class. `VideoUploadWidget` defines a local soft primary shadow:
 
 ```dart
-Text(
-  'Headline',
-  style: Theme.of(context).textTheme.headlineLarge,   // 32.sp, Bold
-)
-
-Text(
-  'Title',
-  style: Theme.of(context).textTheme.titleLarge,      // 16.sp, Bold
-)
-
-Text(
-  'Body',
-  style: Theme.of(context).textTheme.bodyLarge,       // 16.sp, Regular
-)
-
-Text(
-  'Caption',
-  style: Theme.of(context).textTheme.bodySmall,       // 12.sp, Regular
-)
+boxShadow: [
+  BoxShadow(
+    color: AppColors.primary.withAlpha(25),
+    blurRadius: 20,
+    offset: const Offset(0, 8),
+  ),
+],
 ```
-
----
-
-### Spacing
-
-**File:** [`lib/core/helpers/spacing.dart`](lib/core/helpers/spacing.dart)
-
-Use `flutter_screenutil` for responsive spacing:
-
-```dart
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-// Vertical spacing
-SizedBox(height: 20.h)
-
-// Horizontal spacing  
-SizedBox(width: 16.w)
-
-// Using the helper functions
-import 'package:facial_emotional_detection_graduation_project/core/helpers/spacing.dart';
-
-verticalSpace(20)  // Creates SizedBox(height: 20.h)
-horizontalSpace(16)  // Creates SizedBox(width: 16.w)
-```
-
----
 
 ### Font Weights
 
-**File:** [`lib/core/theming/font_weight_helper.dart`](lib/core/theming/font_weight_helper.dart)
+File: `lib/core/theming/font_weight_helper.dart`
 
-| Token | Value |
-|-------|-------|
-| `FontWeightHelper.thin` | w100 |
-| `FontWeightHelper.extraLight` | w200 |
-| `FontWeightHelper.light` | w300 |
-| `FontWeightHelper.regular` | w400 |
-| `FontWeightHelper.medium` | w500 |
-| `FontWeightHelper.semiBold` | w600 |
-| `FontWeightHelper.bold` | w700 |
-| `FontWeightHelper.extraBold` | w800 |
+Use `FontWeightHelper` instead of raw `FontWeight` values when matching the app style:
 
----
+```dart
+TextStyle(
+  fontWeight: FontWeightHelper.semiBold,
+);
+```
+
+Available: `thin`, `extraLight`, `light`, `regular`, `medium`, `semiBold`, `bold`, `extraBold`.
+
+### AppTheme
+
+File: `lib/core/theming/app_theme.dart`
+
+`AppTheme.lightMode` and `AppTheme.darkMode` configure Material 3, League Spartan, scaffold backgrounds, color schemes, button themes, and text themes.
+
+```dart
+MaterialApp(
+  theme: AppTheme.lightMode,
+  darkTheme: AppTheme.darkMode,
+  onGenerateRoute: AppRouter.generateRoute,
+);
+```
 
 ## Core Widgets
 
-### Custom Button
+### CustomBtn
 
-**File:** [`lib/core/widgets/custom_btn.dart`](lib/core/widgets/custom_btn.dart)
+File: `lib/core/widgets/custom_btn.dart`
 
-A full-width gradient button with loading state support.
+Full-width rounded gradient button.
+
+Key API:
 
 ```dart
-import 'package:facial_emotional_detection_graduation_project/core/widgets/custom_btn.dart';
-
-CustomBtn(
-  title: 'Submit',
-  onTap: () {
-    // Handle tap
-  },
-  isLoading: false, // Optional: show loading state
-)
+CustomBtn({
+  required String title,
+  void Function()? onTap,
+  bool? isLoading,
+})
 ```
 
-**Features:**
-- Full-width container
-- Gradient background (primary to primaryDark)
-- Loading state with grey background
-- Uses `AppTextTheme.font16WhiteMedium` for text styling
-
----
-
-### Text Form Field
-
-**File:** [`lib/core/widgets/app_text_form_field.dart`](lib/core/widgets/app_text_form_field.dart)
-
-A customizable text input field with built-in styling.
+Usage:
 
 ```dart
-import 'package:facial_emotional_detection_graduation_project/core/widgets/app_text_form_field.dart';
+CustomBtn(
+  title: 'Login',
+  isLoading: state is LoginLoading,
+  onTap: () => formKey.currentState?.validate(),
+);
+```
 
+Notes:
+
+| Behavior | Detail |
+| --- | --- |
+| Height | `MediaQuery.sizeOf(context).height * 0.0786` |
+| Text | `AppTextTheme.font16WhiteMedium` |
+| Gradient | `AppColors.primary` to `AppColors.primaryDark` |
+| Loading color | Grey gradient when `isLoading == true` |
+
+### AppTextFormField
+
+File: `lib/core/widgets/app_text_form_field.dart`
+
+Styled `TextFormField` wrapper for auth/profile forms.
+
+Key API:
+
+```dart
+AppTextFormField({
+  String? hintText,
+  bool? isObscureText,
+  Widget? suffixIcon,
+  Widget? prefixIcon,
+  Color? backgroundColor,
+  TextEditingController? controller,
+  required Function(String?) validator,
+  FocusNode? focusNode,
+  bool? isReadOnly,
+  String? initialValue,
+  EdgeInsetsGeometry? contentPadding,
+  InputBorder? focusedBorder,
+  InputBorder? enabledBorder,
+  TextStyle? inputTextStyle,
+  TextStyle? hintStyle,
+})
+```
+
+Usage:
+
+```dart
 AppTextFormField(
-  hintText: 'Enter your email',
-  controller: _emailController,
+  controller: emailController,
+  hintText: 'Email',
+  prefixIcon: const Icon(Icons.email_outlined),
   validator: (value) {
-    if (value == null || value.isEmpty) {
-      return 'Email is required';
+    if (!AppRegex.isEmailValid(value ?? '')) {
+      return 'Enter a valid email';
     }
     return null;
   },
-  // Optional parameters:
-  isObscureText: false,
-  suffixIcon: Icon(Icons.visibility),
-  backgroundColor: Colors.white,
-  contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 12.5),
-  isReadOnly: false,
-)
+);
 ```
 
-**Features:**
-- Customizable border styles (focused, enabled, error)
-- Built-in hint text styling
-- Support for suffix icons
-- Read-only mode support
-- Initial value support
-
----
-
-### Password Validation
-
-**File:** [`lib/core/widgets/password_validation.dart`](lib/core/widgets/password_validation.dart)
-
-A widget that shows password validation requirements with visual feedback.
+For passwords:
 
 ```dart
-import 'package:facial_emotional_detection_graduation_project/core/widgets/password_validation.dart';
-
-PasswordValidation(
-  hasLowerCase: true,    // Check if password has lowercase
-  hasUpperCase: true,    // Check if password has uppercase  
-  hasSpecialCharacters: true,  // Check for special chars
-  hasNumber: true,       // Check for numbers
-  hasMinLength: true,   // Check minimum 8 characters
-)
+AppTextFormField(
+  controller: passwordController,
+  hintText: 'Password',
+  isObscureText: true,
+  suffixIcon: const Icon(Icons.visibility_off_outlined),
+  validator: (value) =>
+      AppRegex.isPasswordValid(value ?? '') ? null : 'Weak password',
+);
 ```
 
----
+### PasswordValidation
+
+File: `lib/core/widgets/password_validation.dart`
+
+Displays live password requirements using dots and check icons.
+
+Key API:
+
+```dart
+PasswordValidation({
+  required bool hasLowerCase,
+  required bool hasUpperCase,
+  required bool hasSpecialCharacters,
+  required bool hasNumber,
+  required bool hasMinLength,
+})
+```
+
+Usage:
+
+```dart
+PasswordValidation(
+  hasLowerCase: AppRegex.hasLowerCase(password),
+  hasUpperCase: AppRegex.hasUpperCase(password),
+  hasSpecialCharacters: AppRegex.hasSpecialCharacter(password),
+  hasNumber: AppRegex.hasNumber(password),
+  hasMinLength: AppRegex.hasMinLength(password),
+);
+```
+
+### VideoUploadWidget
+
+File: `lib/core/widgets/video_upload_widget.dart`
+
+Interactive video picker for selecting, changing, and removing a gallery video.
+
+Key API:
+
+```dart
+VideoUploadWidget({
+  Function(File?)? onVideoSelected,
+  String? initialVideoPath,
+  String title = 'Upload Video',
+  String subtitle = 'Tap to select a video from your gallery',
+})
+```
+
+Usage:
+
+```dart
+File? selectedVideo;
+
+VideoUploadWidget(
+  title: 'Upload interview video',
+  subtitle: 'Choose a video up to 10 minutes',
+  onVideoSelected: (file) {
+    selectedVideo = file;
+  },
+);
+```
+
+States:
+
+| State | UI |
+| --- | --- |
+| Empty | Upload prompt with video icon and Browse Gallery button |
+| Loading | Circular progress indicator |
+| Selected | Success icon, filename, Change and Remove actions |
+| Error | `SnackBar` with `AppColors.error` |
 
 ## UI Components
 
-### Dialog Functions
+### Enhanced Dialog
 
-**File:** [`lib/core/helpers/functions.dart`](lib/core/helpers/functions.dart)
+File: `lib/core/helpers/functions.dart`
 
-#### Show Enhanced Dialog
+Reusable success/error dialog.
+
+Key API:
 
 ```dart
-import 'package:facial_emotional_detection_graduation_project/core/helpers/functions.dart';
+showEnhancedDialog({
+  required BuildContext context,
+  required bool isError,
+  required String message,
+  int? statusCode,
+  List<String> errors = const [],
+  IconData? icon,
+  String? successTitle,
+  String? errorTitle,
+})
+```
 
-// Error Dialog
+Error usage:
+
+```dart
 showEnhancedDialog(
   context: context,
   isError: true,
-  data: ApiErrorModel(
-    message: 'Something went wrong',
-    statusCode: 400,
-    errors: ['Invalid input'],
-  ),
+  statusCode: 400,
+  message: 'Please check your input.',
+  errors: ['Email is required', 'Password is too short'],
 );
+```
 
-// Success Dialog
+Success usage:
+
+```dart
 showEnhancedDialog(
   context: context,
   isError: false,
-  successTitle: 'Success',
-  successMessage: 'Operation completed!',
+  successTitle: 'Account created',
+  message: 'You can now sign in.',
 );
 ```
 
----
+Behavior:
 
-## Constants & Enums
+| Status | Title/help behavior |
+| --- | --- |
+| `400` | Validation Error |
+| `401` | Authentication Failed |
+| `403` | Access Denied |
+| `404` | Not Found |
+| `>= 500` | Server Error |
+| success | Uses `successTitle` or `Success` |
 
-### Cache Constants
+### Route Transitions
 
-**File:** [`lib/core/constant/cache_constants.dart`](lib/core/constant/cache_constants.dart)
+File: `lib/core/routing/router_transitions.dart`
 
-```dart
-import 'package:facial_emotional_detection_graduation_project/core/constant/cache_constants.dart';
-
-// Access tokens
-CacheConstants.accessToken      // 'access_token'
-CacheConstants.refreshToken     // 'refresh_token'
-CacheConstants.phoneNumber       // 'phone_number'
-
-// User preferences
-CacheConstants.hasSeenOnboarding // 'has_seen_onboarding'
-CacheConstants.isBiometricLogin  // 'isBiometric'
-CacheConstants.userEmail         // 'userEmailFromArgs'
-CacheConstants.userEmailFromGoogle // 'userEmailFromGoogle'
-CacheConstants.signInWithGoogle  // 'signInWithGoogle'
-```
-
-### Shared Preferences Keys
-
-**File:** [`lib/core/helpers/constants.dart`](lib/core/helpers/constants.dart)
+Helpers for custom route animations:
 
 ```dart
-import 'package:facial_emotional_detection_graduation_project/core/helpers/constants.dart';
+Navigator.of(context).push(
+  RouterTransitions.buildHorizontal(const LoginScreen()),
+);
 
-SharedPrefKeys.userToken  // 'userToken'
+Navigator.of(context).push(
+  RouterTransitions.buildFade(const HomeScreen()),
+);
 ```
+
+Available builders: `buildVertical`, `buildHorizontal`, `buildFade`, `buildScale`, and plain `build`.
+
+## Constants And Enums
+
+No enums were found in `lib/core/`. Constants are grouped below.
 
 ### Routes
 
-**File:** [`lib/core/routing/routes.dart`](lib/core/routing/routes.dart)
+File: `lib/core/routing/routes.dart`
 
 ```dart
-import 'package:facial_emotional_detection_graduation_project/core/routing/routes.dart';
-
-// Available routes
-Routes.onBoardingScreen   // "/onBoardingScreen"
-Routes.loginScreen        // "/loginScreen"
-Routes.registerScreen    // "/registerScreen"
-Routes.otpScreen         // "/otpScreen"
-Routes.otpSuccessScreen  // "/otpSuccessScreen"
-Routes.homeScreen        // "/homeScreen"
+context.pushNamed(Routes.loginScreen);
+context.pushNamed(
+  Routes.otpScreen,
+  arguments: {'email': email},
+);
 ```
 
----
+Available route names:
+
+```dart
+Routes.onBoardingScreen
+Routes.loginScreen
+Routes.registerScreen
+Routes.otpScreen
+Routes.otpSuccessScreen
+Routes.homeScreen
+Routes.biometricLoginScreen
+Routes.forgotPasswordScreen
+Routes.resetPasswordScreen
+```
+
+Note: `Routes.registerScreen` is currently `'registerScreen'` without a leading slash, unlike the other routes.
+
+### Cache Constants
+
+File: `lib/core/constant/cache_constants.dart`
+
+Global startup flags:
+
+```dart
+isFirstLaunch
+isBiometric
+isUserLoggedInWithGoogle
+isUserLoggedInWithEmailAndPasswordAndHasValidAccessToken
+```
+
+Storage keys:
+
+```dart
+CacheConstants.accessToken
+CacheConstants.refreshToken
+CacheConstants.userEmail
+CacheConstants.userEmailFromGoogle
+CacheConstants.userName
+CacheConstants.userPhotoUrl
+CacheConstants.signInWithGoogle
+CacheConstants.isBiometricLogin
+CacheConstants.hasSeenOnboarding
+CacheConstants.phoneNumber
+```
+
+Usage:
+
+```dart
+await SharedPrefHelper.setData(
+  CacheConstants.hasSeenOnboarding,
+  true,
+);
+```
+
+### Shared Pref Keys
+
+File: `lib/core/helpers/constants.dart`
+
+```dart
+isLoggedInUser
+SharedPrefKeys.userToken
+```
+
+### Firebase Constants
+
+File: `lib/core/constant/firebase_constants.dart`
+
+```dart
+FirebaseConstants.usersCollection
+```
+
+Usage:
+
+```dart
+FirebaseFirestore.instance
+    .collection(FirebaseConstants.usersCollection)
+    .doc(uid);
+```
+
+### API Constants
+
+File: `lib/core/networking/api_constant.dart`
+
+```dart
+ApiConstants.baseUrl
+ApiConstants.login
+ApiConstants.register
+ApiConstants.verifyEmail
+ApiConstants.logout
+ApiConstants.me
+ApiConstants.refreshToken
+ApiConstants.forgotPassword
+ApiConstants.resetPassword
+ApiConstants.resendOtp
+```
 
 ## Utilities
 
-### Regex Validators
+### Validators
 
-**File:** [`lib/core/helpers/app_regex.dart`](lib/core/helpers/app_regex.dart)
+File: `lib/core/helpers/app_regex.dart`
 
 ```dart
-import 'package:facial_emotional_detection_graduation_project/core/helpers/app_regex.dart';
+AppRegex.isEmailValid('name@example.com');
+AppRegex.isPasswordValid('Password1!');
+AppRegex.isPhoneNumberValid('01012345678');
 
-// Email validation
-AppRegex.isEmailValid('test@example.com')  // true
-
-// Password validation (min 8 chars, uppercase, lowercase, number, special char)
-AppRegex.isPasswordValid('Password1!')  // true
-
-// Phone number validation (Egyptian numbers)
-AppRegex.isPhoneNumberValid('01012345678')  // true
-
-// Password strength checks
-AppRegex.hasLowerCase('Password')  // true
-AppRegex.hasUpperCase('Password')  // true
-AppRegex.hasNumber('Password1')    // true
-AppRegex.hasSpecialCharacter('Pass!')  // true
-AppRegex.hasMinLength('Password123')  // true
+AppRegex.hasLowerCase(password);
+AppRegex.hasUpperCase(password);
+AppRegex.hasNumber(password);
+AppRegex.hasSpecialCharacter(password);
+AppRegex.hasMinLength(password);
 ```
 
----
+### Assets
 
-### Extensions
-
-**File:** [`lib/core/helpers/extensions.dart`](lib/core/helpers/extensions.dart)
-
-#### Navigation Extension
+File: `lib/core/helpers/app_assets.dart`
 
 ```dart
-import 'package:facial_emotional_detection_graduation_project/core/helpers/extensions.dart';
+Image.asset(AppAssets.appLogo);
+Image.asset(AppAssets.loginScreenHead);
 
-// Push navigation
-context.pushNamed('/routeName', arguments: someData);
+Lottie.asset(AppAssets.lottieLoadingAnimation);
 
-// Push and replace
-context.pushReplacementNamed('/routeName');
+SvgPicture.asset(AppAssets.googleIcon);
+SvgPicture.asset(AppAssets.facebookIcon);
+SvgPicture.asset(AppAssets.biometric);
+```
 
-// Push and remove until
+Available asset tokens:
+
+```dart
+AppAssets.appLogo
+AppAssets.loginScreenHead
+AppAssets.lottieLoadingAnimation
+AppAssets.googleIcon
+AppAssets.facebookIcon
+AppAssets.biometric
+```
+
+### Navigation Extensions
+
+File: `lib/core/helpers/extensions.dart`
+
+```dart
+context.pushNamed(Routes.homeScreen);
+context.pushReplacementNamed(Routes.loginScreen);
 context.pushNamedAndRemoveUntil(
-  '/routeName',
-  predicate: (route) => false, // Remove all previous routes
+  Routes.loginScreen,
+  predicate: (_) => false,
 );
-
-// Pop
 context.pop();
 ```
 
-#### String Extension
+### Null/Empty Extensions
+
+File: `lib/core/helpers/extensions.dart`
 
 ```dart
-String? myString;
+String? value;
+if (value.isNullOrEmpty()) {
+  return 'Required';
+}
 
-myString.isNullOrEmpty()  // Returns true if null or empty
+List<String>? items;
+if (items.isNullOrEmpty()) {
+  return const EmptyState();
+}
 ```
 
-#### List Extension
+### Form Auto Scroll
 
-```dart
-List<String>? myList;
+File: `lib/core/helpers/extensions.dart`
 
-myList.isNullOrEmpty()  // Returns true if null or empty list
-```
-
-#### Form Auto Scroll Extension
+Validates a form and scrolls the first invalid field into view.
 
 ```dart
 final formKey = GlobalKey<FormState>();
 
-formKey.validateAndScroll()  // Validates and scrolls to first error
+if (formKey.validateAndScroll()) {
+  // Submit form
+}
 ```
-
----
 
 ### Shared Preferences Helper
 
-**File:** [`lib/core/helpers/shared_pref_helper.dart`](lib/core/helpers/shared_pref_helper.dart)
+File: `lib/core/helpers/shared_pref_helper.dart`
 
 ```dart
-import 'package:facial_emotional_detection_graduation_project/core/helpers/shared_pref_helper.dart';
+await SharedPrefHelper.setData(CacheConstants.userName, 'Khaled');
+final userName = await SharedPrefHelper.getString(CacheConstants.userName);
 
-// Save data
-await SharedPrefHelper.setData('key', 'value');
-await SharedPrefHelper.setData('count', 42);
-await SharedPrefHelper.setData('isEnabled', true);
+await SharedPrefHelper.setSecuredString(
+  CacheConstants.accessToken,
+  token,
+);
+final token = await SharedPrefHelper.getSecuredString(
+  CacheConstants.accessToken,
+);
 
-// Get data
-String value = await SharedPrefHelper.getString('key');
-int count = await SharedPrefHelper.getInt('count');
-bool enabled = await SharedPrefHelper.getBool('isEnabled');
-
-// Secure storage (for sensitive data)
-await SharedPrefHelper.setSecuredString('token', 'secret_token');
-String token = await SharedPrefHelper.getSecuredString('token');
-
-// Remove data
-await SharedPrefHelper.removeData('key');
-
-// Clear all
+await SharedPrefHelper.removeData(CacheConstants.userEmail);
 await SharedPrefHelper.clearAllData();
 await SharedPrefHelper.clearAllSecuredData();
 ```
 
----
-
-### Assets
-
-**File:** [`lib/core/helpers`](lib/core/helpers/app_assets.dart/app_assets.dart)
+Getters:
 
 ```dart
-import 'package:facial_emotional_detection_graduation_project/core/helpers/app_assets.dart';
-
-// Image assets
-AppAssets.appLogo              // 'assets/images/login_screen/app_logo.png'
-AppAssets.loginScreenHead      // 'assets/images/login_screen/head.png'
-
-// Lottie animations
-AppAssets.lottieLoadingAnimation  // 'assets/lottie/loading_animation.json'
-
-// SVG icons
-AppAssets.googleIcon           // 'assets/svgs/google_icon.svg'
-AppAssets.facebookIcon         // 'assets/svgs/facebook_icon.svg'
-AppAssets.biometric            // 'assets/svgs/biometric.svg'
+SharedPrefHelper.getBool(key)
+SharedPrefHelper.getBoolOrNull(key)
+SharedPrefHelper.getDouble(key)
+SharedPrefHelper.getInt(key)
+SharedPrefHelper.getString(key)
+SharedPrefHelper.getSecuredString(key)
 ```
 
----
+### Logger
 
-## Quick Reference
+File: `lib/core/helpers/logger.dart`
 
-### Replacing Hardcoded Values
+Logs only when `appFlavor == 'development'`.
 
-| Hardcoded | Replace With |
-|-----------|--------------|
+```dart
+Logger.log('Opened home screen');
+Logger.debug('Form value: $value');
+Logger.info('Loading profile');
+Logger.success('Saved successfully');
+Logger.warning('Missing optional image');
+Logger.error('Failed to save', error, stackTrace);
+```
+
+### App Startup
+
+File: `lib/core/helpers/app_startup.dart`
+
+Initializes Flutter bindings, Firebase, dependency injection, ScreenUtil, system UI styling, and startup auth flags.
+
+```dart
+Future<void> main() async {
+  await initializeApp();
+  runApp(const EmoVisionApp());
+}
+```
+
+### API Error Handling
+
+File: `lib/core/networking/api_error_handler.dart`
+
+Turns `DioException` values into user-readable messages.
+
+```dart
+try {
+  await DioHelper.postRequest(
+    endPoint: ApiConstants.login,
+    data: body,
+  );
+} on DioException catch (error) {
+  final message = ApiErrorHandler.handle(error);
+  showEnhancedDialog(
+    context: context,
+    isError: true,
+    message: message,
+    statusCode: error.response?.statusCode,
+  );
+}
+```
+
+### Dio Helper
+
+File: `lib/core/networking/dio_helper.dart`
+
+Provides a configured Dio instance with base URL, logging, auth token attachment, token refresh, and request helpers.
+
+```dart
+final response = await DioHelper.getRequest(
+  endPoint: ApiConstants.me,
+);
+
+await DioHelper.postRequest(
+  endPoint: ApiConstants.login,
+  data: {
+    'email': email,
+    'password': password,
+  },
+);
+```
+
+Available methods: `getRequest`, `postRequest`, `putRequest`, `deleteRequest`.
+
+### Services For Presentation Flows
+
+Files:
+
+```text
+lib/core/services/biometric_service.dart
+lib/core/services/firebase_services.dart
+lib/core/di/dependency_injection.dart
+```
+
+Use `getIt` to access registered services/cubits from UI setup code:
+
+```dart
+final biometricService = getIt<BiometricService>();
+final isAvailable = await biometricService.isAvailable();
+
+if (isAvailable) {
+  final ok = await biometricService.authenticate();
+}
+```
+
+Registered dependencies include `AuthService`, `FirebaseServices`, `BiometricService`, `AuthRepo`, `LoginCubit`, `RegisterCubit`, `OtpCubit`, `HomeCubit`, and `LogoutCubit`.
+
+## Quick Reference For Replacing Hardcoded Values
+
+| Hardcoded value | Prefer |
+| --- | --- |
+| `Colors.blue` | `AppColors.primary` |
+| `Colors.red` | `AppColors.error` |
+| `Colors.green` | `AppColors.success` |
+| `Colors.orange` | `AppColors.warning` |
 | `Colors.white` | `AppColors.white` |
 | `Colors.black` | `AppColors.black` |
-| `Colors.blue` | `AppColors.primary` |
+| `Color(0xff...)` | Add or reuse an `AppColors` token |
+| `FontWeight.w600` | `FontWeightHelper.semiBold` |
 | `FontWeight.bold` | `FontWeightHelper.bold` |
-| `16.0` | `16.sp` (with flutter_screenutil) |
-| `EdgeInsets.all(16.0)` | `EdgeInsets.all(16.w)` or `16.all` |
+| `SizedBox(height: 16.h)` | `verticalSpace(16)` |
+| `SizedBox(width: 8.w)` | `horizontalSpace(8)` |
+| Raw route string | `Routes.someScreen` |
+| Raw asset path | `AppAssets.someAsset` |
+| Raw storage key | `CacheConstants.someKey` or `SharedPrefKeys.someKey` |
+| Manual email/password regex | `AppRegex` methods |
+| Manual `Navigator.of(context)` calls | `context.pushNamed`, `context.pop`, etc. |
+| Custom error `AlertDialog` | `showEnhancedDialog(...)` |
 
-### Common Patterns
+## Common Presentation Patterns
 
-#### Using the Theme
-
-```dart
-// Get colors based on theme
-Theme.of(context).colorScheme.primary     // AppColors.primary
-Theme.of(context).colorScheme.secondary   // AppColors.secondary
-
-// Get text styles
-Theme.of(context).textTheme.headlineMedium
-Theme.of(context).textTheme.bodyLarge
-```
-
-#### Spacing Quick Reference
+### Form With Validation And Auto Scroll
 
 ```dart
-// Always use .h for height and .w for width with screenutil
-EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h)
-Padding(padding: EdgeInsets.all(16.r))  // .r for radius too
+final formKey = GlobalKey<FormState>();
+
+Form(
+  key: formKey,
+  child: Column(
+    children: [
+      AppTextFormField(
+        controller: emailController,
+        hintText: 'Email',
+        validator: (value) =>
+            AppRegex.isEmailValid(value ?? '') ? null : 'Invalid email',
+      ),
+      verticalSpace(16),
+      CustomBtn(
+        title: 'Continue',
+        onTap: () {
+          if (formKey.validateAndScroll()) {
+            context.pushNamed(Routes.otpScreen, arguments: {
+              'email': emailController.text,
+            });
+          }
+        },
+      ),
+    ],
+  ),
+);
 ```
 
----
+### Error Flow
 
-## File Structure Overview
-
-```
-lib/core/
-├── constant/
-│   └── cache_constants.dart          # Cache key constants
-├── di/
-│   └── dependency_injection.dart    # Dependency injection setup
-├── helpers/
-│   ├── app_assets.dart               # Asset paths
-│   ├── app_regex.dart                # Regex validators
-│   ├── constants.dart                # App constants
-│   ├── extensions.dart               # Dart extensions
-│   ├── functions.dart                # Utility functions
-│   ├── logger.dart                   # Logging utilities
-│   ├── shared_pref_helper.dart       # SharedPreferences wrapper
-│   └── spacing.dart                  # Spacing helpers
-├── networking/
-│   ├── api_constant.dart
-│   ├── api_error_factory.dart
-│   ├── api_error_handler.dart
-│   ├── api_error_model.dart
-│   ├── api_result.dart
-│   ├── dio_exception_type_extension.dart
-│   ├── dio_factory.dart
-│   ├── dio_helper.dart
-│   ├── error_model.dart
-│   └── local_status_code.dart
-├── routing/
-│   ├── app_router.dart               # App router configuration
-│   ├── router_transitions.dart       # Transition animations
-│   └── routes.dart                   # Route constants
-├── services/
-│   ├── auth_service.dart
-│   ├── biometric_service.dart
-│   └── firebase_services.dart
-├── theming/
-│   ├── app_colors.dart               # Color tokens
-│   ├── app_text_theme.dart           # Typography styles
-│   ├── app_theme.dart                # Theme configuration
-│   └── font_weight_helper.dart       # Font weight constants
-└── widgets/
-    ├── app_text_form_field.dart      # Custom text field
-    ├── custom_btn.dart               # Custom button
-    └── password_validation.dart      # Password validator widget
+```dart
+showEnhancedDialog(
+  context: context,
+  isError: true,
+  message: ApiErrorHandler.handle(error),
+  statusCode: error.response?.statusCode,
+);
 ```
 
----
+### Success Flow
 
-## Additional Notes
+```dart
+showEnhancedDialog(
+  context: context,
+  isError: false,
+  successTitle: 'Done',
+  message: 'Your changes were saved.',
+);
+```
 
-1. **Theme Configuration:** The app supports both light and dark modes through `AppTheme.lightMode` and `AppTheme.darkMode` in [`lib/core/theming/app_theme.dart`](lib/core/theming/app_theme.dart)
+### Theme-Aware Text And Color
 
-2. **Responsive Design:** All sizes use `flutter_screenutil` with `.sp`, `.h`, `.w`, and `.r` extensions for responsive design
+```dart
+Text(
+  'Home',
+  style: Theme.of(context).textTheme.headlineMedium,
+);
 
-3. **Font Family:** The app uses "League Spartan" font family
-
-4. **State Management:** The project uses `flutter_bloc` for state management
-
-5. **Navigation:** Uses GoRouter-style routing with custom transitions
+Container(
+  color: Theme.of(context).colorScheme.surface,
+);
+```

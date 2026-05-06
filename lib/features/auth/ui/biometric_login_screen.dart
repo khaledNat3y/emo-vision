@@ -78,6 +78,8 @@ class _BiometricLoginScreenState extends State<BiometricLoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
@@ -106,7 +108,7 @@ class _BiometricLoginScreenState extends State<BiometricLoginScreen> {
 
                 Text(
                   'Biometric Login',
-                  style: AppTextTheme.font24BlackBold,
+                  style: theme.textTheme.displayMedium?.copyWith(fontSize: 24),
                   textAlign: TextAlign.center,
                 ),
 
@@ -114,7 +116,7 @@ class _BiometricLoginScreenState extends State<BiometricLoginScreen> {
 
                 Text(
                   'Use your fingerprint or face ID\nto access your account',
-                  style: AppTextTheme.font13BlackRegular,
+                  style: theme.textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
 
@@ -128,7 +130,7 @@ class _BiometricLoginScreenState extends State<BiometricLoginScreen> {
                       SizedBox(height: 16.h),
                       Text(
                         'Authenticating...',
-                        style: AppTextTheme.font12GreyMedium,
+                        style: theme.textTheme.titleSmall,
                       ),
                     ],
                   )
@@ -175,7 +177,7 @@ class _BiometricLoginScreenState extends State<BiometricLoginScreen> {
                         vertical: 14.h,
                       ),
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
+                        gradient: const LinearGradient(
                           colors: [AppColors.primary, AppColors.primaryDark],
                         ),
                         borderRadius: BorderRadius.circular(12.r),

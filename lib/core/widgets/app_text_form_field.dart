@@ -41,14 +41,20 @@ class AppTextFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final hintTextColor = theme.brightness == Brightness.dark
+        ? AppColors.textTertiaryDark
+        : AppColors.grey.withValues(alpha: 0.8);
+
     return TextFormField(
       controller: controller,
       focusNode: focusNode,
       obscureText: isObscureText ?? false,
       cursorColor: AppColors.primary,
       readOnly: isReadOnly ?? false,
+      style: inputTextStyle ?? theme.textTheme.bodyMedium,
       decoration: InputDecoration(
-        fillColor: backgroundColor ?? Theme.of(context).colorScheme.surface,
+        fillColor: backgroundColor ?? theme.colorScheme.surface,
         filled: true,
         isDense: true,
         contentPadding:
@@ -71,9 +77,9 @@ class AppTextFormField extends StatelessWidget {
         enabledBorder:
             enabledBorder ??
             OutlineInputBorder(
-              borderSide: const BorderSide(
+              borderSide: BorderSide(
                 width: 1.3,
-                color: AppColors.borderLight,
+                color: theme.colorScheme.outline,
               ),
               borderRadius: BorderRadius.circular(10.0),
             ),
@@ -84,11 +90,11 @@ class AppTextFormField extends StatelessWidget {
         hintText: hintText,
         hintStyle:
             hintStyle ??
-            Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: AppColors.grey.withValues(alpha: 0.8),
-            ),
+            theme.textTheme.bodyMedium?.copyWith(color: hintTextColor),
         suffixIcon: suffixIcon,
         prefixIcon: prefixIcon,
+        suffixIconColor: hintTextColor,
+        prefixIconColor: hintTextColor,
       ),
       // style: AppTheme.font14DarkBlueMedium,
       validator: (value) {

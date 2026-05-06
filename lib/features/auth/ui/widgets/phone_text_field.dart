@@ -21,15 +21,20 @@ class PhoneTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return IntlPhoneField(
       controller: controller,
+      style: theme.textTheme.bodyMedium,
       validator: validator ?? _defaultEgyptianValidator,
       decoration: InputDecoration(
-        fillColor: Theme.of(context).colorScheme.surface,
+        fillColor: theme.colorScheme.surface,
         filled: true,
         isDense: true,
-        contentPadding:
-        EdgeInsets.symmetric(horizontal: 14.0.w, vertical: 12.5.h),
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: 14.0.w,
+          vertical: 12.5.h,
+        ),
         focusedBorder: OutlineInputBorder(
           borderSide: const BorderSide(width: 1.3, color: AppColors.primary),
           borderRadius: BorderRadius.circular(16.0),
@@ -40,7 +45,7 @@ class PhoneTextField extends StatelessWidget {
           borderRadius: BorderRadius.circular(16.0),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(width: 1.3, color: AppColors.borderLight),
+          borderSide: BorderSide(width: 1.3, color: theme.colorScheme.outline),
           borderRadius: BorderRadius.circular(10.0),
         ),
         errorBorder: OutlineInputBorder(
@@ -48,10 +53,11 @@ class PhoneTextField extends StatelessWidget {
           borderRadius: BorderRadius.circular(16.0),
         ),
         hintText: "000 000 0000",
-        hintStyle: Theme.of(context)
-            .textTheme
-            .bodyMedium
-            ?.copyWith(color: AppColors.black),
+        hintStyle: theme.textTheme.bodyMedium?.copyWith(
+          color: theme.brightness == Brightness.dark
+              ? AppColors.textTertiaryDark
+              : AppColors.grey.withValues(alpha: 0.8),
+        ),
       ),
       initialCountryCode: 'EG',
       onChanged: (phone) {
@@ -93,7 +99,9 @@ class PhoneTextField extends StatelessWidget {
     final List<String> validPrefixes = ['010', '011', '012', '015'];
 
     // Check if the number starts with a valid prefix
-    final bool hasValidPrefix = validPrefixes.any((prefix) => phoneNumber.startsWith(prefix));
+    final bool hasValidPrefix = validPrefixes.any(
+      (prefix) => phoneNumber.startsWith(prefix),
+    );
 
     if (!hasValidPrefix) {
       return 'Must start with 010, 011, 012, or 015';

@@ -1,30 +1,44 @@
 import 'package:facial_emotional_detection_graduation_project/core/constant/cache_constants.dart'; // ✅ add this
+import 'package:facial_emotional_detection_graduation_project/core/di/dependency_injection.dart';
+import 'package:facial_emotional_detection_graduation_project/core/helpers/logger.dart';
+import 'package:facial_emotional_detection_graduation_project/core/theming/cubit/theme_cubit.dart';
+import 'package:facial_emotional_detection_graduation_project/flavor.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:facial_emotional_detection_graduation_project/core/routing/app_router.dart';
 import 'package:facial_emotional_detection_graduation_project/core/routing/routes.dart';
 import 'package:facial_emotional_detection_graduation_project/core/theming/app_theme.dart';
 
-class EmovisionApp extends StatelessWidget {
-  const EmovisionApp({super.key});
+class EmoVisionApp extends StatelessWidget {
+  const EmoVisionApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: const Size(375, 812),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (context, child) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'EmoVision',
-          theme: AppTheme.lightMode,
-          darkTheme: AppTheme.darkMode,
-          themeMode: ThemeMode.light,
-          initialRoute: _resolveInitialRoute(),
-          onGenerateRoute: AppRouter.generateRoute,
-        );
-      },
+    Logger.debug(AppConfig.modeName);
+    return BlocProvider(
+      create: (_) =>
+          getIt.isRegistered<ThemeCubit>() ? getIt<ThemeCubit>() : ThemeCubit(),
+      child: ScreenUtilInit(
+        designSize: const Size(375, 812),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        builder: (context, child) {
+          return BlocBuilder<ThemeCubit, ThemeMode>(
+            builder: (context, themeMode) {
+              return MaterialApp(
+                debugShowCheckedModeBanner: false,
+                title: 'EmoVision',
+                theme: AppTheme.lightMode,
+                darkTheme: AppTheme.darkMode,
+                themeMode: themeMode,
+                initialRoute: _resolveInitialRoute(),
+                onGenerateRoute: AppRouter.generateRoute,
+              );
+            },
+          );
+        },
+      ),
     );
   }
 

@@ -4,5 +4,5 @@ import 'package:flutter/material.dart';
 
 void main() async {
   await initializeApp();
-  runApp(const EmovisionApp());
+  runApp(const EmoVisionApp());
 }

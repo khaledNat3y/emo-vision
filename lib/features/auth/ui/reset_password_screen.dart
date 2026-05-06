@@ -2,7 +2,6 @@ import 'package:facial_emotional_detection_graduation_project/core/helpers/app_r
 import 'package:facial_emotional_detection_graduation_project/core/helpers/extensions.dart';
 import 'package:facial_emotional_detection_graduation_project/core/helpers/spacing.dart';
 import 'package:facial_emotional_detection_graduation_project/core/theming/app_colors.dart';
-import 'package:facial_emotional_detection_graduation_project/core/theming/app_text_theme.dart';
 import 'package:facial_emotional_detection_graduation_project/core/widgets/app_text_form_field.dart';
 import 'package:facial_emotional_detection_graduation_project/core/widgets/custom_btn.dart';
 import 'package:facial_emotional_detection_graduation_project/core/widgets/password_validation.dart';
@@ -80,8 +79,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
       resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: SingleChildScrollView(
@@ -118,27 +119,23 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   style: TextStyle(
                     fontSize: 26.sp,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimaryLight,
+                    color: theme.colorScheme.onSurface,
                   ),
                 ),
                 8.verticalSpace,
                 Text(
                   'Enter the OTP sent to your email and your new\npassword to secure your account.',
-                  style: TextStyle(
-                    fontSize: 13.sp,
-                    color: const Color(0xFF888888),
-                    height: 1.5,
-                  ),
+                  style: theme.textTheme.titleSmall?.copyWith(height: 1.5),
                 ),
                 28.verticalSpace,
-                Text('EMAIL ADDRESS', style: AppTextTheme.font12GreyMedium),
+                Text('EMAIL ADDRESS', style: theme.textTheme.titleSmall),
                 8.verticalSpace,
                 AppTextFormField(
                   controller: TextEditingController(text: widget.email),
                   isReadOnly: true,
                   prefixIcon: const Icon(
                     Icons.email_outlined,
-                    color: Color(0xFF1565C0),
+                    color: AppColors.primary,
                   ),
                   validator: (value) => null,
                 ),
@@ -148,7 +145,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   children: [
                     Text(
                       'VERIFICATION CODE',
-                      style: AppTextTheme.font12GreyMedium,
+                      style: theme.textTheme.titleSmall,
                     ),
                     BlocConsumer<ForgotPasswordCubit, ForgotPasswordState>(
                       listener: (context, state) {
@@ -212,8 +209,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                               fontSize: 12.sp,
                               fontWeight: FontWeight.w600,
                               color: cubit.isTimerActive
-                                  ? const Color(0xFF888888)
-                                  : const Color(0xFF1565C0),
+                                  ? theme.textTheme.titleSmall?.color
+                                  : AppColors.primary,
                             ),
                           ),
                         );
@@ -241,11 +238,11 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   verticalSpace(8),
                   Text(
                     _cubit.otpError!,
-                    style: TextStyle(color: Colors.red, fontSize: 12.sp),
+                    style: TextStyle(color: AppColors.error, fontSize: 12.sp),
                   ),
                 ],
                 20.verticalSpace,
-                Text("NEW PASSWORD", style: AppTextTheme.font12GreyMedium),
+                Text("NEW PASSWORD", style: theme.textTheme.titleSmall),
                 8.verticalSpace,
                 AppTextFormField(
                   controller: _newPasswordController,
@@ -286,10 +283,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 ),
 
                 16.verticalSpace,
-                Text(
-                  "CONFIRM NEW PASSWORD",
-                  style: AppTextTheme.font12GreyMedium,
-                ),
+                Text("CONFIRM NEW PASSWORD", style: theme.textTheme.titleSmall),
                 8.verticalSpace,
                 AppTextFormField(
                   controller: _confirmPasswordController,
@@ -310,7 +304,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           content: Text(
                             'Password reset successful! Please log in with your new password.',
                           ),
-                          backgroundColor: Colors.green,
+                          backgroundColor: AppColors.success,
                         ),
                       );
                       context.pop();
@@ -318,7 +312,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(state.message),
-                          backgroundColor: Colors.red,
+                          backgroundColor: AppColors.error,
                         ),
                       );
                     }

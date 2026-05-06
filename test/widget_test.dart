@@ -9,11 +9,10 @@ import 'package:facial_emotional_detection_graduation_project/emovision_app.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const EmovisionApp());
+    await tester.pumpWidget(const EmoVisionApp());
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

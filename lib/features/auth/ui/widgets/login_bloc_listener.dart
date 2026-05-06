@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:facial_emotional_detection_graduation_project/core/helpers/extensions.dart';
 import 'package:facial_emotional_detection_graduation_project/core/routing/routes.dart';
+import 'package:facial_emotional_detection_graduation_project/core/theming/app_colors.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/logic/login_cubit/login_cubit.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/logic/login_cubit/login_state.dart';
 
@@ -54,7 +55,7 @@ class LoginBlocListener extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.error),
-              backgroundColor: Colors.red,
+              backgroundColor: AppColors.error,
             ),
           );
         }

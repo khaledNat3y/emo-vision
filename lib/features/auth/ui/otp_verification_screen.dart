@@ -1,4 +1,5 @@
 import 'package:facial_emotional_detection_graduation_project/core/di/dependency_injection.dart';
+import 'package:facial_emotional_detection_graduation_project/core/theming/app_colors.dart';
 import 'package:facial_emotional_detection_graduation_project/core/widgets/custom_btn.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/logic/otp_cubit/otp_cubit.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/ui/widgets/otp_bloc_listener.dart';
@@ -36,7 +37,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Please enter complete 6-digit code'),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.error,
         ),
       );
       return;
@@ -51,6 +52,8 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return BlocProvider(
       create: (_) => getIt<OtpCubit>(),
       child: OtpBlocListener(
@@ -71,19 +74,19 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                       onPressed: () => Navigator.pop(context),
                       icon: const Icon(
                         Icons.arrow_back_ios,
-                        color: Colors.grey,
+                        color: AppColors.grey,
                         size: 20,
                       ),
                     ),
                     32.verticalSpace,
 
                     // Title
-                    const Text(
+                    Text(
                       'Verification Code',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                        color: theme.colorScheme.onSurface,
                       ),
                     ),
                     8.verticalSpace,
@@ -91,9 +94,9 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                     // Subtitle with email
                     Text(
                       'We have sent the verification\ncode to ${widget.email}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
-                        color: Colors.grey,
+                        color: theme.textTheme.titleMedium?.color,
                         height: 1.5,
                       ),
                     ),

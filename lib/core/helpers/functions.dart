@@ -16,8 +16,9 @@ void showEnhancedDialog({
   String? successTitle,
   String? errorTitle,
 }) {
+  final theme = Theme.of(context);
+  final isDark = theme.brightness == Brightness.dark;
   final Color iconColor;
-  final Color backgroundColor;
   final String title;
   final IconData dialogIcon;
 
@@ -27,20 +28,20 @@ void showEnhancedDialog({
 
     if (statusCode != null && statusCode >= 500) {
       iconColor = Colors.orange.shade700;
-      backgroundColor = Colors.orange.shade50;
     } else if (statusCode == 401 || statusCode == 403) {
       iconColor = Colors.red.shade700;
-      backgroundColor = Colors.red.shade50;
     } else {
       iconColor = Colors.amber.shade700;
-      backgroundColor = Colors.amber.shade50;
     }
   } else {
     dialogIcon = Icons.check_circle_outline;
     iconColor = Colors.green.shade700;
-    backgroundColor = Colors.green.shade50;
     title = successTitle ?? 'Success';
   }
+
+  final indicatorBackgroundColor = iconColor.withValues(
+    alpha: isDark ? 0.18 : 0.12,
+  );
 
   showDialog(
     context: context,
@@ -52,7 +53,7 @@ void showEnhancedDialog({
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: backgroundColor,
+              color: indicatorBackgroundColor,
               shape: BoxShape.circle,
             ),
             child: Icon(dialogIcon, color: iconColor, size: 28),
@@ -74,7 +75,7 @@ void showEnhancedDialog({
                     'Error Code: $statusCode',
                     style: TextStyle(
                       fontSize: 12,
-                      color: Colors.grey.shade600,
+                      color: theme.textTheme.titleSmall?.color,
                       fontWeight: FontWeight.normal,
                     ),
                   ),
@@ -87,14 +88,22 @@ void showEnhancedDialog({
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(message, style: const TextStyle(fontSize: 16, height: 1.5)),
+          Text(
+            message,
+            style: TextStyle(
+              fontSize: 16,
+              height: 1.5,
+              color: theme.colorScheme.onSurface,
+            ),
+          ),
           if (isError && errors.isNotEmpty) ...[
             const SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.grey.shade100,
+                color: theme.colorScheme.surface,
                 borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: theme.colorScheme.outline),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,7 +113,7 @@ void showEnhancedDialog({
                       Icon(
                         Icons.info_outline,
                         size: 18,
-                        color: Colors.grey.shade700,
+                        color: theme.colorScheme.onSurface,
                       ),
                       const SizedBox(width: 8),
                       Text(
@@ -112,7 +121,7 @@ void showEnhancedDialog({
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.bold,
-                          color: Colors.grey.shade700,
+                          color: theme.colorScheme.onSurface,
                         ),
                       ),
                     ],
@@ -128,7 +137,7 @@ void showEnhancedDialog({
                           Text(
                             '• ',
                             style: TextStyle(
-                              color: Colors.grey.shade700,
+                              color: theme.colorScheme.onSurface,
                               fontSize: 14,
                             ),
                           ),
@@ -136,7 +145,7 @@ void showEnhancedDialog({
                             child: Text(
                               e,
                               style: TextStyle(
-                                color: Colors.grey.shade700,
+                                color: theme.colorScheme.onSurface,
                                 fontSize: 14,
                                 height: 1.5,
                               ),
@@ -155,7 +164,9 @@ void showEnhancedDialog({
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.blue.shade50,
+                color: theme.colorScheme.primary.withValues(
+                  alpha: isDark ? 0.18 : 0.08,
+                ),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
@@ -163,7 +174,7 @@ void showEnhancedDialog({
                   Icon(
                     Icons.lightbulb_outline,
                     size: 18,
-                    color: Colors.blue.shade700,
+                    color: theme.colorScheme.primary,
                   ),
                   const SizedBox(width: 8),
                   Expanded(
@@ -171,7 +182,7 @@ void showEnhancedDialog({
                       _getHelpText(statusCode),
                       style: TextStyle(
                         fontSize: 13,
-                        color: Colors.blue.shade700,
+                        color: theme.colorScheme.primary,
                       ),
                     ),
                   ),
@@ -188,7 +199,7 @@ void showEnhancedDialog({
                 child: Text(
                   'OK',
                   style: TextStyle(
-                    color: Colors.grey.shade600,
+                    color: theme.colorScheme.primary,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -198,7 +209,7 @@ void showEnhancedDialog({
               ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green.shade600,
+                  backgroundColor: iconColor,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 32,

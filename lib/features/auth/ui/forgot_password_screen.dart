@@ -3,8 +3,6 @@ import 'package:facial_emotional_detection_graduation_project/core/helpers/exten
 import 'package:facial_emotional_detection_graduation_project/core/helpers/spacing.dart';
 import 'package:facial_emotional_detection_graduation_project/core/routing/routes.dart';
 import 'package:facial_emotional_detection_graduation_project/core/theming/app_colors.dart';
-import 'package:facial_emotional_detection_graduation_project/core/theming/app_text_theme.dart';
-import 'package:facial_emotional_detection_graduation_project/core/theming/font_weight_helper.dart';
 import 'package:facial_emotional_detection_graduation_project/core/widgets/app_text_form_field.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/logic/forgot_password_cubit/cubit/forgot_password_cubit.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/ui/widgets/custom_button.dart';
@@ -36,6 +34,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       body: Center(
         child: Padding(
@@ -45,11 +45,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Forgot Password", style: AppTextTheme.font24BlackBold),
+                Text(
+                  "Forgot Password",
+                  style: theme.textTheme.displayMedium?.copyWith(fontSize: 24),
+                ),
                 verticalSpace(6),
                 Text(
                   "Enter your email address to receive a password reset link.",
-                  style: AppTextTheme.font12GreyMedium,
+                  style: theme.textTheme.titleSmall,
                   textAlign: TextAlign.center,
                 ),
                 verticalSpace(50),
@@ -57,10 +60,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     "Email Address",
-                    style: AppTextTheme.font12GreyMedium.copyWith(
-                      fontWeight: FontWeightHelper.regular,
-                      fontSize: 12,
-                    ),
+                    style: theme.textTheme.titleSmall,
                   ),
                 ),
                 verticalSpace(6),
@@ -135,7 +135,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   },
                   child: Text(
                     "Back to Login",
-                    style: AppTextTheme.font13WhiteRegular.copyWith(
+                    style: theme.textTheme.bodyMedium?.copyWith(
                       color: AppColors.primary,
                       fontSize: 15,
                     ),

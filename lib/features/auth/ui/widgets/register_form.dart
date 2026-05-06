@@ -1,5 +1,4 @@
 import 'package:facial_emotional_detection_graduation_project/core/theming/app_colors.dart';
-import 'package:facial_emotional_detection_graduation_project/core/theming/app_text_theme.dart';
 import 'package:facial_emotional_detection_graduation_project/core/widgets/app_text_form_field.dart';
 import 'package:facial_emotional_detection_graduation_project/core/widgets/password_validation.dart';
 import 'package:facial_emotional_detection_graduation_project/core/helpers/app_regex.dart';
@@ -67,6 +66,8 @@ class _RegisterFormState extends State<RegisterForm> {
 
   @override
   Widget build(BuildContext context) {
+    final labelStyle = Theme.of(context).textTheme.titleSmall;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: Form(
@@ -81,7 +82,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("First Name", style: AppTextTheme.font12GreyMedium),
+                      Text("First Name", style: labelStyle),
                       AppTextFormField(
                         hintText: "Lois",
                         controller: firstNameController,
@@ -100,7 +101,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Last Name", style: AppTextTheme.font12GreyMedium),
+                      Text("Last Name", style: labelStyle),
                       AppTextFormField(
                         hintText: "Becket",
                         controller: lastNameController,
@@ -119,7 +120,7 @@ class _RegisterFormState extends State<RegisterForm> {
             24.verticalSpace,
 
             // Email
-            Text("Email", style: AppTextTheme.font12GreyMedium),
+            Text("Email", style: labelStyle),
             AppTextFormField(
               hintText: "Loisbecket@gmail.com",
               controller: email,
@@ -135,7 +136,7 @@ class _RegisterFormState extends State<RegisterForm> {
             24.verticalSpace,
 
             // Password
-            Text("Password", style: AppTextTheme.font12GreyMedium),
+            Text("Password", style: labelStyle),
             AppTextFormField(
               hintText: "Password",
               controller: password,
@@ -189,7 +190,7 @@ class _RegisterFormState extends State<RegisterForm> {
             24.verticalSpace,
 
             // ── Confirm Password ─────────────────────────────────────────────
-            Text("Confirm Password", style: AppTextTheme.font12GreyMedium),
+            Text("Confirm Password", style: labelStyle),
             AppTextFormField(
               hintText: "Confirm Password",
               controller: confirmPassword,

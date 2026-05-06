@@ -110,6 +110,7 @@ class _AuthInterceptor extends Interceptor {
       ApiConstants.forgotPassword,
       ApiConstants.resetPassword,
       ApiConstants.resendOtp,
+      ApiConstants.uploadVideo,
     ];
 
     if (!skipPaths.contains(options.path)) {

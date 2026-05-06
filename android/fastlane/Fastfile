@@ -1,24 +1,40 @@
-
 default_platform(:android)
 
 platform :android do
-  desc "Lane for Android Firebase App Distribution"
-  lane :firebase_distribution do
-    gradle(task: "test")
+
+  desc "Distribute Development build to testers"
+  lane :distribute_dev do
+    flutter_clean = "flutter clean"
+    flutter_build = "flutter build apk --release --flavor development -t lib/main_development.dart"
+    sh(flutter_clean) 
+    sh(flutter_build)
+    firebase_app_distribution(
+      # App ID of "EmoVision DEV" in Firebase
+      app: "1:911321786473:android:d4d24d28299526004a5af8",
+      testers: "khalednatey85@gmail.com",
+      release_notes: "Development build - for internal testing only.",
+      firebase_cli_token: "1//032r0xb9_mWKFCgYIARAAGAMSNwF-L9IriFZssP9gdi-9flyvpa5nj-vQOc9xDyoXPzWNsMXiw7XsIMACTTWDo8zCarhWUbiq9ho",
+      android_artifact_type: "APK",
+      android_artifact_path: "../build/app/outputs/flutter-apk/app-development-release.apk"
+    )
   end
 
-  desc "Submit a new Beta Build to Crashlytics Beta"
-  lane :beta do
-    gradle(task: "clean assembleRelease")
-    crashlytics
-  
-    # sh "your_script.sh"
-    # You can also use other beta testing services here
+  desc "Distribute Production build to testers"
+  lane :distribute_prod do
+    flutter_clean = "flutter clean"
+    flutter_build = "flutter build apk --release --flavor production -t lib/main_production.dart --no-tree-shake-icons"
+    sh(flutter_clean)
+    sh(flutter_build)
+
+    firebase_app_distribution(
+      # App ID of "EmoVision PROD" in Firebase
+      app: "1:911321786473:android:7cc9b69f389f7d174a5af8",   
+      testers: "khalednatey85@gmail.com",
+      release_notes: "Production build - release candidate.",
+      firebase_cli_token: "1//032r0xb9_mWKFCgYIARAAGAMSNwF-L9IriFZssP9gdi-9flyvpa5nj-vQOc9xDyoXPzWNsMXiw7XsIMACTTWDo8zCarhWUbiq9ho",
+      android_artifact_type: "APK",
+      android_artifact_path: "../build/app/outputs/flutter-apk/app-production-release.apk"
+    )
   end
 
-  desc "Deploy a new version to the Google Play"
-  lane :deploy do
-    gradle(task: "clean assembleRelease")
-    upload_to_play_store
-  end
 end

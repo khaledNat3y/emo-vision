@@ -2,11 +2,9 @@ import 'package:facial_emotional_detection_graduation_project/core/constant/cach
 import 'package:facial_emotional_detection_graduation_project/core/di/dependency_injection.dart';
 import 'package:facial_emotional_detection_graduation_project/core/helpers/logger.dart';
 import 'package:facial_emotional_detection_graduation_project/core/helpers/shared_pref_helper.dart';
-import 'package:facial_emotional_detection_graduation_project/core/theming/app_colors.dart';
 import 'package:facial_emotional_detection_graduation_project/flavor.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:facial_emotional_detection_graduation_project/firebase_options.dart';
 
@@ -24,12 +22,7 @@ Future<void> initializeApp() async {
 
   await ScreenUtil.ensureScreenSize();
 
-  SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle(
-      statusBarColor: AppColors.white.withValues(alpha: 0.05),
-    ),
-  );
-  print(AppConfig.modeName);
+  Logger.debug(AppConfig.modeName);
 
   await checkIfUserFirstLaunch();
 }
@@ -44,14 +37,14 @@ Future<void> checkIfUserFirstLaunch() async {
   final loggedInWithGoogle = await SharedPrefHelper.getBool(
     CacheConstants.signInWithGoogle,
   );
-  final String? accessToken = await SharedPrefHelper.getSecuredString(
+  final String accessToken = await SharedPrefHelper.getSecuredString(
     CacheConstants.accessToken,
   );
 
   isFirstLaunch = !hasSeenOnboarding;
   if (isBiometricLoggedIn) isBiometric = true;
   if (loggedInWithGoogle) isUserLoggedInWithGoogle = true;
-  if (accessToken != null && accessToken.isNotEmpty) {
+  if (accessToken.isNotEmpty) {
     isUserLoggedInWithEmailAndPasswordAndHasValidAccessToken = true;
   }
 
