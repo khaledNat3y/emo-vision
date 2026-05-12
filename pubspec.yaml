@@ -62,6 +62,7 @@ dependencies:
   retrofit: ^4.9.2
   retrofit_generator: ^10.2.3
   shared_preferences: ^2.5.3
+  supabase_flutter: ^2.12.4
   tflite_flutter: ^0.12.1
 
 dev_dependencies:

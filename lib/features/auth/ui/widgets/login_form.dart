@@ -115,8 +115,6 @@ class _LoginFormState extends State<LoginForm> {
                 );
               },
             ),
-            // ✅ LoginBlocListener is NOT here anymore.
-            // It is placed in LoginScreen wrapping the entire screen body.
           ],
         ),
       ),
