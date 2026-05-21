@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:facial_emotional_detection_graduation_project/core/networking/api_error_handler.dart';
+import 'package:facial_emotional_detection_graduation_project/core/networking/supabase/supabase_client.dart';
 import 'package:facial_emotional_detection_graduation_project/core/services/firebase_services.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/forgot_password_request_body.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/login_request_body.dart';
@@ -13,6 +14,7 @@ import 'package:facial_emotional_detection_graduation_project/features/auth/data
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/reset_password_request_body.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/verify_email_request_body.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/constant/cache_constants.dart';
 import '../../../../core/helpers/shared_pref_helper.dart';
@@ -33,6 +35,10 @@ class AuthRepo {
   Future<Either<String, LoginResponse>> login(LoginRequestBody body) async {
     try {
       final response = await _authService.loginUser(body: body);
+      // final AuthResponse response2 = await Supabase.instance.client.auth.signInWithPassword(
+      //   email: body.email,
+      //   password: body.password,
+      // );
       return Right(response);
     } on DioException catch (e) {
       return Left(ApiErrorHandler.handle(e));
@@ -45,7 +51,12 @@ class AuthRepo {
     RegisterRequestBody body,
   ) async {
     try {
+      await Supabase.instance.client.auth.signUp(
+        email: body.email,
+        password: body.password,
+      );
       final response = await _authService.register(body: body);
+
       return Right(response);
     } on DioException catch (e) {
       return Left(ApiErrorHandler.handle(e));

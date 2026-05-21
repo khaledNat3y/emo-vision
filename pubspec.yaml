@@ -61,11 +61,13 @@ dependencies:
   pretty_dio_logger: ^1.4.0
   retrofit: ^4.9.2
   retrofit_generator: ^10.2.3
+  sentry_flutter: ^8.14.2
   shared_preferences: ^2.5.3
   supabase_flutter: ^2.12.4
   tflite_flutter: ^0.12.1
 
 dev_dependencies:
+  sentry_dart_plugin: ^3.3.0
   flutter_lints: ^5.0.0
   flutter_test:
     sdk: flutter
@@ -122,3 +124,9 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+sentry:
+  upload_debug_symbols: true
+  upload_source_maps: true
+  project: flutter
+  org: emovision

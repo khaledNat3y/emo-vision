@@ -42,10 +42,6 @@ class _HomeAnalyzeSectionState extends State<HomeAnalyzeSection> {
         ),
         SizedBox(height: 24.h),
 
-        // ── Single BlocBuilder for button + result ─────────────────────────
-        // Only ONE BlocBuilder here — no duplicate loading states.
-        // The button shows loading internally.
-        // The result card appears below when done.
         BlocBuilder<UploadVideoCubit, UploadVideoState>(
           builder: (innerContext, uploadState) {
             final isLoading = uploadState is UploadVideoLoading;

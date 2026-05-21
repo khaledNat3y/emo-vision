@@ -1,4 +1,5 @@
 import 'package:facial_emotional_detection_graduation_project/core/theming/app_colors.dart';
+import 'package:facial_emotional_detection_graduation_project/core/theming/app_text_theme.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/logic/logout_cubit/logout_cubit.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/logic/logout_cubit/logout_state.dart';
 import 'package:facial_emotional_detection_graduation_project/features/home/logic/cubit/home_state.dart';
@@ -67,12 +68,20 @@ class _HomeAvatar extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // userName is always resolved cleanly by HomeCubit
             Text(
-              state.isBiometric ? 'Biometric User' : state.userName,
-              style: Theme.of(context).textTheme.titleLarge,
+              state.userName,
+              style: AppTextTheme.font14BlackSemiBold,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
             if (state.email.isNotEmpty && !state.isBiometric)
-              Text(state.email, style: Theme.of(context).textTheme.titleSmall),
+              Text(
+                state.email,
+                style: AppTextTheme.font12GreyMedium,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
           ],
         ),
       ],
@@ -102,7 +111,7 @@ class _LogoutButton extends StatelessWidget {
                 ? SizedBox(
                     width: 16.w,
                     height: 16.h,
-                    child: const CircularProgressIndicator(
+                    child: CircularProgressIndicator(
                       strokeWidth: 2,
                       color: AppColors.error,
                     ),

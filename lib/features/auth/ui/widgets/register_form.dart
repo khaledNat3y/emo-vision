@@ -189,7 +189,7 @@ class _RegisterFormState extends State<RegisterForm> {
 
             24.verticalSpace,
 
-            // ── Confirm Password ─────────────────────────────────────────────
+            // Confirm Password
             Text("Confirm Password", style: labelStyle),
             AppTextFormField(
               hintText: "Confirm Password",
@@ -204,7 +204,7 @@ class _RegisterFormState extends State<RegisterForm> {
             ),
             55.verticalSpace,
 
-            // ── Register Button ───────────────────────────────────────────────
+            // Register Button
             BlocBuilder<RegisterCubit, RegisterState>(
               builder: (context, state) {
                 return CustomButton(
@@ -225,9 +225,6 @@ class _RegisterFormState extends State<RegisterForm> {
                 );
               },
             ),
-
-            // ✅ RegisterBlocListener is NOT here.
-            // It wraps the entire RegisterScreenBody inside RegisterScreen.
           ],
         ),
       ),

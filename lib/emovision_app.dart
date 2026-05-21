@@ -23,6 +23,7 @@ class EmoVisionApp extends StatelessWidget {
         designSize: const Size(375, 812),
         minTextAdapt: true,
         splitScreenMode: true,
+        ensureScreenSize: true,
         builder: (context, child) {
           return BlocBuilder<ThemeCubit, ThemeMode>(
             builder: (context, themeMode) {

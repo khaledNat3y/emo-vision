@@ -32,17 +32,16 @@ class HomeWelcomeCard extends StatelessWidget {
             ),
           ),
           SizedBox(height: 6.h),
+          // userName is always resolved cleanly by HomeCubit — no email fallback
           Text(
-            state.isBiometric
-                ? 'Biometric User'
-                : state.userName.isNotEmpty
-                ? state.userName
-                : state.email,
+            state.userName,
             style: TextStyle(
               fontSize: 22.sp,
               color: AppColors.white,
               fontWeight: FontWeight.bold,
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
           SizedBox(height: 12.h),
           _LoginMethodBadge(state: state),

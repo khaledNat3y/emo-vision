@@ -32,10 +32,10 @@ class ApiErrorHandler {
 
       if (data is Map<String, dynamic>) {
         // 1. Direct message
-        final message = data['message']?.toString();
-        if (message != null && message.isNotEmpty) {
-          return message;
-        }
+        // final message = data['message']?.toString();
+        // if (message != null && message.isNotEmpty) {
+        //   return message;
+        // }
 
         // 2. Laravel-style errors
         final errors = data['errors'];

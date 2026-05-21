@@ -95,7 +95,7 @@ class AppTheme {
         color: AppColors.grey,
       ),
       titleSmall: TextStyle(
-        fontSize: 12.sp,
+        fontSize: 14.sp,
         fontWeight: FontWeightHelper.medium,
         color: AppColors.grey,
       ),
@@ -107,12 +107,12 @@ class AppTheme {
 
       /// used in login screen form
       bodyMedium: TextStyle(
-        fontSize: 14.sp,
+        fontSize: 15.sp,
         fontWeight: FontWeightHelper.medium,
         color: AppColors.textPrimaryLight,
       ),
       bodySmall: TextStyle(
-        fontSize: 12.sp,
+        fontSize: 15.sp,
         fontWeight: FontWeightHelper.regular,
         color: AppColors.textTertiaryLight,
       ),

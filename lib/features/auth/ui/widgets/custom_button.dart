@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theming/app_colors.dart';
 import '../../../../core/theming/app_text_theme.dart';
 
@@ -48,7 +49,9 @@ class CustomButton extends StatelessWidget {
           child: Center(
             child: Text(
               isLoading ?? false ? 'Loading...' : text,
-              style: textStyle ?? AppTextTheme.font16WhiteMedium,
+              style:
+                  textStyle ??
+                  AppTextTheme.font16WhiteMedium.copyWith(fontSize: 18.sp),
             ),
           ),
         ),

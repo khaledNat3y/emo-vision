@@ -6,11 +6,6 @@ import 'home_state.dart';
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(const HomeInitial());
 
-  /// Reads the cached user info from SharedPreferences and emits [HomeSuccess].
-  /// This handles all 3 login methods:
-  ///   - Email/Password → email + fullName from /api/auth/me
-  ///   - Google         → email + displayName + photoUrl from Firebase
-  ///   - Biometric      → same email + name that were saved during original login
   Future<void> loadUserInfo({
     String? emailFromArgs,
     String? userNameFromArgs,
@@ -25,14 +20,20 @@ class HomeCubit extends Cubit<HomeState> {
       String photoUrl = '';
       bool isBiometric = false;
 
-      // If args are provided (fresh navigation from login), use them directly
-      if (userNameFromArgs != null && userNameFromArgs.isNotEmpty) {
-        displayName = userNameFromArgs;
+      // ── Case 1: Fresh navigation from login (args provided) ──────────────
+      // Args are passed when navigating directly from login screen.
+      // On hot reload args become null — fall through to Case 2.
+      final hasArgs =
+          (userNameFromArgs != null && userNameFromArgs.isNotEmpty) ||
+          (emailFromArgs != null && emailFromArgs.isNotEmpty);
+
+      if (hasArgs) {
+        displayName = userNameFromArgs ?? '';
         displayEmail = emailFromArgs ?? '';
         photoUrl = photoUrlFromArgs ?? '';
         isBiometric = loginMethod == 'biometric';
       } else {
-        // App restarted — determine method from stored flags
+        // ── Case 2: App restarted or hot reload — read from storage ─────────
         final isGoogle = await SharedPrefHelper.getBool(
           CacheConstants.signInWithGoogle,
         );
@@ -43,42 +44,51 @@ class HomeCubit extends Cubit<HomeState> {
         isBiometric = isBiometricStored;
 
         if (isGoogle) {
-          displayEmail = await SharedPrefHelper.getString(
-            CacheConstants.userEmailFromGoogle,
-          );
-          displayName = await SharedPrefHelper.getString(
-            CacheConstants.userName,
-          );
-          photoUrl = await SharedPrefHelper.getString(
-            CacheConstants.userPhotoUrl,
-          );
+          // Google stores email under userEmailFromGoogle key
+          displayEmail =
+              await SharedPrefHelper.getString(
+                CacheConstants.userEmailFromGoogle,
+              ) ??
+              '';
+          // Google stores name under userName key (set in LoginCubit.signInWithGoogle)
+          displayName =
+              await SharedPrefHelper.getString(CacheConstants.userName) ?? '';
+          photoUrl =
+              await SharedPrefHelper.getString(CacheConstants.userPhotoUrl) ??
+              '';
         } else if (isBiometricStored) {
-          // Biometric reuses the last email/name that was stored
-          displayEmail = await SharedPrefHelper.getString(
-            CacheConstants.userEmail,
-          );
-          displayName = await SharedPrefHelper.getString(
-            CacheConstants.userName,
-          );
+          // Biometric reuses whatever email/name was stored from original login
+          displayEmail =
+              await SharedPrefHelper.getString(CacheConstants.userEmail) ?? '';
+          displayName =
+              await SharedPrefHelper.getString(CacheConstants.userName) ?? '';
         } else {
-          // Email/Password
-          displayEmail = await SharedPrefHelper.getString(
-            CacheConstants.userEmail,
-          );
-          displayName = await SharedPrefHelper.getString(
-            CacheConstants.userName,
-          );
+          // Email/Password — stored by LoginCubit after /me call
+          displayEmail =
+              await SharedPrefHelper.getString(CacheConstants.userEmail) ?? '';
+          displayName =
+              await SharedPrefHelper.getString(CacheConstants.userName) ?? '';
         }
+      }
+
+      // Resolve display name
+      // Never show the full email as the display name to avoid overflow
+      final String resolvedName;
+      if (isBiometric) {
+        resolvedName = 'Biometric User';
+      } else if (displayName.isNotEmpty) {
+        resolvedName = displayName;
+      } else if (displayEmail.isNotEmpty) {
+        // Use only the part before @ to avoid overflow
+        resolvedName = displayEmail.split('@').first;
+      } else {
+        resolvedName = 'User';
       }
 
       emit(
         HomeSuccess(
           email: displayEmail,
-          userName: isBiometric
-              ? 'Biometric User'
-              : displayName.isNotEmpty
-              ? displayName
-              : displayEmail,
+          userName: resolvedName,
           photoUrl: photoUrl,
           isBiometric: isBiometric,
         ),

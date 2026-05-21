@@ -1,3 +1,5 @@
+import 'package:facial_emotional_detection_graduation_project/core/helpers/logger.dart';
+
 class UploadVideoResponseErrorModel {
   List<Detail>? detail;
 
@@ -7,15 +9,15 @@ class UploadVideoResponseErrorModel {
     if (json['detail'] != null) {
       detail = <Detail>[];
       json['detail'].forEach((v) {
-        detail!.add(new Detail.fromJson(v));
+        detail!.add(Detail.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.detail != null) {
-      data['detail'] = this.detail!.map((v) => v.toJson()).toList();
+    if (detail != null) {
+      data['detail'] = detail!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -38,10 +40,10 @@ class Detail {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['type'] = this.type;
-    data['loc'] = this.loc;
-    data['msg'] = this.msg;
-    data['input'] = this.input;
+    data['type'] = type;
+    data['loc'] = loc;
+    data['msg'] = msg;
+    data['input'] = input;
     return data;
   }
 }
