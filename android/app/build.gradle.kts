@@ -12,7 +12,7 @@ android {
 
     namespace = "com.example.facial_emotional_detection_graduation_project"
     compileSdk = 36
-    ndkVersion = "27.0.12077973"
+    ndkVersion = "28.2.13676358"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -33,6 +33,20 @@ android {
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
+    flavorDimensions += "default"
+    
+    productFlavors {
+    create("development") {
+        dimension = "default"
+        applicationIdSuffix = ".development"
+        resValue("string", "app_name", "EmoVision Development")
+    }
+    create("production") {
+        dimension = "default"
+        applicationIdSuffix = ".production"
+        resValue("string", "app_name", "EmoVision")
+    }
+}
 
     buildTypes {
         release {

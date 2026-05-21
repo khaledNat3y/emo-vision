@@ -5,20 +5,21 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AppTheme {
   static ThemeData lightMode = ThemeData(
-    useMaterial3: true,
     brightness: Brightness.light,
-    fontFamily: "LeagueSpartan",
+    fontFamily: "League Spartan",
     colorScheme: const ColorScheme.light(
-      // surface: AppColors.surfaceLight,
       primary: AppColors.primary,
       secondary: AppColors.secondary,
       tertiary: AppColors.tertiary,
       error: AppColors.error,
       onSurface: AppColors.textPrimaryLight,
-      // onPrimary: AppColors.white,
+      outline: AppColors.borderLight,
+      outlineVariant: AppColors.dividerLight,
     ),
     scaffoldBackgroundColor: AppColors.backgroundLight,
-    
+    cardColor: AppColors.surfaceLight,
+    dividerColor: AppColors.dividerLight,
+    iconTheme: const IconThemeData(color: AppColors.textPrimaryLight),
 
     // Input Decoration Theme
 
@@ -28,9 +29,7 @@ class AppTheme {
         backgroundColor: AppColors.primary,
         foregroundColor: AppColors.white,
         padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.r),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
         textStyle: TextStyle(
           fontSize: 16.sp,
           fontWeight: FontWeightHelper.bold,
@@ -52,11 +51,9 @@ class AppTheme {
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         foregroundColor: AppColors.primary,
-        side: BorderSide(color: AppColors.borderLight),
+        side: const BorderSide(color: AppColors.borderLight),
         padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.r),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
       ),
     ),
 
@@ -98,7 +95,7 @@ class AppTheme {
         color: AppColors.grey,
       ),
       titleSmall: TextStyle(
-        fontSize: 12.sp,
+        fontSize: 14.sp,
         fontWeight: FontWeightHelper.medium,
         color: AppColors.grey,
       ),
@@ -107,26 +104,23 @@ class AppTheme {
         fontWeight: FontWeightHelper.regular,
         color: AppColors.textPrimaryLight,
       ),
+
       /// used in login screen form
       bodyMedium: TextStyle(
-        fontSize: 14.sp,
+        fontSize: 15.sp,
         fontWeight: FontWeightHelper.medium,
-        color: AppColors.black,
+        color: AppColors.textPrimaryLight,
       ),
       bodySmall: TextStyle(
-        fontSize: 12.sp,
+        fontSize: 15.sp,
         fontWeight: FontWeightHelper.regular,
         color: AppColors.textTertiaryLight,
       ),
     ),
-
-
-
   );
 
   static ThemeData darkMode = ThemeData(
-    fontFamily: "LeagueSpartan",
-    useMaterial3: true,
+    fontFamily: "League Spartan",
     brightness: Brightness.dark,
     colorScheme: const ColorScheme.dark(
       surface: AppColors.surfaceDark,
@@ -134,10 +128,13 @@ class AppTheme {
       secondary: AppColors.secondary,
       tertiary: AppColors.tertiary,
       error: AppColors.error,
-      onSurface: AppColors.textPrimaryDark,
-      onPrimary: AppColors.white,
+      outline: AppColors.borderDark,
+      outlineVariant: AppColors.dividerDark,
     ),
     scaffoldBackgroundColor: AppColors.backgroundDark,
+    cardColor: AppColors.surfaceDark,
+    dividerColor: AppColors.dividerDark,
+    iconTheme: const IconThemeData(color: AppColors.textPrimaryDark),
 
     // Input Decoration Theme
 
@@ -147,9 +144,7 @@ class AppTheme {
         backgroundColor: AppColors.primary,
         foregroundColor: AppColors.white,
         padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.r),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
         textStyle: TextStyle(
           fontSize: 16.sp,
           fontWeight: FontWeightHelper.bold,
@@ -171,11 +166,9 @@ class AppTheme {
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         foregroundColor: AppColors.primary,
-        side: BorderSide(color: AppColors.borderDark),
+        side: const BorderSide(color: AppColors.borderDark),
         padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.r),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
       ),
     ),
 
@@ -237,6 +230,5 @@ class AppTheme {
         color: AppColors.textTertiaryDark,
       ),
     ),
-
   );
 }

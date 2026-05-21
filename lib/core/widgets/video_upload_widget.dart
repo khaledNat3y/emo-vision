@@ -97,8 +97,8 @@ class _VideoUploadWidgetState extends State<VideoUploadWidget> {
           ),
           borderRadius: BorderRadius.circular(24.r),
           border: Border.all(
-            color: _selectedVideo != null 
-                ? AppColors.success 
+            color: _selectedVideo != null
+                ? AppColors.success
                 : AppColors.primary.withAlpha(76),
             width: 2,
           ),
@@ -113,8 +113,8 @@ class _VideoUploadWidgetState extends State<VideoUploadWidget> {
         child: _isLoading
             ? _buildLoadingState()
             : _selectedVideo != null
-                ? _buildVideoPreview()
-                : _buildUploadPrompt(),
+            ? _buildVideoPreview()
+            : _buildUploadPrompt(),
       ),
     );
   }
@@ -130,17 +130,15 @@ class _VideoUploadWidgetState extends State<VideoUploadWidget> {
             height: 60.h,
             child: CircularProgressIndicator(
               strokeWidth: 3.w,
-              valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+              valueColor: const AlwaysStoppedAnimation<Color>(
+                AppColors.primary,
+              ),
             ),
           ),
           SizedBox(height: 16.h),
           Text(
             'Selecting video...',
-            style: TextStyle(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w500,
-              color: AppColors.textPrimaryLight,
-            ),
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
         ],
       ),
@@ -167,29 +165,16 @@ class _VideoUploadWidgetState extends State<VideoUploadWidget> {
             ),
           ),
           SizedBox(height: 20.h),
-          Text(
-            widget.title,
-            style: TextStyle(
-              fontSize: 20.sp,
-              fontWeight: FontWeight.bold,
-              color: AppColors.textPrimaryLight,
-            ),
-          ),
+          Text(widget.title, style: Theme.of(context).textTheme.headlineMedium),
           SizedBox(height: 8.h),
           Text(
             widget.subtitle,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 14.sp,
-              color: AppColors.grey,
-            ),
+            style: Theme.of(context).textTheme.titleMedium,
           ),
           SizedBox(height: 24.h),
           Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: 24.w,
-              vertical: 12.h,
-            ),
+            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
             decoration: BoxDecoration(
               color: AppColors.primary,
               borderRadius: BorderRadius.circular(50.r),
@@ -253,10 +238,7 @@ class _VideoUploadWidgetState extends State<VideoUploadWidget> {
             textAlign: TextAlign.center,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: 12.sp,
-              color: AppColors.grey,
-            ),
+            style: Theme.of(context).textTheme.titleSmall,
           ),
           SizedBox(height: 20.h),
           Row(
@@ -265,10 +247,7 @@ class _VideoUploadWidgetState extends State<VideoUploadWidget> {
               // Change video button
               TextButton.icon(
                 onPressed: _pickVideo,
-                icon: Icon(
-                  Icons.refresh_rounded,
-                  size: 18.w,
-                ),
+                icon: Icon(Icons.refresh_rounded, size: 18.w),
                 label: Text(
                   'Change',
                   style: TextStyle(
@@ -276,18 +255,13 @@ class _VideoUploadWidgetState extends State<VideoUploadWidget> {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                style: TextButton.styleFrom(
-                  foregroundColor: AppColors.primary,
-                ),
+                style: TextButton.styleFrom(foregroundColor: AppColors.primary),
               ),
               SizedBox(width: 16.w),
               // Remove video button
               TextButton.icon(
                 onPressed: _removeVideo,
-                icon: Icon(
-                  Icons.close_rounded,
-                  size: 18.w,
-                ),
+                icon: Icon(Icons.close_rounded, size: 18.w),
                 label: Text(
                   'Remove',
                   style: TextStyle(
@@ -295,9 +269,7 @@ class _VideoUploadWidgetState extends State<VideoUploadWidget> {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                style: TextButton.styleFrom(
-                  foregroundColor: AppColors.error,
-                ),
+                style: TextButton.styleFrom(foregroundColor: AppColors.error),
               ),
             ],
           ),

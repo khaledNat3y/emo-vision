@@ -1,89 +1,143 @@
-import 'package:facial_emotional_detection_graduation_project/core/helpers/spacing.dart';
+import 'package:facial_emotional_detection_graduation_project/core/theming/app_colors.dart';
 import 'package:facial_emotional_detection_graduation_project/core/theming/app_text_theme.dart';
-import 'package:facial_emotional_detection_graduation_project/core/theming/app_theme.dart';
+import 'package:facial_emotional_detection_graduation_project/features/auth/logic/logout_cubit/logout_cubit.dart';
+import 'package:facial_emotional_detection_graduation_project/features/auth/logic/logout_cubit/logout_state.dart';
+import 'package:facial_emotional_detection_graduation_project/features/home/logic/cubit/home_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/theming/app_colors.dart';
-
 class HomeHeader extends StatelessWidget {
-  final String? photoUrl;
-  final String? userName;
-  final String? email;
-  const HomeHeader({super.key, this.photoUrl, this.userName, this.email});
+  final HomeSuccess state;
+  final VoidCallback onLogoutTap;
+
+  const HomeHeader({super.key, required this.state, required this.onLogoutTap});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text.rich(
-          TextSpan(
-            text: 'Emo',
-            style: AppTextTheme.font20BoldPrimary.copyWith(color: AppColors.textPrimaryLight),
-            children: [
-              TextSpan(
-                text: 'Vision',
-                style: AppTextTheme.font20BoldPrimary,
-              ),
-            ]
-          ),
-        ),
-        verticalSpace(20),
+        _HomeAvatar(state: state),
+        _LogoutButton(onTap: onLogoutTap),
+      ],
+    );
+  }
+}
 
-        ListTile(
-          title: Text(
-            "Welcome, ${userName ?? 'User'}",
-            style: TextStyle(fontSize: 14.sp, color: AppColors.grey),
-          ),
-          subtitle: Text(
-            email ?? '',
-            style: AppTextTheme.font13WhiteRegular.copyWith(color: AppColors.grey),
-          ),
-          trailing: Container(
-          width: 50.w,
-          height: 50.h,
+class _HomeAvatar extends StatelessWidget {
+  final HomeSuccess state;
+
+  const _HomeAvatar({required this.state});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: 44.w,
+          height: 44.h,
           decoration: BoxDecoration(
-            color: AppColors.primary.withAlpha(25),
             shape: BoxShape.circle,
-          ),
-          child: ClipOval(
-            child: photoUrl != null && photoUrl!.isNotEmpty
-                ? Image.network(
-                    photoUrl!,
+            color: AppColors.primary.withValues(alpha: 0.15),
+            image: state.photoUrl.isNotEmpty
+                ? DecorationImage(
+                    image: NetworkImage(state.photoUrl),
                     fit: BoxFit.cover,
-                    width: 50.w,
-                    height: 50.h,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Icon(
-                        Icons.person_rounded,
-                        color: AppColors.primary,
-                        size: 28.w,
-                      );
-                    },
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return Center(
-                        child: CircularProgressIndicator(
-                          value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                              : null,
-                          strokeWidth: 2,
-                        ),
-                      );
-                    },
                   )
-                : Icon(
-                    Icons.person_rounded,
-                    color: AppColors.primary,
-                    size: 28.w,
+                : null,
+          ),
+          child: state.photoUrl.isEmpty
+              ? Center(
+                  child: Text(
+                    state.isBiometric
+                        ? '🔒'
+                        : state.userName.isNotEmpty
+                        ? state.userName[0].toUpperCase()
+                        : '?',
+                    style: TextStyle(
+                      fontSize: state.isBiometric ? 20.sp : 18.sp,
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                )
+              : null,
+        ),
+        SizedBox(width: 12.w),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // userName is always resolved cleanly by HomeCubit
+            Text(
+              state.userName,
+              style: AppTextTheme.font14BlackSemiBold,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            if (state.email.isNotEmpty && !state.isBiometric)
+              Text(
+                state.email,
+                style: AppTextTheme.font12GreyMedium,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _LogoutButton extends StatelessWidget {
+  final VoidCallback onTap;
+
+  const _LogoutButton({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<LogoutCubit, LogoutState>(
+      builder: (context, state) {
+        final isLoading = state is LogoutLoading;
+        return GestureDetector(
+          onTap: isLoading ? null : onTap,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+            decoration: BoxDecoration(
+              border: Border.all(color: AppColors.error.withValues(alpha: 0.4)),
+              borderRadius: BorderRadius.circular(20.r),
+            ),
+            child: isLoading
+                ? SizedBox(
+                    width: 16.w,
+                    height: 16.h,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: AppColors.error,
+                    ),
+                  )
+                : Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.logout_rounded,
+                        size: 16.sp,
+                        color: AppColors.error,
+                      ),
+                      SizedBox(width: 6.w),
+                      Text(
+                        'Logout',
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          color: AppColors.error,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
                   ),
           ),
-        ),
-        ),
-        
-          
-      ],
+        );
+      },
     );
   }
 }

@@ -1,5 +1,4 @@
 import 'package:facial_emotional_detection_graduation_project/core/theming/app_colors.dart';
-import 'package:facial_emotional_detection_graduation_project/core/theming/app_text_theme.dart';
 import 'package:facial_emotional_detection_graduation_project/core/widgets/app_text_form_field.dart';
 import 'package:facial_emotional_detection_graduation_project/core/widgets/password_validation.dart';
 import 'package:facial_emotional_detection_graduation_project/core/helpers/app_regex.dart';
@@ -18,7 +17,6 @@ class RegisterForm extends StatefulWidget {
 }
 
 class _RegisterFormState extends State<RegisterForm> {
-  // ── Controllers & Keys ────────────────────────────────────────────────────
   late TextEditingController email;
   late TextEditingController password;
   late TextEditingController confirmPassword;
@@ -26,7 +24,7 @@ class _RegisterFormState extends State<RegisterForm> {
   late TextEditingController lastNameController;
   late GlobalKey<FormState> formKey;
 
-  // ── State ─────────────────────────────────────────────────────────────────
+  // State
   bool isObscureText = true;
   late FocusNode _passwordFocusNode;
   bool _isPasswordFocused = false;
@@ -68,6 +66,8 @@ class _RegisterFormState extends State<RegisterForm> {
 
   @override
   Widget build(BuildContext context) {
+    final labelStyle = Theme.of(context).textTheme.titleSmall;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: Form(
@@ -75,14 +75,14 @@ class _RegisterFormState extends State<RegisterForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── First & Last Name ────────────────────────────────────────────
+            // First & Last Name
             Row(
               children: [
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("First Name", style: AppTextTheme.font12GreyMedium),
+                      Text("First Name", style: labelStyle),
                       AppTextFormField(
                         hintText: "Lois",
                         controller: firstNameController,
@@ -101,7 +101,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Last Name", style: AppTextTheme.font12GreyMedium),
+                      Text("Last Name", style: labelStyle),
                       AppTextFormField(
                         hintText: "Becket",
                         controller: lastNameController,
@@ -119,8 +119,8 @@ class _RegisterFormState extends State<RegisterForm> {
             ),
             24.verticalSpace,
 
-            // ── Email ────────────────────────────────────────────────────────
-            Text("Email", style: AppTextTheme.font12GreyMedium),
+            // Email
+            Text("Email", style: labelStyle),
             AppTextFormField(
               hintText: "Loisbecket@gmail.com",
               controller: email,
@@ -135,8 +135,8 @@ class _RegisterFormState extends State<RegisterForm> {
             ),
             24.verticalSpace,
 
-            // ── Password ─────────────────────────────────────────────────────
-            Text("Password", style: AppTextTheme.font12GreyMedium),
+            // Password
+            Text("Password", style: labelStyle),
             AppTextFormField(
               hintText: "Password",
               controller: password,
@@ -165,32 +165,32 @@ class _RegisterFormState extends State<RegisterForm> {
               },
             ),
 
-            // ── Animated Password Validation Indicator ───────────────────────
+            // Animated Password Validation Indicator
             AnimatedSize(
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut,
               child: _isPasswordFocused
                   ? Padding(
-                padding: EdgeInsets.only(top: 12.h),
-                child: AnimatedOpacity(
-                  opacity: _isPasswordFocused ? 1.0 : 0.0,
-                  duration: const Duration(milliseconds: 300),
-                  child: PasswordValidation(
-                    hasLowerCase: hasLowerCase,
-                    hasUpperCase: hasUpperCase,
-                    hasSpecialCharacters: hasSpecialCharacters,
-                    hasNumber: hasNumber,
-                    hasMinLength: hasMinLength,
-                  ),
-                ),
-              )
+                      padding: EdgeInsets.only(top: 12.h),
+                      child: AnimatedOpacity(
+                        opacity: _isPasswordFocused ? 1.0 : 0.0,
+                        duration: const Duration(milliseconds: 300),
+                        child: PasswordValidation(
+                          hasLowerCase: hasLowerCase,
+                          hasUpperCase: hasUpperCase,
+                          hasSpecialCharacters: hasSpecialCharacters,
+                          hasNumber: hasNumber,
+                          hasMinLength: hasMinLength,
+                        ),
+                      ),
+                    )
                   : const SizedBox.shrink(),
             ),
 
             24.verticalSpace,
 
-            // ── Confirm Password ─────────────────────────────────────────────
-            Text("Confirm Password", style: AppTextTheme.font12GreyMedium),
+            // Confirm Password
+            Text("Confirm Password", style: labelStyle),
             AppTextFormField(
               hintText: "Confirm Password",
               controller: confirmPassword,
@@ -204,7 +204,7 @@ class _RegisterFormState extends State<RegisterForm> {
             ),
             55.verticalSpace,
 
-            // ── Register Button ───────────────────────────────────────────────
+            // Register Button
             BlocBuilder<RegisterCubit, RegisterState>(
               builder: (context, state) {
                 return CustomButton(
@@ -225,9 +225,6 @@ class _RegisterFormState extends State<RegisterForm> {
                 );
               },
             ),
-
-            // ✅ RegisterBlocListener is NOT here.
-            // It wraps the entire RegisterScreenBody inside RegisterScreen.
           ],
         ),
       ),

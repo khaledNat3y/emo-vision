@@ -20,7 +20,7 @@ class LoginScreenHeader extends StatelessWidget {
           const LoginLogoAndAppName(),
           30.verticalSpace,
           Text(
-            'Sign in to your Account',
+            'Sign in to your\nAccount',
             style: Theme.of(context).textTheme.headlineLarge,
           ),
           8.verticalSpace,

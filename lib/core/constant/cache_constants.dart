@@ -1,3 +1,10 @@
+// These are read once at startup in checkIfUserFirstLaunch()
+// and used to decide the initial route.
+bool isFirstLaunch = false;
+bool isBiometric = false;
+bool isUserLoggedInWithGoogle = false;
+bool isUserLoggedInWithEmailAndPasswordAndHasValidAccessToken = false;
+
 class CacheConstants {
   // Tokens (SecureStorage)
   static const String accessToken = 'access_token';

@@ -13,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../core/helpers/app_assets.dart';
-import '../../../core/theming/app_colors.dart';
 
 class LoginScreenBody extends StatelessWidget {
   const LoginScreenBody({super.key});
@@ -24,7 +23,7 @@ class LoginScreenBody extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── Header image ───────────────────────────────────────────────────
+          //Header image
           Stack(
             children: [
               Container(
@@ -42,9 +41,6 @@ class LoginScreenBody extends StatelessWidget {
           ),
 
           // Email / Password form
-          // LoginCubit is already provided by LoginScreen above this widget.
-          // LoginBlocListener is also already wrapping this whole body.
-          // So LoginForm just reads the cubit — no extra setup needed here.
           const LoginForm(),
 
           const OrLoginWith(),
@@ -108,7 +104,7 @@ class LoginScreenBody extends StatelessWidget {
                     TextSpan(
                       text: "Terms of Service",
                       style: AppTextTheme.font12GreyMedium.copyWith(
-                        color: AppColors.black,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     TextSpan(
@@ -118,7 +114,7 @@ class LoginScreenBody extends StatelessWidget {
                     TextSpan(
                       text: "Data Processing Agreement",
                       style: AppTextTheme.font12GreyMedium.copyWith(
-                        color: AppColors.black,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                   ],

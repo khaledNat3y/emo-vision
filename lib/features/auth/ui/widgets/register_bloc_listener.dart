@@ -1,5 +1,6 @@
 import 'package:facial_emotional_detection_graduation_project/core/helpers/extensions.dart';
 import 'package:facial_emotional_detection_graduation_project/core/routing/routes.dart';
+import 'package:facial_emotional_detection_graduation_project/core/theming/app_colors.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/logic/register_cubit/register_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,7 +20,9 @@ class RegisterBlocListener extends StatelessWidget {
             if (context.mounted) {
               context.pushNamed(
                 Routes.otpScreen,
-                arguments: {'email': state.email}, // ✅ state.email not state.data.message
+                arguments: {
+                  'email': state.email,
+                }, // ✅ state.email not state.data.message
               );
             }
           });
@@ -29,7 +32,7 @@ class RegisterBlocListener extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.error),
-              backgroundColor: Colors.red,
+              backgroundColor: AppColors.error,
             ),
           );
         }

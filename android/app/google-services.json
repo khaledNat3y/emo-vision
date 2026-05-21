@@ -48,6 +48,78 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:911321786473:android:d4d24d28299526004a5af8",
+        "android_client_info": {
+          "package_name": "com.example.facial_emotional_detection_graduation_project.development"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "911321786473-863rtkr9s7llukra3fq7lo6g1j6ovvmg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApnQY-84ikUFuLHp48HsaCE4NgGTamFNE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "911321786473-863rtkr9s7llukra3fq7lo6g1j6ovvmg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "911321786473-339bc9c22hrg84usl06bjl00muso6t35.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.facialEmotionalDetectionGraduationProject"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:911321786473:android:7cc9b69f389f7d174a5af8",
+        "android_client_info": {
+          "package_name": "com.example.facial_emotional_detection_graduation_project.production"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "911321786473-863rtkr9s7llukra3fq7lo6g1j6ovvmg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApnQY-84ikUFuLHp48HsaCE4NgGTamFNE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "911321786473-863rtkr9s7llukra3fq7lo6g1j6ovvmg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "911321786473-339bc9c22hrg84usl06bjl00muso6t35.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.facialEmotionalDetectionGraduationProject"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

@@ -1,19 +1,17 @@
 import 'package:facial_emotional_detection_graduation_project/core/di/dependency_injection.dart';
+import 'package:facial_emotional_detection_graduation_project/core/theming/app_colors.dart';
 import 'package:facial_emotional_detection_graduation_project/core/widgets/custom_btn.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/logic/otp_cubit/otp_cubit.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/ui/widgets/otp_bloc_listener.dart';
+import 'package:facial_emotional_detection_graduation_project/features/auth/ui/widgets/otp_pin_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
 
 class OTPVerificationScreen extends StatefulWidget {
   final String email;
 
-  const OTPVerificationScreen({
-    super.key,
-    required this.email,
-  });
+  const OTPVerificationScreen({super.key, required this.email});
 
   @override
   State<OTPVerificationScreen> createState() => _OTPVerificationScreenState();
@@ -39,13 +37,13 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Please enter complete 6-digit code'),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.error,
         ),
       );
       return;
     }
 
-    // ✅ Updated to match new OtpCubit.verifyOTP(email:, otp:) signature
+    // Updated to match new OtpCubit.verifyOTP(email:, otp:) signature
     context.read<OtpCubit>().verifyOTP(
       email: widget.email,
       otp: _otpController.text,
@@ -54,6 +52,8 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return BlocProvider(
       create: (_) => getIt<OtpCubit>(),
       child: OtpBlocListener(
@@ -74,19 +74,19 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                       onPressed: () => Navigator.pop(context),
                       icon: const Icon(
                         Icons.arrow_back_ios,
-                        color: Colors.grey,
+                        color: AppColors.grey,
                         size: 20,
                       ),
                     ),
                     32.verticalSpace,
 
                     // Title
-                    const Text(
+                    Text(
                       'Verification Code',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                        color: theme.colorScheme.onSurface,
                       ),
                     ),
                     8.verticalSpace,
@@ -94,44 +94,19 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                     // Subtitle with email
                     Text(
                       'We have sent the verification\ncode to ${widget.email}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
-                        color: Colors.grey,
+                        color: theme.textTheme.titleMedium?.color,
                         height: 1.5,
                       ),
                     ),
                     32.verticalSpace,
 
                     // OTP Input
-                    PinCodeTextField(
-                      appContext: context,
+                    OtpPinField(
                       length: 6,
                       controller: _otpController,
-                      keyboardType: TextInputType.number,
-                      animationType: AnimationType.fade,
-                      pinTheme: PinTheme(
-                        shape: PinCodeFieldShape.box,
-                        borderRadius: BorderRadius.circular(12),
-                        fieldHeight: 45,
-                        fieldWidth: 45,
-                        activeFillColor: Colors.white,
-                        inactiveFillColor: Colors.white,
-                        selectedFillColor: Colors.white,
-                        activeColor: const Color(0xFF2F5FED),
-                        inactiveColor: const Color(0xFFE8E8E8),
-                        selectedColor: const Color(0xFF2F5FED),
-                        borderWidth: 2,
-                      ),
-                      cursorColor: const Color(0xFF2F5FED),
-                      animationDuration: const Duration(milliseconds: 200),
-                      enableActiveFill: true,
-                      textStyle: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black,
-                      ),
-                      onCompleted: (_) => _handleVerifyOTP(),
-                      onChanged: (_) {},
+                      onCompleted: _handleVerifyOTP,
                     ),
                     32.verticalSpace,
 
@@ -139,7 +114,9 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                     BlocBuilder<OtpCubit, OtpState>(
                       builder: (context, state) {
                         return CustomBtn(
-                          title: state is OtpLoading ? "Verifying..." : "Confirm",
+                          title: state is OtpLoading
+                              ? "Verifying..."
+                              : "Confirm",
                           onTap: state is OtpLoading ? null : _handleVerifyOTP,
                           isLoading: state is OtpLoading,
                         );

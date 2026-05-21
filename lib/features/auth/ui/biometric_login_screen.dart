@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:facial_emotional_detection_graduation_project/core/di/dependency_injection.dart';
 import 'package:facial_emotional_detection_graduation_project/core/helpers/extensions.dart';
@@ -79,6 +78,8 @@ class _BiometricLoginScreenState extends State<BiometricLoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
@@ -107,7 +108,7 @@ class _BiometricLoginScreenState extends State<BiometricLoginScreen> {
 
                 Text(
                   'Biometric Login',
-                  style: AppTextTheme.font24BlackBold,
+                  style: theme.textTheme.displayMedium?.copyWith(fontSize: 24),
                   textAlign: TextAlign.center,
                 ),
 
@@ -115,7 +116,7 @@ class _BiometricLoginScreenState extends State<BiometricLoginScreen> {
 
                 Text(
                   'Use your fingerprint or face ID\nto access your account',
-                  style: AppTextTheme.font13BlackRegular,
+                  style: theme.textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
 
@@ -129,7 +130,7 @@ class _BiometricLoginScreenState extends State<BiometricLoginScreen> {
                       SizedBox(height: 16.h),
                       Text(
                         'Authenticating...',
-                        style: AppTextTheme.font12GreyMedium,
+                        style: theme.textTheme.titleSmall,
                       ),
                     ],
                   )
@@ -176,7 +177,7 @@ class _BiometricLoginScreenState extends State<BiometricLoginScreen> {
                         vertical: 14.h,
                       ),
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
+                        gradient: const LinearGradient(
                           colors: [AppColors.primary, AppColors.primaryDark],
                         ),
                         borderRadius: BorderRadius.circular(12.r),

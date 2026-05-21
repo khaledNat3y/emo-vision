@@ -1,5 +1,6 @@
+import 'package:facial_emotional_detection_graduation_project/core/helpers/extensions.dart';
+import 'package:facial_emotional_detection_graduation_project/core/routing/routes.dart';
 import 'package:facial_emotional_detection_graduation_project/core/theming/app_colors.dart';
-import 'package:facial_emotional_detection_graduation_project/core/theming/app_text_theme.dart';
 import 'package:facial_emotional_detection_graduation_project/core/widgets/app_text_form_field.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/logic/login_cubit/login_cubit.dart';
 import 'package:flutter/material.dart';
@@ -84,6 +85,7 @@ class _LoginFormState extends State<LoginForm> {
                 GestureDetector(
                   onTap: () {
                     // Navigate to Forgot Password Screen
+                    context.pushNamed(Routes.forgotPasswordScreen);
                   },
                   child: Text(
                     "Forgot Password?",
@@ -113,8 +115,6 @@ class _LoginFormState extends State<LoginForm> {
                 );
               },
             ),
-            // ✅ LoginBlocListener is NOT here anymore.
-            // It is placed in LoginScreen wrapping the entire screen body.
           ],
         ),
       ),
