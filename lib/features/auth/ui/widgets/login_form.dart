@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/helpers/app_regex.dart';
-import '../../data/models/login_request_body.dart';
 import '../../logic/login_cubit/login_state.dart';
 import 'custom_button.dart';
 
@@ -21,7 +20,6 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final formKey = GlobalKey<FormState>();
   bool isObscure = true;
-  bool isChecked = false;
   late TextEditingController passwordController;
   late TextEditingController emailController;
 
@@ -45,7 +43,7 @@ class _LoginFormState extends State<LoginForm> {
             5.verticalSpace,
             AppTextFormField(
               controller: emailController,
-              hintText: "Loisbecket@gmail.com",
+              hintText: "loisbecket@gmail.com",
               validator: (value) {
                 if (value == null ||
                     value.isEmpty ||
@@ -84,7 +82,6 @@ class _LoginFormState extends State<LoginForm> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    // Navigate to Forgot Password Screen
                     context.pushNamed(Routes.forgotPasswordScreen);
                   },
                   child: Text(
@@ -105,11 +102,9 @@ class _LoginFormState extends State<LoginForm> {
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
                       context.read<LoginCubit>().login(
-                        body: LoginRequestBody(
-                          email: emailController.text,
-                          password: passwordController.text,
-                        ),
-                      );
+                            email: emailController.text,
+                            password: passwordController.text,
+                          );
                     }
                   },
                 );

@@ -1,6 +1,7 @@
-import 'package:facial_emotional_detection_graduation_project/core/constant/cache_constants.dart'; // ✅ add this
+import 'package:facial_emotional_detection_graduation_project/core/constant/cache_constants.dart';
 import 'package:facial_emotional_detection_graduation_project/core/di/dependency_injection.dart';
 import 'package:facial_emotional_detection_graduation_project/core/helpers/logger.dart';
+import 'package:facial_emotional_detection_graduation_project/core/helpers/shared_pref_helper.dart';
 import 'package:facial_emotional_detection_graduation_project/core/theming/cubit/theme_cubit.dart';
 import 'package:facial_emotional_detection_graduation_project/flavor.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,7 @@ class EmoVisionApp extends StatelessWidget {
                 theme: AppTheme.lightMode,
                 darkTheme: AppTheme.darkMode,
                 themeMode: themeMode,
-                initialRoute: _resolveInitialRoute(),
+                initialRoute: initialRoute(),
                 onGenerateRoute: AppRouter.generateRoute,
               );
             },
@@ -43,21 +44,10 @@ class EmoVisionApp extends StatelessWidget {
     );
   }
 
-  String _resolveInitialRoute() {
-    // First launch — show onboarding
+  String initialRoute() {
     if (isFirstLaunch) return Routes.onBoardingScreen;
-
-    // Biometric — show biometric screen to re-authenticate
-    // (NOT home directly — user must pass fingerprint first)
     if (isBiometric) return Routes.biometricLoginScreen;
-
-    // Google or Email/Password with valid token — go straight to home
-    if (isUserLoggedInWithGoogle) return Routes.homeScreen;
-    if (isUserLoggedInWithEmailAndPasswordAndHasValidAccessToken) {
-      return Routes.homeScreen;
-    }
-
-    // Default — login screen
+    if (isUserLoggedIn) return Routes.homeScreen;
     return Routes.loginScreen;
   }
 }

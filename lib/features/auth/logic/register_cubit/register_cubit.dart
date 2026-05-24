@@ -1,24 +1,22 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/register_request_body.dart';
-import 'package:facial_emotional_detection_graduation_project/features/auth/data/repo/auth_repo.dart';
-
-import '../../data/models/register_response.dart';
-part 'register_state.dart';
+import 'package:facial_emotional_detection_graduation_project/core/services/supabase/supabase_auth_service.dart';
+import 'register_state.dart';
 
 class RegisterCubit extends Cubit<RegisterState> {
-  final AuthRepo _authRepo;
+  final SupabaseAuthService _authService;
 
-  RegisterCubit(this._authRepo) : super(RegisterInitial());
+  RegisterCubit(this._authService) : super(const RegisterInitial());
 
-  Future<void> register({required RegisterRequestBody body}) async {
-    emit(RegisterLoading());
-
-    final result = await _authRepo.register(body);
-
-    result.fold(
-          (errorMessage) => emit(RegisterError(error: errorMessage)),
-          (_) => emit(RegisterSuccess(email: body.email)),
-    );
+  Future<void> register({required String email, required String password}) async {
+    emit(const RegisterLoading());
+    try {
+      await _authService.signUpWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      emit(RegisterSuccess(email: email));
+    } catch (e) {
+      emit(RegisterError(error: e.toString()));
+    }
   }
 }

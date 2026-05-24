@@ -1,12 +1,17 @@
 import 'package:facial_emotional_detection_graduation_project/core/helpers/app_startup.dart';
-import 'package:facial_emotional_detection_graduation_project/core/networking/supabase/supabase_client.dart';
+import 'package:facial_emotional_detection_graduation_project/core/helpers/logger.dart';
+import 'package:facial_emotional_detection_graduation_project/core/helpers/shared_pref_helper.dart';
+import 'package:facial_emotional_detection_graduation_project/core/constant/cache_constants.dart';
 import 'package:facial_emotional_detection_graduation_project/emovision_app.dart';
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
   await initializeApp();
-  await SupabaseClientHelper.initialize();
+  final token = await SharedPrefHelper.getSecuredString(
+    CacheConstants.supabaseAccessToken,
+  );
+  Logger.info('Supabase token: ${token != null ? "exists" : "not found"}');
+  Logger.info(token);
 
   runApp(const EmoVisionApp());
 }

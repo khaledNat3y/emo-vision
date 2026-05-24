@@ -91,11 +91,6 @@ class AnalyzeButton extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(height: 8.h),
-        Text(
-          'Powered by AI Emotion Detection',
-          style: TextStyle(fontSize: 12.sp, color: AppColors.textTertiaryLight),
-        ),
       ],
     );
   }

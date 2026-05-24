@@ -1,3 +1,4 @@
+import 'package:facial_emotional_detection_graduation_project/core/constant/cache_constants.dart';
 import 'package:facial_emotional_detection_graduation_project/core/theming/app_colors.dart';
 import 'package:facial_emotional_detection_graduation_project/features/home/logic/cubit/home_state.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ class HomeWelcomeCard extends StatelessWidget {
             ),
           ),
           SizedBox(height: 6.h),
-          // userName is always resolved cleanly by HomeCubit — no email fallback
+          // userName is always resolved cleanly by HomeCubit
           Text(
             state.userName,
             style: TextStyle(
@@ -43,7 +44,15 @@ class HomeWelcomeCard extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
-          SizedBox(height: 12.h),
+          SizedBox(height: 8.h),
+          if (isBiometric) ...[
+            Text(
+              "Please Signin with email to analyze your emotions",
+              style: TextStyle(fontSize: 16.sp, color: AppColors.error),
+            ),
+            SizedBox(height: 8.h),
+          ],
+
           _LoginMethodBadge(state: state),
         ],
       ),

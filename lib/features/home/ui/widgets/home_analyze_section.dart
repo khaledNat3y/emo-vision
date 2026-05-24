@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:facial_emotional_detection_graduation_project/core/helpers/spacing.dart';
+import 'package:facial_emotional_detection_graduation_project/core/theming/app_colors.dart';
 import 'package:facial_emotional_detection_graduation_project/core/theming/app_text_theme.dart';
 import 'package:facial_emotional_detection_graduation_project/features/home/logic/cubit/upload_video_cubit.dart';
 import 'package:facial_emotional_detection_graduation_project/features/home/ui/widgets/analyze_button.dart';
@@ -26,13 +28,13 @@ class _HomeAnalyzeSectionState extends State<HomeAnalyzeSection> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         //Section title
-        Text('Analyze Emotion', style: AppTextTheme.font20BoldPrimary),
-        SizedBox(height: 8.h),
-        Text(
-          'Upload a video to detect facial emotions in real time.',
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-        SizedBox(height: 16.h),
+        // Text('Analyze Emotion', style: AppTextTheme.font20BoldPrimary),
+        // SizedBox(height: 8.h),
+        // Text(
+        //   'Upload a video to detect facial emotions in real time.',
+        //   style: Theme.of(context).textTheme.bodyMedium,
+        // ),
+        // SizedBox(height: 16.h),
 
         // Video picker
         VideoUploadSection(
@@ -47,7 +49,7 @@ class _HomeAnalyzeSectionState extends State<HomeAnalyzeSection> {
             final isLoading = uploadState is UploadVideoLoading;
 
             return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 //Analyze button
                 AnalyzeButton(
@@ -67,8 +69,7 @@ class _HomeAnalyzeSectionState extends State<HomeAnalyzeSection> {
                     child: HomeResultCard(data: uploadState.data),
                   ),
                 ],
-
-                SizedBox(height: 40.h),
+                verticalSpace(100),
               ],
             );
           },

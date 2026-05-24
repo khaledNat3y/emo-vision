@@ -1,26 +1,19 @@
-// These are read once at startup in checkIfUserFirstLaunch()
-// and used to decide the initial route.
+// App state flags (set at startup)
 bool isFirstLaunch = false;
 bool isBiometric = false;
-bool isUserLoggedInWithGoogle = false;
-bool isUserLoggedInWithEmailAndPasswordAndHasValidAccessToken = false;
+bool isUserLoggedIn = false;
 
 class CacheConstants {
-  // Tokens (SecureStorage)
-  static const String accessToken = 'access_token';
-  static const String refreshToken = 'refresh_token';
+  // Auth tokens (SecureStorage) - Supabase
+  static const String supabaseAccessToken = 'supabase_access_token';
 
   // User info (SharedPreferences)
-  static const String userEmail = 'userEmailFromArgs';
-  static const String userEmailFromGoogle = 'userEmailFromGoogle';
+  static const String userEmail = 'userEmail';
   static const String userName = 'userName';
   static const String userPhotoUrl = 'userPhotoUrl';
-
-  // Auth method flags (SharedPreferences)
-  static const String signInWithGoogle = 'signInWithGoogle';
-  static const String isBiometricLogin = 'isBiometric';
+  static const String isUserAuthenticated = 'isUserAuthenticated';
 
   // App state (SharedPreferences)
   static const String hasSeenOnboarding = 'has_seen_onboarding';
-  static const String phoneNumber = 'phone_number';
+  static const String isBiometricLogin = 'isBiometric';
 }

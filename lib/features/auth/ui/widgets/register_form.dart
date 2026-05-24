@@ -2,8 +2,8 @@ import 'package:facial_emotional_detection_graduation_project/core/theming/app_c
 import 'package:facial_emotional_detection_graduation_project/core/widgets/app_text_form_field.dart';
 import 'package:facial_emotional_detection_graduation_project/core/widgets/password_validation.dart';
 import 'package:facial_emotional_detection_graduation_project/core/helpers/app_regex.dart';
-import 'package:facial_emotional_detection_graduation_project/features/auth/data/models/register_request_body.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/logic/register_cubit/register_cubit.dart';
+import 'package:facial_emotional_detection_graduation_project/features/auth/logic/register_cubit/register_state.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/ui/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -213,13 +213,9 @@ class _RegisterFormState extends State<RegisterForm> {
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
                       context.read<RegisterCubit>().register(
-                        body: RegisterRequestBody(
-                          email: email.text,
-                          password: password.text,
-                          firstName: firstNameController.text,
-                          lastName: lastNameController.text,
-                        ),
-                      );
+                            email: email.text,
+                            password: password.text,
+                          );
                     }
                   },
                 );

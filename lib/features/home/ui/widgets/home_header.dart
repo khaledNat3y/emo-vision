@@ -68,10 +68,13 @@ class _HomeAvatar extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // userName is always resolved cleanly by HomeCubit
             Text(
               state.userName,
-              style: AppTextTheme.font14BlackSemiBold,
+              style: Theme.of(context).brightness == Brightness.light
+                  ? AppTextTheme.font14BlackSemiBold
+                  : AppTextTheme.font14BlackSemiBold.copyWith(
+                      color: AppColors.white,
+                    ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),

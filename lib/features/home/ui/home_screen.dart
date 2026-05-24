@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:facial_emotional_detection_graduation_project/core/di/dependency_injection.dart';
 import 'package:facial_emotional_detection_graduation_project/core/helpers/extensions.dart';
 import 'package:facial_emotional_detection_graduation_project/core/routing/routes.dart';
@@ -7,7 +9,9 @@ import 'package:facial_emotional_detection_graduation_project/features/auth/logi
 import 'package:facial_emotional_detection_graduation_project/features/home/logic/cubit/home_cubit.dart';
 import 'package:facial_emotional_detection_graduation_project/features/home/logic/cubit/home_state.dart';
 import 'package:facial_emotional_detection_graduation_project/features/home/logic/cubit/upload_video_cubit.dart';
+import 'package:facial_emotional_detection_graduation_project/features/home/ui/settings_screen.dart';
 import 'package:facial_emotional_detection_graduation_project/features/home/ui/widgets/home_body.dart';
+import 'package:facial_emotional_detection_graduation_project/features/home/ui/widgets/nav_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -33,6 +37,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _resultKey = GlobalKey();
+  late List<Widget> screens;
+  int _currentIndex = 0;
 
   @override
   void dispose() {
@@ -89,6 +95,47 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    screens = [
+      BlocBuilder<HomeCubit, HomeState>(
+        builder: (context, homeState) {
+          if (homeState is HomeLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (homeState is HomeFailure) {
+            return Center(child: Text(homeState.error));
+          }
+          if (homeState is HomeSuccess) {
+            return HomeBody(
+              state: homeState,
+              scrollController: _scrollController,
+              resultKey: _resultKey,
+              onLogoutTap: () => _showLogoutDialog(context),
+            );
+          }
+          return const SizedBox.shrink();
+        },
+      ),
+
+      BlocBuilder<HomeCubit, HomeState>(
+        builder: (context, state) {
+          if (state is HomeSuccess) {
+            return SettingsScreen(
+              userName: state.userName,
+              email: state.email,
+              photoUrl: state.photoUrl,
+              onLogout: () => _showLogoutDialog(context),
+            );
+          }
+          return const SizedBox.shrink();
+        },
+      ),
+    ];
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
@@ -137,26 +184,51 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
         child: Scaffold(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          body: SafeArea(
-            child: BlocBuilder<HomeCubit, HomeState>(
-              builder: (context, homeState) {
-                if (homeState is HomeLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (homeState is HomeFailure) {
-                  return Center(child: Text(homeState.error));
-                }
-                if (homeState is HomeSuccess) {
-                  return HomeBody(
-                    state: homeState,
-                    scrollController: _scrollController,
-                    resultKey: _resultKey,
-                    onLogoutTap: () => _showLogoutDialog(context),
-                  );
-                }
-                return const SizedBox.shrink();
-              },
+          floatingActionButton: ClipRRect(
+            borderRadius: BorderRadius.circular(30.r),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+              child: Container(
+                height: 70.h,
+                width: MediaQuery.sizeOf(context).width * 0.8,
+                padding: EdgeInsets.symmetric(horizontal: 12.w),
+                decoration: BoxDecoration(
+                  color: AppColors.grey.withValues(alpha: 0.15), // glass base
+                  borderRadius: BorderRadius.circular(30.r),
+                  border: Border.all(
+                    color: AppColors.grey.withValues(alpha: 0.1),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    NavItem(
+                      title: "Home",
+                      icon: Icons.home_rounded,
+                      isActive: _currentIndex == 0,
+                      onTap: () {
+                        setState(() => _currentIndex = 0);
+                      },
+                    ),
+
+                    NavItem(
+                      title: "Settings",
+                      icon: Icons.settings,
+                      isActive: _currentIndex == 1,
+                      onTap: () {
+                        setState(() => _currentIndex = 1);
+                      },
+                    ),
+                  ],
+                ),
+              ),
             ),
+          ),
+          floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
+          body: SafeArea(
+            child: IndexedStack(index: _currentIndex, children: screens),
           ),
         ),
       ),

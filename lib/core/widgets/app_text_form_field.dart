@@ -49,6 +49,7 @@ class AppTextFormField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       focusNode: focusNode,
+      textInputAction: TextInputAction.next,
       obscureText: isObscureText ?? false,
       cursorColor: AppColors.primary,
       readOnly: isReadOnly ?? false,

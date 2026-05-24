@@ -1,11 +1,20 @@
-import 'package:facial_emotional_detection_graduation_project/core/helpers/logger.dart';
-
 class UploadVideoResponseErrorModel {
   List<Detail>? detail;
 
   UploadVideoResponseErrorModel({this.detail});
 
   UploadVideoResponseErrorModel.fromJson(Map<String, dynamic> json) {
+    if (json['detail'] is String) {
+      detail = [
+        Detail(
+          type: 'error',
+          loc: ['unknown'],
+          msg: json['detail'],
+          input: null,
+        ),
+      ];
+      return;
+    }
     if (json['detail'] != null) {
       detail = <Detail>[];
       json['detail'].forEach((v) {
