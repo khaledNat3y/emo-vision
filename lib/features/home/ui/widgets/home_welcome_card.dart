@@ -45,7 +45,7 @@ class HomeWelcomeCard extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
           SizedBox(height: 8.h),
-          if (isBiometric) ...[
+          if (state.isBiometric) ...[
             Text(
               "Please Signin with email to analyze your emotions",
               style: TextStyle(fontSize: 16.sp, color: AppColors.error),
