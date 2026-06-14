@@ -1,16 +1,23 @@
-import 'package:facial_emotional_detection_graduation_project/core/services/firebase_services.dart';
+import 'package:facial_emotional_detection_graduation_project/core/services/supabase/supabase_auth_service.dart';
 import 'package:facial_emotional_detection_graduation_project/features/home/data/model/user_model.dart';
 
 class HomeRepo {
-  final FirebaseServices firebaseServices;
+  final SupabaseAuthService supabaseService;
 
-  HomeRepo(this.firebaseServices);
+  HomeRepo(this.supabaseService);
 
+  UserModel? getCurrentUserInfo() {
+    final user = supabaseService.getCurrentUser();
 
-   UserModel? getCurrentUserInfo() {
-    final UserModel? userInfo = firebaseServices.getCurrentUserInfo();
-    return userInfo;
-   }
+    if (user == null) return null;
 
-
+    return UserModel(
+      uid: user.id,
+      name: user.userMetadata?['full_name'] ?? '',
+      email: user.email ?? '',
+      photoURL: user.userMetadata?['avatar_url'] ?? '',
+      provider: user.appMetadata['provider'] ?? '',
+      createdAt: DateTime.now(),
+    );
+  }
 }

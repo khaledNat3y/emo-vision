@@ -1,5 +1,6 @@
 import 'package:facial_emotional_detection_graduation_project/core/helpers/spacing.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'logger.dart';
 
 /// Shows an enhanced dialog for errors or success messages.
@@ -258,4 +259,43 @@ String _getHelpText(int? statusCode) {
     default:
       return 'Please check your input and try again.';
   }
+}
+
+Future<void> launchUrlToEmoVisionWebsite() async {
+  if (!await launchUrl(Uri.parse('https://emovision.kofino.net'))) {
+    throw Exception(
+      'Could not launch ${Uri.parse('https://emovision.kofino.net')}',
+    );
+  }
+}
+
+void showToast(BuildContext context, String message) {
+  final OverlayEntry overlayEntry = OverlayEntry(
+    builder: (context) => Positioned(
+      bottom: 100,
+      left: 24,
+      right: 24,
+      child: Material(
+        color: Colors.transparent,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            color: Colors.green,
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Text(
+            message,
+            style: const TextStyle(color: Colors.white),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+    ),
+  );
+
+  Overlay.of(context).insert(overlayEntry);
+
+  Future.delayed(const Duration(seconds: 5), () {
+    overlayEntry.remove();
+  });
 }

@@ -1,19 +1,20 @@
-import 'package:facial_emotional_detection_graduation_project/core/helpers/constants.dart';
+import 'package:facial_emotional_detection_graduation_project/core/helpers/logger.dart';
+import 'package:facial_emotional_detection_graduation_project/features/auth/data/repo/auth_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:facial_emotional_detection_graduation_project/core/constant/cache_constants.dart';
 import 'package:facial_emotional_detection_graduation_project/core/helpers/shared_pref_helper.dart';
-import 'package:facial_emotional_detection_graduation_project/core/services/supabase/supabase_auth_service.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
-  final SupabaseAuthService _authService;
+  final AuthRepo _authRepo;
 
-  LoginCubit(this._authService) : super(const LoginInitial());
+  LoginCubit(this._authRepo) : super(const LoginInitial());
 
   Future<void> login({required String email, required String password}) async {
     emit(const LoginLoading());
     try {
-      final response = await _authService.signInWithEmailAndPassword(
+      final response = await _authRepo.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -47,15 +48,13 @@ class LoginCubit extends Cubit<LoginState> {
 
   Future<void> signInWithGoogle() async {
     emit(const LoginWithGoogleLoading());
-    try {
-      final success = await _authService.signInWithGoogle();
-      if (!success) {
-        emit(const LoginError(error: 'Google sign-in failed'));
-        return;
-      }
 
-      final user = _authService.getCurrentUser();
-      if (user == null) {
+    try {
+      final AuthResponse response = await _authRepo.signInWithGoogle();
+
+      final user = response.user;
+
+      if (user == null || response.session == null) {
         emit(const LoginError(error: 'Google sign-in failed'));
         return;
       }
@@ -64,10 +63,12 @@ class LoginCubit extends Cubit<LoginState> {
         CacheConstants.userEmail,
         user.email ?? '',
       );
+
       await SharedPrefHelper.setData(
         CacheConstants.userName,
         user.userMetadata?['full_name'] ?? '',
       );
+
       await SharedPrefHelper.setData(
         CacheConstants.userPhotoUrl,
         user.userMetadata?['avatar_url'] ?? '',
@@ -81,11 +82,16 @@ class LoginCubit extends Cubit<LoginState> {
         ),
       );
     } catch (e) {
-      emit(LoginError(error: e.toString()));
+      Logger.info('Google sign-in error: $e');
+      emit(
+        const LoginWithGoogleError(
+          error: "Google sign-in failed, Please try again",
+        ),
+      );
     }
   }
 
   Future<void> signOut() async {
-    await _authService.signOut();
+    await _authRepo.signOut();
   }
 }

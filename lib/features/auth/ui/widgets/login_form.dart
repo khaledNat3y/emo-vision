@@ -1,5 +1,6 @@
 import 'package:facial_emotional_detection_graduation_project/core/helpers/extensions.dart';
 import 'package:facial_emotional_detection_graduation_project/core/routing/routes.dart';
+import 'package:facial_emotional_detection_graduation_project/core/services/deep_link_service.dart';
 import 'package:facial_emotional_detection_graduation_project/core/theming/app_colors.dart';
 import 'package:facial_emotional_detection_graduation_project/core/widgets/app_text_form_field.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/logic/login_cubit/login_cubit.dart';
@@ -102,9 +103,9 @@ class _LoginFormState extends State<LoginForm> {
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
                       context.read<LoginCubit>().login(
-                            email: emailController.text,
-                            password: passwordController.text,
-                          );
+                        email: emailController.text,
+                        password: passwordController.text,
+                      );
                     }
                   },
                 );

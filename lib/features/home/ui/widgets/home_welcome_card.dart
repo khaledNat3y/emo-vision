@@ -1,6 +1,6 @@
 import 'package:facial_emotional_detection_graduation_project/core/constant/cache_constants.dart';
 import 'package:facial_emotional_detection_graduation_project/core/theming/app_colors.dart';
-import 'package:facial_emotional_detection_graduation_project/features/home/logic/cubit/home_state.dart';
+import 'package:facial_emotional_detection_graduation_project/features/home/logic/home_cubit/home_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -45,14 +45,14 @@ class HomeWelcomeCard extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
           SizedBox(height: 8.h),
-          if (state.isBiometric) ...[
-            Text(
-              "Please Signin with email to analyze your emotions",
-              style: TextStyle(fontSize: 16.sp, color: AppColors.error),
-            ),
-            SizedBox(height: 8.h),
-          ],
 
+          // if (state.isBiometric) ...[
+          //   Text(
+          //     "Please Signin with email to analyze your emotions",
+          //     style: TextStyle(fontSize: 16.sp, color: AppColors.error),
+          //   ),
+          //   SizedBox(height: 8.h),
+          // ],
           _LoginMethodBadge(state: state),
         ],
       ),

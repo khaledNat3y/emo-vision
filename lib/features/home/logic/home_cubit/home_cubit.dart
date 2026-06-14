@@ -36,17 +36,14 @@ class HomeCubit extends Cubit<HomeState> {
 
         isBiometric = isBiometricStored;
 
-        if (isBiometricStored) {
-          displayEmail =
-              await SharedPrefHelper.getString(CacheConstants.userEmail) ?? '';
-          displayName =
-              await SharedPrefHelper.getString(CacheConstants.userName) ?? '';
-        } else {
-          displayEmail =
-              await SharedPrefHelper.getString(CacheConstants.userEmail) ?? '';
-          displayName =
-              await SharedPrefHelper.getString(CacheConstants.userName) ?? '';
-        }
+        displayEmail =
+            await SharedPrefHelper.getString(CacheConstants.userEmail) ?? '';
+
+        displayName =
+            await SharedPrefHelper.getString(CacheConstants.userName) ?? '';
+
+        photoUrl =
+            await SharedPrefHelper.getString(CacheConstants.userPhotoUrl) ?? '';
       }
 
       final String resolvedName;

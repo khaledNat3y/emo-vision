@@ -50,13 +50,12 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyApnQY-84ikUFuLHp48HsaCE4NgGTamFNE',
-    appId: '1:911321786473:android:06db1d95e68e39bb4a5af8',
-    messagingSenderId: '911321786473',
-    projectId: 'emo-vision',
-    storageBucket: 'emo-vision.firebasestorage.app',
+    apiKey: 'AIzaSyBcdwwZqSRsmTgCuTDDDvl3dnljy3ppVn0',
+    appId: '1:957167248980:android:9f7a07cebf53d62be72fc1',
+    messagingSenderId: '957167248980',
+    projectId: 'emo-vision-graduation',
+    storageBucket: 'emo-vision-graduation.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBfabwTKhxoN1XpTd04mUHjwCgM31c20BQ',
     appId: '1:911321786473:ios:b16cc4093db4eef74a5af8',

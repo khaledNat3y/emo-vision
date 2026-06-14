@@ -1,12 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class UserModel {
   final String uid;
   final String name;
   final String email;
   final String photoURL;
   final String provider;
-  final FieldValue createdAt;
+  final DateTime? createdAt;
 
   UserModel({
     required this.uid,
@@ -14,7 +12,7 @@ class UserModel {
     required this.email,
     required this.photoURL,
     required this.provider,
-    required this.createdAt,
+    this.createdAt,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> map) {
@@ -24,7 +22,9 @@ class UserModel {
       email: map['email'] ?? '',
       photoURL: map['photoURL'] ?? '',
       provider: map['provider'] ?? '',
-      createdAt: map['createdAt'] ?? FieldValue.serverTimestamp(),
+      createdAt: map['createdAt'] != null
+          ? DateTime.parse(map['createdAt'])
+          : null,
     );
   }
 
@@ -35,7 +35,7 @@ class UserModel {
       'email': email,
       'photoURL': photoURL,
       'provider': provider,
-      'createdAt': createdAt,
+      'createdAt': createdAt?.toIso8601String(),
     };
   }
 }

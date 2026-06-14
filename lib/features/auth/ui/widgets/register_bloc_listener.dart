@@ -1,4 +1,6 @@
 import 'package:facial_emotional_detection_graduation_project/core/helpers/extensions.dart';
+import 'package:facial_emotional_detection_graduation_project/core/helpers/functions.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:facial_emotional_detection_graduation_project/core/routing/routes.dart';
 import 'package:facial_emotional_detection_graduation_project/core/theming/app_colors.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/logic/register_cubit/register_cubit.dart';
@@ -19,11 +21,9 @@ class RegisterBlocListener extends StatelessWidget {
           FocusScope.of(context).unfocus();
           Future.microtask(() {
             if (context.mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Registration successful! Please log in.'),
-                  backgroundColor: AppColors.success,
-                ),
+              showToast(
+                context,
+                "We sent you a confirmation email. Please check your inbox.",
               );
               context.pushNamedAndRemoveUntil(
                 Routes.loginScreen,

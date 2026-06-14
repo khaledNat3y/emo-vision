@@ -25,7 +25,7 @@ class DioHelper {
       ),
     );
     dio.interceptors.add(PrettyDioLogger());
-    dio.interceptors.add(SupabaseAuthInterceptor());
+    // dio.interceptors.add(SupabaseAuthInterceptor());
     return dio;
   }
 
@@ -79,18 +79,18 @@ class DioHelper {
 }
 
 // Supabase Auth Interceptor - attaches Supabase JWT to all requests
-class SupabaseAuthInterceptor extends Interceptor {
-  final SupabaseAuthService _supabaseAuthService = SupabaseAuthService();
+// class SupabaseAuthInterceptor extends Interceptor {
+//   final SupabaseAuthService _supabaseAuthService = SupabaseAuthService();
 
-  @override
-  void onRequest(
-    RequestOptions options,
-    RequestInterceptorHandler handler,
-  ) async {
-    final token = await _supabaseAuthService.getAccessToken();
-    if (token != null && token.isNotEmpty) {
-      options.headers['Authorization'] = 'Bearer $token';
-    }
-    handler.next(options);
-  }
-}
+//   @override
+//   void onRequest(
+//     RequestOptions options,
+//     RequestInterceptorHandler handler,
+//   ) async {
+//     final token = await _supabaseAuthService.getAccessToken();
+//     if (token != null && token.isNotEmpty) {
+//       options.headers['Authorization'] = 'Bearer $token';
+//     }
+//     handler.next(options);
+//   }
+// }

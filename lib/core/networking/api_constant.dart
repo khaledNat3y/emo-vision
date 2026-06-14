@@ -1,7 +1,7 @@
 class ApiConstants {
   static const String baseUrl = 'https://accessories-eshop.runasp.net';
   static const String videoProcessingBaseUrl =
-      'https://emovisiondeployment-production.up.railway.app';
+      'https://emovisiondeployment-production-8e39.up.railway.app';
 
   // Auth endpoints
   static const String login = '/api/auth/login';

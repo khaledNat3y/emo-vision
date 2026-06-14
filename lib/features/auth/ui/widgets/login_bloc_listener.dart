@@ -1,3 +1,4 @@
+import 'package:facial_emotional_detection_graduation_project/core/helpers/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:facial_emotional_detection_graduation_project/core/helpers/extensions.dart';
@@ -32,6 +33,20 @@ class LoginBlocListener extends StatelessWidget {
             }
           });
         }
+        if (state is LoginWithGoogleLoading) {
+          FocusScope.of(context).unfocus();
+          Future.microtask(() {
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  duration: Duration(seconds: 15),
+                  content: Text("Logging in with Google..."),
+                  backgroundColor: AppColors.primary,
+                ),
+              );
+            }
+          });
+        }
 
         if (state is LoginWithGoogleSuccess) {
           FocusScope.of(context).unfocus();
@@ -52,6 +67,16 @@ class LoginBlocListener extends StatelessWidget {
         }
 
         if (state is LoginError) {
+          Logger.debug(state.error);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Login failed, please try again."),
+              backgroundColor: AppColors.error,
+            ),
+          );
+        }
+        if (state is LoginWithGoogleError) {
+          Logger.debug(state.error);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.error),

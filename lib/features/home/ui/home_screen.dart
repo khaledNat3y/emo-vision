@@ -1,236 +1,37 @@
-import 'dart:ui';
-
-import 'package:facial_emotional_detection_graduation_project/core/di/dependency_injection.dart';
-import 'package:facial_emotional_detection_graduation_project/core/helpers/extensions.dart';
-import 'package:facial_emotional_detection_graduation_project/core/routing/routes.dart';
-import 'package:facial_emotional_detection_graduation_project/core/theming/app_colors.dart';
-import 'package:facial_emotional_detection_graduation_project/features/auth/logic/logout_cubit/logout_cubit.dart';
-import 'package:facial_emotional_detection_graduation_project/features/auth/logic/logout_cubit/logout_state.dart';
-import 'package:facial_emotional_detection_graduation_project/features/home/logic/cubit/home_cubit.dart';
-import 'package:facial_emotional_detection_graduation_project/features/home/logic/cubit/home_state.dart';
-import 'package:facial_emotional_detection_graduation_project/features/home/logic/cubit/upload_video_cubit.dart';
-import 'package:facial_emotional_detection_graduation_project/features/home/ui/settings_screen.dart';
-import 'package:facial_emotional_detection_graduation_project/features/home/ui/widgets/home_body.dart';
-import 'package:facial_emotional_detection_graduation_project/features/home/ui/widgets/nav_item.dart';
+import 'package:facial_emotional_detection_graduation_project/features/home/logic/home_cubit/home_state.dart';
+import 'package:facial_emotional_detection_graduation_project/features/home/ui/widgets/home_analyze_section.dart';
+import 'package:facial_emotional_detection_graduation_project/features/home/ui/widgets/home_header.dart';
+import 'package:facial_emotional_detection_graduation_project/features/home/ui/widgets/home_welcome_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class HomeScreen extends StatefulWidget {
-  final String? email;
-  final String? userName;
-  final String? photoUrl;
-  final String? loginMethod;
+class HomeScreen extends StatelessWidget {
+  final HomeSuccess state;
+  final ScrollController scrollController;
+  final VoidCallback onLogoutTap;
 
   const HomeScreen({
     super.key,
-    this.email,
-    this.userName,
-    this.photoUrl,
-    this.loginMethod,
+    required this.state,
+    required this.scrollController,
+    required this.onLogoutTap,
   });
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  final ScrollController _scrollController = ScrollController();
-  final GlobalKey _resultKey = GlobalKey();
-  late List<Widget> screens;
-  int _currentIndex = 0;
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  /// Waits for the result widget to be inserted and laid out,
-  /// then smoothly scrolls to the bottom.
-  void _scrollToResult() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (_scrollController.hasClients) {
-          _scrollController.animateTo(
-            _scrollController.position.maxScrollExtent,
-            duration: const Duration(milliseconds: 500),
-            curve: Curves.easeInOut,
-          );
-        }
-      });
-    });
-  }
-
-  void _showLogoutDialog(BuildContext ctx) {
-    showDialog(
-      context: ctx,
-      builder: (dialogContext) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.r),
-        ),
-        title: const Text('Logout'),
-        content: const Text('Are you sure you want to logout?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text(
-              'Cancel',
-              style: TextStyle(color: AppColors.grey),
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(dialogContext);
-              ctx.read<LogoutCubit>().logout();
-            },
-            child: const Text(
-              'Logout',
-              style: TextStyle(color: AppColors.error),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    screens = [
-      BlocBuilder<HomeCubit, HomeState>(
-        builder: (context, homeState) {
-          if (homeState is HomeLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (homeState is HomeFailure) {
-            return Center(child: Text(homeState.error));
-          }
-          if (homeState is HomeSuccess) {
-            return HomeBody(
-              state: homeState,
-              scrollController: _scrollController,
-              resultKey: _resultKey,
-              onLogoutTap: () => _showLogoutDialog(context),
-            );
-          }
-          return const SizedBox.shrink();
-        },
-      ),
-
-      BlocBuilder<HomeCubit, HomeState>(
-        builder: (context, state) {
-          if (state is HomeSuccess) {
-            return SettingsScreen(
-              userName: state.userName,
-              email: state.email,
-              photoUrl: state.photoUrl,
-              onLogout: () => _showLogoutDialog(context),
-            );
-          }
-          return const SizedBox.shrink();
-        },
-      ),
-    ];
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (_) => getIt<HomeCubit>()
-            ..loadUserInfo(
-              emailFromArgs: widget.email,
-              userNameFromArgs: widget.userName,
-              photoUrlFromArgs: widget.photoUrl,
-              loginMethod: widget.loginMethod,
-            ),
-        ),
-        BlocProvider(create: (_) => getIt<LogoutCubit>()),
-        BlocProvider(create: (_) => getIt<UploadVideoCubit>()),
-      ],
-      child: MultiBlocListener(
-        listeners: [
-          BlocListener<LogoutCubit, LogoutState>(
-            listener: (context, state) {
-              if (state is LogoutSuccess) {
-                context.pushNamedAndRemoveUntil(
-                  Routes.loginScreen,
-                  predicate: (route) => false,
-                );
-              }
-            },
-          ),
-          BlocListener<UploadVideoCubit, UploadVideoState>(
-            listener: (context, state) {
-              if (state is UploadVideoSuccess) {
-                _scrollToResult();
-              }
-              if (state is UploadVideoError) {
-                _scrollToResult();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      state.error.detail?.first.msg ?? 'Upload failed',
-                    ),
-                    backgroundColor: AppColors.error,
-                  ),
-                );
-              }
-            },
-          ),
+    return SingleChildScrollView(
+      controller: scrollController,
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 20.h),
+          HomeHeader(state: state, onLogoutTap: onLogoutTap),
+          SizedBox(height: 32.h),
+          HomeWelcomeCard(state: state),
+          SizedBox(height: 32.h),
+          const HomeAnalyzeSection(),
         ],
-        child: Scaffold(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          floatingActionButton: ClipRRect(
-            borderRadius: BorderRadius.circular(30.r),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-              child: Container(
-                height: 70.h,
-                width: MediaQuery.sizeOf(context).width * 0.8,
-                padding: EdgeInsets.symmetric(horizontal: 12.w),
-                decoration: BoxDecoration(
-                  color: AppColors.grey.withValues(alpha: 0.15), // glass base
-                  borderRadius: BorderRadius.circular(30.r),
-                  border: Border.all(
-                    color: AppColors.grey.withValues(alpha: 0.1),
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    NavItem(
-                      title: "Home",
-                      icon: Icons.home_rounded,
-                      isActive: _currentIndex == 0,
-                      onTap: () {
-                        setState(() => _currentIndex = 0);
-                      },
-                    ),
-
-                    NavItem(
-                      title: "Settings",
-                      icon: Icons.settings,
-                      isActive: _currentIndex == 1,
-                      onTap: () {
-                        setState(() => _currentIndex = 1);
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerFloat,
-          body: SafeArea(
-            child: IndexedStack(index: _currentIndex, children: screens),
-          ),
-        ),
       ),
     );
   }

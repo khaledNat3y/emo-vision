@@ -55,8 +55,6 @@ class LoginScreenBody extends StatelessWidget {
                 title: 'Google',
                 onTap: () {
                   context.read<LoginCubit>().signInWithGoogle();
-                  // LoginBlocListener above will handle the navigation
-                  // when LoginWithGoogleSuccess is emitted
                 },
               ),
 

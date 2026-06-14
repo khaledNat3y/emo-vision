@@ -6,4 +6,6 @@ class Routes {
   static const String biometricLoginScreen = '/biometricLoginScreen';
   static const String forgotPasswordScreen = '/forgotPasswordScreen';
   static const String resetPasswordScreen = '/resetPasswordScreen';
+  static const String emailVerifiedScreen = '/email-verified';
+  static const String updatePasswordScreen = '/update-password';
 }

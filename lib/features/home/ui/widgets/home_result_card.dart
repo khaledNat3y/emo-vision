@@ -12,6 +12,8 @@ class HomeResultCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final prediction = data.prediction ?? 'Unknown';
     final totalFrames = data.metadata?.totalFrames ?? 0;
+    final duration = data.metadata?.durationSec ?? 0.0;
+    final confidence = data.overallConfidence ?? 0.0;
 
     // Determine engaged/not-engaged from prediction string
     final isEngaged =
@@ -83,6 +85,16 @@ class HomeResultCard extends StatelessWidget {
 
           // Prediction raw value
           _InfoRow(label: 'Prediction:', value: prediction, color: resultColor),
+          _InfoRow(
+            label: 'Duration:',
+            value: '${duration.toStringAsFixed(1)} sec',
+            color: resultColor,
+          ),
+          _InfoRow(
+            label: 'Confidence:',
+            value: '$confidence',
+            color: resultColor,
+          ),
 
           // Total frames
           if (totalFrames > 0) ...[

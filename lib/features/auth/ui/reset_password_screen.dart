@@ -21,11 +21,7 @@ class ResetPasswordScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.email_outlined,
-                size: 80.sp,
-                color: AppColors.primary,
-              ),
+              Icon(Icons.email_outlined, size: 80.sp, color: AppColors.primary),
               24.verticalSpace,
               Text(
                 'Check Your Email',

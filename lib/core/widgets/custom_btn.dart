@@ -8,13 +8,11 @@ class CustomBtn extends StatelessWidget {
   final void Function()? onTap;
   final bool? isLoading;
 
-  const CustomBtn({
-    super.key, required this.title, this.onTap, this.isLoading,
-  });
+  const CustomBtn({super.key, required this.title, this.onTap, this.isLoading});
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: onTap,
       child: Container(
         width: double.infinity,
@@ -24,13 +22,15 @@ class CustomBtn extends StatelessWidget {
           gradient: LinearGradient(
             colors: [
               isLoading ?? false ? AppColors.grey : AppColors.primary,
-              isLoading ?? false ? AppColors.grey : AppColors.primaryDark
+              isLoading ?? false ? AppColors.grey : AppColors.primaryDark,
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
         ),
-        child: Center(child: Text(title, style: AppTextTheme.font16WhiteMedium,)),
+        child: Center(
+          child: Text(title, style: AppTextTheme.font16WhiteMedium),
+        ),
       ),
     );
   }

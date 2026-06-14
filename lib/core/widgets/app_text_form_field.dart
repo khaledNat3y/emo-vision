@@ -19,6 +19,7 @@ class AppTextFormField extends StatelessWidget {
   final FocusNode? focusNode;
   final bool? isReadOnly;
   final String? initialValue;
+  final void Function(String)? onFieldSubmitted;
 
   const AppTextFormField({
     super.key,
@@ -37,6 +38,7 @@ class AppTextFormField extends StatelessWidget {
     this.isReadOnly,
     this.initialValue,
     this.prefixIcon,
+    this.onFieldSubmitted,
   });
 
   @override
@@ -49,11 +51,15 @@ class AppTextFormField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       focusNode: focusNode,
+      onTapOutside: (event) {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       textInputAction: TextInputAction.next,
       obscureText: isObscureText ?? false,
       cursorColor: AppColors.primary,
       readOnly: isReadOnly ?? false,
       style: inputTextStyle ?? theme.textTheme.bodyMedium,
+      onFieldSubmitted: onFieldSubmitted,
       decoration: InputDecoration(
         fillColor: backgroundColor ?? theme.colorScheme.surface,
         filled: true,

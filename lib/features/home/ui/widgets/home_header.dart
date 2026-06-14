@@ -2,7 +2,7 @@ import 'package:facial_emotional_detection_graduation_project/core/theming/app_c
 import 'package:facial_emotional_detection_graduation_project/core/theming/app_text_theme.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/logic/logout_cubit/logout_cubit.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/logic/logout_cubit/logout_state.dart';
-import 'package:facial_emotional_detection_graduation_project/features/home/logic/cubit/home_state.dart';
+import 'package:facial_emotional_detection_graduation_project/features/home/logic/home_cubit/home_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

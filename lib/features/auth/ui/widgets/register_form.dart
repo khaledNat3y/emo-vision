@@ -1,3 +1,4 @@
+import 'package:facial_emotional_detection_graduation_project/core/helpers/spacing.dart';
 import 'package:facial_emotional_detection_graduation_project/core/theming/app_colors.dart';
 import 'package:facial_emotional_detection_graduation_project/core/widgets/app_text_form_field.dart';
 import 'package:facial_emotional_detection_graduation_project/core/widgets/password_validation.dart';
@@ -27,6 +28,7 @@ class _RegisterFormState extends State<RegisterForm> {
   // State
   bool isObscureText = true;
   late FocusNode _passwordFocusNode;
+  late FocusNode _confirmPasswordFocusNode;
   bool _isPasswordFocused = false;
   bool hasLowerCase = false;
   bool hasUpperCase = false;
@@ -44,7 +46,7 @@ class _RegisterFormState extends State<RegisterForm> {
     lastNameController = TextEditingController();
     formKey = GlobalKey<FormState>();
     _passwordFocusNode = FocusNode();
-
+    _confirmPasswordFocusNode = FocusNode();
     // Listen to password focus changes
     _passwordFocusNode.addListener(() {
       setState(() {
@@ -141,6 +143,10 @@ class _RegisterFormState extends State<RegisterForm> {
               hintText: "Password",
               controller: password,
               focusNode: _passwordFocusNode,
+
+              onFieldSubmitted: (_) {
+                FocusScope.of(context).requestFocus(_confirmPasswordFocusNode);
+              },
               isObscureText: isObscureText,
               suffixIcon: IconButton(
                 onPressed: () {
@@ -194,6 +200,7 @@ class _RegisterFormState extends State<RegisterForm> {
             AppTextFormField(
               hintText: "Confirm Password",
               controller: confirmPassword,
+              focusNode: _confirmPasswordFocusNode,
               isObscureText: isObscureText,
               validator: (value) {
                 if (value != password.text) {
@@ -213,14 +220,17 @@ class _RegisterFormState extends State<RegisterForm> {
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
                       context.read<RegisterCubit>().register(
-                            email: email.text,
-                            password: password.text,
-                          );
+                        firstName: firstNameController.text,
+                        lastName: lastNameController.text,
+                        email: email.text,
+                        password: password.text,
+                      );
                     }
                   },
                 );
               },
             ),
+            verticalSpace(16),
           ],
         ),
       ),

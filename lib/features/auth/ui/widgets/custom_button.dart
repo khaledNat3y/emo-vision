@@ -24,9 +24,8 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IgnorePointer(
-      // Prevents clicking while loading
       ignoring: isLoading == true,
-      child: InkWell(
+      child: GestureDetector(
         onTap: isLoading ?? false ? null : onPressed,
         child: Container(
           width: double.infinity,
