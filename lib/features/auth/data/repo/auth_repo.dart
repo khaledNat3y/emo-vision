@@ -60,6 +60,8 @@ class AuthRepo {
   Future<void> deleteAccount() async {
     try {
       await supabaseAuthService.deleteAccount();
+    } on AuthException catch (e) {
+      throw "AuthException: ${e.message}";
     } catch (e) {
       rethrow;
     }

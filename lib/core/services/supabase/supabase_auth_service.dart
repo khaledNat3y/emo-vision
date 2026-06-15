@@ -53,7 +53,7 @@ class SupabaseAuthService {
         data: {'full_name': '$firstName $lastName'},
         email: email,
         password: password,
-        emailRedirectTo: 'io.supabase.emovision.dev://email-verified',
+        emailRedirectTo: AppConstants.emailVerifiedDeepLink,
       );
       // 'https://emovision.dev/email-verified'
       await _storeSession(response.session);
@@ -122,7 +122,7 @@ class SupabaseAuthService {
     try {
       final user = client.auth.currentUser;
       if (user == null) {
-        throw AuthException('No authenticated user found.');
+        throw const AuthException('No authenticated user found.');
       }
 
       // 1. Delete user data from your users table first
@@ -190,7 +190,7 @@ class SupabaseAuthService {
   Future<void> resetPasswordForEmail(String email) async {
     await client.auth.resetPasswordForEmail(
       email,
-      redirectTo: 'io.supabase.emovision.dev://update-password',
+      redirectTo: AppConstants.resetPasswordDeepLink,
     );
     // 'https://emovision.dev/update-password'
   }

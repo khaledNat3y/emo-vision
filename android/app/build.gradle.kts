@@ -56,10 +56,10 @@ android {
         }
     }
 }
-flutter {
-    source = "../.."
-}
+    flutter {
+        source = "../.."
+    }
 
 dependencies {
-    implementation("org.tensorflow:tensorflow-lite-select-tf-ops:latest.release")
+    implementation("org.tensorflow:tensorflow-lite:2.14.0")
 }

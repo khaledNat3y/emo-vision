@@ -10,7 +10,8 @@
                 "--flavor",
                 "development",
                 "--target",
-                "lib/main_development.dart"
+                "lib/main_development.dart",
+                "--dart-define=appFlavor=development"
             ]
         },
         {
@@ -22,7 +23,8 @@
                 "--flavor",
                 "production",
                 "--target",
-                "lib/main_production.dart"
+                "lib/main_production.dart",
+                "--dart-define=appFlavor=production"
             ]
         }
     ]

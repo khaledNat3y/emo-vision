@@ -7,9 +7,11 @@ import 'package:facial_emotional_detection_graduation_project/core/theming/app_c
 import 'package:facial_emotional_detection_graduation_project/features/auth/logic/logout_cubit/logout_cubit.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/logic/logout_cubit/logout_state.dart';
 import 'package:facial_emotional_detection_graduation_project/features/home/logic/delete_account_cubit/delete_account_cubit.dart';
+import 'package:facial_emotional_detection_graduation_project/features/home/logic/history_cubit/cubit/history_cubit.dart';
 import 'package:facial_emotional_detection_graduation_project/features/home/logic/home_cubit/home_cubit.dart';
 import 'package:facial_emotional_detection_graduation_project/features/home/logic/home_cubit/home_state.dart';
 import 'package:facial_emotional_detection_graduation_project/features/home/logic/upload_video_cubit/upload_video_cubit.dart';
+import 'package:facial_emotional_detection_graduation_project/features/home/ui/history_screen.dart';
 import 'package:facial_emotional_detection_graduation_project/features/home/ui/settings_screen.dart';
 import 'package:facial_emotional_detection_graduation_project/features/home/ui/home_screen.dart';
 import 'package:facial_emotional_detection_graduation_project/features/home/ui/widgets/nav_item.dart';
@@ -115,6 +117,7 @@ class _HomeRootState extends State<HomeRoot> {
           return const SizedBox.shrink();
         },
       ),
+      const HistoryScreen(),
 
       const SettingsScreen(),
     ];
@@ -136,6 +139,7 @@ class _HomeRootState extends State<HomeRoot> {
         BlocProvider(create: (_) => getIt<LogoutCubit>()),
         BlocProvider(create: (_) => getIt<UploadVideoCubit>()),
         BlocProvider(create: (_) => getIt<DeleteAccountCubit>()),
+        BlocProvider(create: (_) => getIt<HistoryCubit>()),
       ],
       child: MultiBlocListener(
         listeners: [
@@ -153,6 +157,7 @@ class _HomeRootState extends State<HomeRoot> {
             listener: (context, state) {
               if (state is UploadVideoSuccess) {
                 _scrollToResult();
+                context.read<HistoryCubit>().fetchHistory();
               }
               if (state is UploadVideoError) {
                 _scrollToResult();
@@ -167,6 +172,40 @@ class _HomeRootState extends State<HomeRoot> {
               }
             },
           ),
+          BlocListener<DeleteAccountCubit, DeleteAccountState>(
+            listener: (context, state) {
+              if (state is DeleteAccountSuccess) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Account deleted successfully"),
+                    backgroundColor: AppColors.success,
+                  ),
+                );
+                context.pushNamedAndRemoveUntil(
+                  Routes.loginScreen,
+                  predicate: (route) => false,
+                );
+              }
+              if (state is DeleteAccountError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.error),
+                    duration: const Duration(seconds: 5),
+                    backgroundColor: AppColors.error,
+                  ),
+                );
+              }
+              if (state is DeleteAccountLoading) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Deleting account..."),
+                    duration: Duration(seconds: 8),
+                    backgroundColor: AppColors.primary,
+                  ),
+                );
+              }
+            },
+          ),
         ],
         child: Scaffold(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -176,7 +215,7 @@ class _HomeRootState extends State<HomeRoot> {
               filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
               child: Container(
                 height: 70.h,
-                width: MediaQuery.sizeOf(context).width * 0.8,
+                width: MediaQuery.sizeOf(context).width * 0.85,
                 padding: EdgeInsets.symmetric(horizontal: 12.w),
                 decoration: BoxDecoration(
                   color: AppColors.grey.withValues(alpha: 0.15), // glass base
@@ -196,13 +235,18 @@ class _HomeRootState extends State<HomeRoot> {
                         setState(() => _currentIndex = 0);
                       },
                     ),
-
+                    NavItem(
+                      title: "History",
+                      icon: Icons.history_rounded,
+                      isActive: _currentIndex == 1,
+                      onTap: () => setState(() => _currentIndex = 1),
+                    ),
                     NavItem(
                       title: "Settings",
                       icon: Icons.settings,
-                      isActive: _currentIndex == 1,
+                      isActive: _currentIndex == 2,
                       onTap: () {
-                        setState(() => _currentIndex = 1);
+                        setState(() => _currentIndex = 2);
                       },
                     ),
                   ],

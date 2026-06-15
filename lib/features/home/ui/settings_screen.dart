@@ -1,4 +1,3 @@
-import 'package:facial_emotional_detection_graduation_project/core/di/dependency_injection.dart';
 import 'package:facial_emotional_detection_graduation_project/core/helpers/functions.dart';
 import 'package:facial_emotional_detection_graduation_project/core/helpers/spacing.dart';
 import 'package:facial_emotional_detection_graduation_project/core/theming/app_colors.dart';
@@ -10,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -105,82 +103,52 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                     ),
                     Divider(color: AppColors.grey.withValues(alpha: 0.3)),
-                    BlocListener<DeleteAccountCubit, DeleteAccountState>(
-                      listener: (context, state) {
-                        if (state is DeleteAccountSuccess) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Account deleted successfully"),
-                              backgroundColor: AppColors.success,
-                            ),
-                          );
-                        }
-                        if (state is DeleteAccountError) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(state.error),
-                              duration: const Duration(seconds: 5),
-                              backgroundColor: AppColors.error,
-                            ),
-                          );
-                        }
-
-                        if (state is DeleteAccountLoading) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Deleting account..."),
-                              duration: Duration(seconds: 8),
-                              backgroundColor: AppColors.primary,
-                            ),
-                          );
-                        }
-                      },
-                      child: SettingsSection(
-                        title: "Delete Account",
-                        titleColor: AppColors.error,
-                        leading: const Icon(
-                          Icons.person_off_outlined,
-                          color: AppColors.error,
-                        ),
-                        trailing: const Icon(
-                          Icons.arrow_forward_ios,
-                          color: AppColors.error,
-                          size: 14,
-                        ),
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text("Delete Account"),
-                                content: const Text(
-                                  "Are you sure you want to delete your account? This action cannot be undone.",
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text("Cancel"),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      context
-                                          .read<DeleteAccountCubit>()
-                                          .deleteAccount();
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text(
-                                      "Delete",
-                                      style: TextStyle(color: AppColors.error),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
+                    SettingsSection(
+                      title: "Delete Account",
+                      titleColor: AppColors.error,
+                      leading: const Icon(
+                        Icons.person_off_outlined,
+                        color: AppColors.error,
                       ),
+                      trailing: const Icon(
+                        Icons.arrow_forward_ios,
+                        color: AppColors.error,
+                        size: 14,
+                      ),
+                      onTap: () {
+                        final homeContext =
+                            context; // capture HomeRoot context here
+                        showDialog(
+                          context: context,
+                          builder: (dialogContext) {
+                            return AlertDialog(
+                              title: const Text("Delete Account"),
+                              content: const Text(
+                                "Are you sure you want to delete your account? This action cannot be undone.",
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.of(dialogContext).pop(),
+                                  child: const Text("Cancel"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    homeContext
+                                        .read<DeleteAccountCubit>()
+                                        .deleteAccount();
+                                    Navigator.of(dialogContext).pop();
+                                  },
+                                  child: const Text(
+                                    "Delete",
+                                    style: TextStyle(color: AppColors.error),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
                     ),
                   ],
                 ),

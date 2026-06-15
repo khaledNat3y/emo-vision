@@ -10,12 +10,14 @@ platform :android do
     sh(flutter_build)
     firebase_app_distribution(
       # App ID of "EmoVision DEV" in Firebase
-      app: "1:911321786473:android:d4d24d28299526004a5af8",
+      app: "1:957167248980:android:1489f79fb7fda981e72fc1",
+      apk_path: "../build/app/outputs/flutter-apk/app-development-release.apk",
       testers: "khalednatey85@gmail.com",
       release_notes: "Development build - for internal testing only.",
-      firebase_cli_token: "1//032r0xb9_mWKFCgYIARAAGAMSNwF-L9IriFZssP9gdi-9flyvpa5nj-vQOc9xDyoXPzWNsMXiw7XsIMACTTWDo8zCarhWUbiq9ho",
+      firebase_cli_token: "1//03Mgp_LsQRC8hCgYIARAAGAMSNwF-L9IrGY_nEywCJs6cZGjYvJZjc-4YiAP5jNfn-eDCeRnPp_mFTFJ_Mw5suQQsRwrzgTyd0jg",
       android_artifact_type: "APK",
-      android_artifact_path: "../build/app/outputs/flutter-apk/app-development-release.apk"
+      # android_artifact_path: "../build/app/outputs/flutter-apk/app-development-release.apk",
+      timeout: 1200
     )
   end
 
@@ -28,10 +30,10 @@ platform :android do
 
     firebase_app_distribution(
       # App ID of "EmoVision PROD" in Firebase
-      app: "1:911321786473:android:7cc9b69f389f7d174a5af8",   
+      app: "1:957167248980:android:06f79bd2b0fb2db4e72fc1",   
       testers: "khalednatey85@gmail.com",
       release_notes: "Production build - release candidate.",
-      firebase_cli_token: "1//032r0xb9_mWKFCgYIARAAGAMSNwF-L9IriFZssP9gdi-9flyvpa5nj-vQOc9xDyoXPzWNsMXiw7XsIMACTTWDo8zCarhWUbiq9ho",
+      firebase_cli_token: "1//03Mgp_LsQRC8hCgYIARAAGAMSNwF-L9IrGY_nEywCJs6cZGjYvJZjc-4YiAP5jNfn-eDCeRnPp_mFTFJ_Mw5suQQsRwrzgTyd0jg",
       android_artifact_type: "APK",
       android_artifact_path: "../build/app/outputs/flutter-apk/app-production-release.apk"
     )

@@ -1,5 +1,6 @@
 import 'package:facial_emotional_detection_graduation_project/core/services/biometric_service.dart';
 import 'package:facial_emotional_detection_graduation_project/core/services/supabase/supabase_auth_service.dart';
+import 'package:facial_emotional_detection_graduation_project/core/services/thumbnail_service.dart';
 import 'package:facial_emotional_detection_graduation_project/core/services/upload_video_service.dart';
 import 'package:facial_emotional_detection_graduation_project/core/theming/cubit/theme_cubit.dart';
 import 'package:facial_emotional_detection_graduation_project/features/auth/data/repo/auth_repo.dart';
@@ -15,6 +16,7 @@ import 'package:facial_emotional_detection_graduation_project/features/home/logi
 import 'package:facial_emotional_detection_graduation_project/features/home/logic/upload_video_cubit/upload_video_cubit.dart';
 import 'package:get_it/get_it.dart';
 import 'package:facial_emotional_detection_graduation_project/core/networking/dio_helper.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../features/home/logic/home_cubit/home_cubit.dart';
 
@@ -27,9 +29,16 @@ void setupDependencies() {
   getIt.registerLazySingleton<UploadVideoService>(
     () => UploadVideoService(DioHelper.dio),
   );
+  getIt.registerLazySingleton<ThumbnailService>(
+    () => ThumbnailService(getIt<SupabaseAuthService>()),
+  );
   // repos
   getIt.registerLazySingleton<UploadVideoRepo>(
-    () => UploadVideoRepo(getIt<UploadVideoService>()),
+    () => UploadVideoRepo(
+      getIt<UploadVideoService>(),
+      getIt<SupabaseAuthService>(),
+      getIt<ThumbnailService>(),
+    ),
   );
   getIt.registerLazySingleton<AuthRepo>(
     () => AuthRepo(getIt<SupabaseAuthService>()),

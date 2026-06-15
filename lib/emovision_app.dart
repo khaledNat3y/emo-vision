@@ -1,7 +1,5 @@
 import 'package:facial_emotional_detection_graduation_project/core/constant/cache_constants.dart';
-import 'package:facial_emotional_detection_graduation_project/core/di/dependency_injection.dart';
 import 'package:facial_emotional_detection_graduation_project/core/helpers/logger.dart';
-import 'package:facial_emotional_detection_graduation_project/core/helpers/shared_pref_helper.dart';
 import 'package:facial_emotional_detection_graduation_project/core/services/deep_link_service.dart';
 import 'package:facial_emotional_detection_graduation_project/core/theming/cubit/theme_cubit.dart';
 import 'package:facial_emotional_detection_graduation_project/flavor.dart';
