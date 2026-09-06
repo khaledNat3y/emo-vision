@@ -11,6 +11,18 @@ abstract class AppTextTheme {
     color: AppColors.textPrimaryLight,
   );
 
+  static TextStyle font14BlackSemiBold = TextStyle(
+    fontSize: 14.sp,
+    fontWeight: FontWeightHelper.semiBold,
+    color: AppColors.black,
+  );
+
+  static TextStyle font12GreyMedium = TextStyle(
+    fontSize: 12.sp,
+    fontWeight: FontWeightHelper.medium,
+    color: AppColors.grey,
+  );
+
   static TextStyle font12BlueRegular = TextStyle(
     fontSize: 12.sp,
     fontWeight: FontWeightHelper.regular,
@@ -36,7 +48,7 @@ abstract class AppTextTheme {
     color: AppColors.textPrimaryDark,
   );
 
-  static TextStyle font12PrimaryRegular = TextStyle(
+  static TextStyle font12RegularPrimary = TextStyle(
     fontSize: 12.sp,
     fontWeight: FontWeightHelper.regular,
     color: AppColors.primary,
@@ -57,13 +69,13 @@ abstract class AppTextTheme {
   static TextStyle font20BoldPrimary = TextStyle(
     fontSize: 20.sp,
     fontWeight: FontWeightHelper.bold,
-    color: AppColors.textPrimaryLight,
+    color: AppColors.primary,
   );
 
   static TextStyle font18MediumSecondary = TextStyle(
     fontSize: 18.sp,
     fontWeight: FontWeightHelper.medium,
-    color: AppColors.textSecondaryLight,
+    color: AppColors.grey,
   );
 
   static TextStyle font14RegularTertiary = TextStyle(

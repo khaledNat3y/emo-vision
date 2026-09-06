@@ -1,14 +1,18 @@
 plugins {
     id("com.android.application")
+    // START: FlutterFire Configuration
+    id("com.google.gms.google-services")
+    // END: FlutterFire Configuration
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
 
 android {
+
     namespace = "com.example.facial_emotional_detection_graduation_project"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = "27.0.12077973"
+    compileSdk = 36
+    ndkVersion = "28.2.13676358"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -24,11 +28,25 @@ android {
         applicationId = "com.example.facial_emotional_detection_graduation_project"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        minSdk = 24
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
+    flavorDimensions += "default"
+    
+    productFlavors {
+    create("development") {
+        dimension = "default"
+        applicationIdSuffix = ".development"
+        resValue("string", "app_name", "EmoVision Development")
+    }
+    create("production") {
+        dimension = "default"
+        applicationIdSuffix = ".production"
+        resValue("string", "app_name", "EmoVision")
+    }
+}
 
     buildTypes {
         release {
@@ -38,7 +56,10 @@ android {
         }
     }
 }
-
 flutter {
     source = "../.."
+}
+
+dependencies {
+    implementation("org.tensorflow:tensorflow-lite-select-tf-ops:latest.release")
 }
